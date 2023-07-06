@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-
+//cnrk?
 @Entity
 @Data
 @NoArgsConstructor
