@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+//tosting 에러가 나면 @data를 게터세터로 바꾼다
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -35,9 +37,5 @@ public class Project {
     @Column(name = "release_note_id")
     private List<ReleaseNote> releaseNoteList;
 
-    public Project(String name, String description, Date createDate) {
-        this.name = name;
-        this.description = description;
-        this.createDate = createDate;
-    }
+
 }

@@ -1,15 +1,14 @@
 package com.swave.releasenotesharesystem.User.domain;
 
 import com.swave.releasenotesharesystem.ReleaseNote.domain.Comment;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
