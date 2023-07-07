@@ -16,4 +16,14 @@ public class ProjectRequestDto {
     Date createDate;
     Long userId;
 
+
+    public ProjectRequestDto(Long id, String name, String description, Date createDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.createDate = createDate;
+
+    }
+
+
 }
