@@ -34,11 +34,15 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
+    /*
+    Department has setting after register, when user first login, due to match with simple login.
+
+     */
     @Builder
-    public User(String email, String password, String department, String name) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
-        this.department = department;
         this.name = name;
     }
+
 }
