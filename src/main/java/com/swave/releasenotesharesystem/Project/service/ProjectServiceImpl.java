@@ -38,7 +38,6 @@ public class ProjectServiceImpl implements ProjectService{
         project.setDescription(projectRequestDto.getDescription());
         project.setCreateDate(projectRequestDto.getCreateDate());*/
         Project project = Project.builder()
-                .id(projectRequestDto.getId())
                 .name(projectRequestDto.getName())
                 .description(projectRequestDto.getDescription())
                 .createDate(projectRequestDto.getCreateDate())

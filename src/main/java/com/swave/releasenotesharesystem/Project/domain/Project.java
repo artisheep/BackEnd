@@ -12,9 +12,7 @@ import java.util.List;
 //tosting 에러가 나면 @data를 게터세터로 바꾼다
 
 @Entity
-//@Data
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class Project {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +34,7 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Column(name = "release_note_id")
     private List<ReleaseNote> releaseNoteList;
-
+@Builder
     public Project(String name, String description, Date createDate) {
         this.name = name;
         this.description = description;

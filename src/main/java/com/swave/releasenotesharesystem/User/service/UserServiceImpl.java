@@ -1,13 +1,20 @@
 package com.swave.releasenotesharesystem.User.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.swave.releasenotesharesystem.User.domain.UserUpdateRequest;
 import com.swave.releasenotesharesystem.User.exception.InvalidIdException;
 import com.swave.releasenotesharesystem.User.exception.UserNotFoundException;
 import com.swave.releasenotesharesystem.User.repository.UserRepository;
 import com.swave.releasenotesharesystem.User.request.*;
 import com.swave.releasenotesharesystem.User.response.EmailCheckResponseDto;
 import com.swave.releasenotesharesystem.User.response.LoginResponseDTO;
+import com.swave.releasenotesharesystem.Util.OAuth.JwtProperties;
+import com.swave.releasenotesharesystem.Util.OAuth.OauthToken;
+import com.swave.releasenotesharesystem.Util.exception.InvalidTokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -48,6 +55,7 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .name(request.getName())
+                .provider("local")
                 .build();
 
         userRepository.save(user);
@@ -67,12 +75,12 @@ public class UserServiceImpl implements UserService {
         return emailCheckResponseDto;
     }
 @Override
-public String checkEmailHead(HttpServletRequest request) throws UserNotFoundException{
-        String email = request.getHeader("email");
+public String checkEmailString(String request) throws UserNotFoundException{
+        String email = request;
         //log.info("User Email : "+email);
         Boolean value =userRepository.findByEmail(email).isEmpty() ;
     //log.info(value.toString() );
-        if( request.getHeader("email") == null || userRepository.findByEmail(email).isEmpty()){
+        if( request == null || userRepository.findByEmail(email).isEmpty()){
             //log.info("User Doesn't Have any Header or not valid account");
             throw new UserNotFoundException();
         }
@@ -81,9 +89,13 @@ public String checkEmailHead(HttpServletRequest request) throws UserNotFoundExce
         return email;
 }
 @Override
-    public void updateUser(HttpServletRequest request,UpdateUserDto requestDto) throws UserNotFoundException{
-        String email = checkEmailHead(request);
-        Optional<User> optionalUser  = userRepository.findByEmail(email);
+    public void updateUser(HttpServletRequest request, UpdateUserDto requestDto) throws UserNotFoundException{
+        /*
+        TODO: possible : Return Updated Token so user can regain his ID.
+         */
+    log.info("Sucussed for Filt but fail here. ");
+        Long id  = (Long) request.getAttribute("id");
+        Optional<User> optionalUser  = userRepository.findById(id);
         String newEmail = requestDto.getEmail();
         String newPassword = requestDto.getPassword();
         String newDepartment = requestDto.getDepartment();
@@ -115,15 +127,15 @@ public String checkEmailHead(HttpServletRequest request) throws UserNotFoundExce
 
     @Override
     public LoginResponseDTO userLogin(HttpServletRequest request, LoginRequestDTO requestDto) throws UserNotFoundException {
-        String email = checkEmailHead(request);
+        String email = checkEmailString(requestDto.getEmail());
         Optional<User> optionalUser  = userRepository.findByEmail(email);
-        boolean result = false;
+        String result = "Not matching ID";
         if(optionalUser.isPresent())
         {
             User user = optionalUser.get();
             log.info("User : "+ user.getPassword() + " request : " + requestDto.getPassword());
             if(user.getPassword().equals(requestDto.getPassword())){
-                result =true;
+                result = oAuthService.createToken(user);
             }
         }
 
@@ -134,14 +146,12 @@ LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
     }
 
     @Override
-    public void deleteUser(HttpServletRequest request, DeleteUserDto requestDTO) throws UserNotFoundException{
-
-        String email = checkEmailHead(request);
-        User user = userRepository.findByEmail(email).get();
-
-        Long target = user.getId();
-
-        userRepository.deleteById(target);
+    public void deleteUser(HttpServletRequest request, DeleteUserDto requestDto) throws UserNotFoundException{
+/*
+TODO: Make a validation for ID delete phase
+ */
+        Long id = (Long) request.getAttribute("id");
+        userRepository.deleteById(id);
 
     }
 
@@ -150,19 +160,21 @@ LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
 
 
     @Override
-    public User getUser(HttpServletRequest request) {
-        Long userCode = (Long) request.getAttribute("userCode");
+    public User getUser(HttpServletRequest request) throws UserNotFoundException {
+        Long userCode = (Long) request.getAttribute("id");
         User user = userRepository.findById(userCode).orElseThrow(UserNotFoundException::new);
         return user;
     }
 
-    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) throws InvalidTokenException {
+    @Override
+    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) throws InvalidTokenException, UserNotFoundException {
         checkInvalidToken(request);
         User user = getUser(request);
         System.out.println(user.getEmail());
         return ResponseEntity.ok().body(user);
     }
 
+    @Override
     public ResponseEntity getLogin(String code,String provider) throws JsonProcessingException {
         OauthToken oauthToken = oAuthService.getAccessToken(code, provider);
         String jwtToken = oAuthService.SaveUserAndGetToken(oauthToken.getAccess_token(), provider);
@@ -170,6 +182,7 @@ LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
         headers.add(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
         return ResponseEntity.ok().headers(headers).body("\"success\"");
     }
+    @Override
     public String updateMyPage(HttpServletRequest request, UserUpdateRequest userUpdateRequest) throws Exception {
         checkInvalidToken(request);
         Long userId =getUser(request).getId();
@@ -184,6 +197,7 @@ LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
         return "success";
     }
 
+    @Override
     public void checkInvalidToken(HttpServletRequest request) throws InvalidTokenException {
         if(request.getHeader("Authorization") == null) {
 //            log.info("error");

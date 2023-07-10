@@ -45,7 +45,8 @@ public class OAuthService {
             clientId = "4646a32b25c060e42407ceb8c13ef14a";
             clientSecret = "AWyAH1M24R9EYfUjJ1KCxcsh3DwvK8F7";
             redirectUri = "http://127.0.0.1:5173/oauth/callback/kakao";
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Invalid Provider: " + provider);
         }
 
@@ -128,6 +129,8 @@ public class OAuthService {
 //                        .userRole("ROLE_USER").build();
 
                 userRepository.save(user);
+            } else if ( provider.equals("local") ) {
+
             } else {
                 log.info("기존 회원 -> 회원 가입 건너 뜀");
             }

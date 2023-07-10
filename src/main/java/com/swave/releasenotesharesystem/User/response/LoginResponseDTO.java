@@ -10,5 +10,5 @@ TODO : Need to implement what happens after login.
 @Builder
 public class LoginResponseDTO {
 
-    private boolean result;
+    private String result;
 }
