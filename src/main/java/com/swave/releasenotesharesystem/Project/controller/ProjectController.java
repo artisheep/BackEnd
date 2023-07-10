@@ -1,10 +1,11 @@
 package com.swave.releasenotesharesystem.Project.controller;
 
 import com.swave.releasenotesharesystem.Project.requestDto.ProjectRequestDto;
+import com.swave.releasenotesharesystem.Project.responseDto.loadAllProjectDto;
 import com.swave.releasenotesharesystem.Project.responseDto.loadOneProjectDto;
 import com.swave.releasenotesharesystem.Project.service.ProjectService;
-import com.swave.releasenotesharesystem.Project.responseDto.loadAllProjectDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/project")
 @CrossOrigin
+@Slf4j
 @RequiredArgsConstructor
 public class ProjectController {
 /*

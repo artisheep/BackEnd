@@ -1,18 +1,16 @@
 package com.swave.releasenotesharesystem.Project.service;
 
 import com.swave.releasenotesharesystem.Project.domain.Project;
-import com.swave.releasenotesharesystem.Project.responseDto.loadAllProjectDto;
-import com.swave.releasenotesharesystem.Project.responseDto.loadOneProjectDto;
-import com.swave.releasenotesharesystem.User.requestDto.UserInProjectRequestDto;
-import com.swave.releasenotesharesystem.Util.type.UserRole;
 import com.swave.releasenotesharesystem.Project.repository.ProjectRepository;
 import com.swave.releasenotesharesystem.Project.requestDto.ProjectRequestDto;
-
+import com.swave.releasenotesharesystem.Project.responseDto.loadAllProjectDto;
+import com.swave.releasenotesharesystem.Project.responseDto.loadOneProjectDto;
 import com.swave.releasenotesharesystem.User.domain.User;
-;
-import com.swave.releasenotesharesystem.User.repository.UserInProjectRepository;
 import com.swave.releasenotesharesystem.User.domain.UserInProject;
+import com.swave.releasenotesharesystem.User.repository.UserInProjectRepository;
 import com.swave.releasenotesharesystem.User.repository.UserRepository;
+import com.swave.releasenotesharesystem.Util.type.UserRole;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+;
+
 @Service
+@Slf4j
 public class ProjectServiceImpl implements ProjectService{
 
     @Autowired
@@ -43,8 +44,12 @@ public class ProjectServiceImpl implements ProjectService{
                 .description(projectRequestDto.getDescription())
                 .createDate(new Date())
                 .build();
+
+        log.info(project.getDescription().toString());
+
         //유저리스트 받아서 설정
         project.setUserInProjectList(new ArrayList<>());
+        log.info(projectRequestDto.getUserId().toString());
         User user = userRepository.findById(projectRequestDto.getUserId()).orElse(null);
         //UserInProject.setUserInProject(new ArrayList<>());
         //builder를 이용한 userInProject 생성

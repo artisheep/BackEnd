@@ -3,7 +3,10 @@ package com.swave.releasenotesharesystem.Project.domain;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.ReleaseNote;
 import com.swave.releasenotesharesystem.User.domain.UserInProject;
 import jdk.jfr.Timestamp;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
