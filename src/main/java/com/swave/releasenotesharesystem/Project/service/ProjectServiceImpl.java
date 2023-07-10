@@ -39,7 +39,6 @@ public class ProjectServiceImpl implements ProjectService{
         //빌더로 프로젝트생성
         //todo : 빌더를 잘 만지면 한줄로 가능하다.
         Project project = Project.builder()
-                .id(projectRequestDto.getId())
                 .name(projectRequestDto.getName())
                 .description(projectRequestDto.getDescription())
                 .createDate(new Date())

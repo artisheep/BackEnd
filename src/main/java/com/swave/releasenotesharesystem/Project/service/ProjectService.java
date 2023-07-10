@@ -16,4 +16,3 @@ public interface ProjectService {
 
     String updateUsers(ProjectRequestDto project);
 }
-
