@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Project {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
@@ -45,6 +46,7 @@ public class Project {
         this.description=description;
         this.createDate=createDate;
     }
+
 
 
 }

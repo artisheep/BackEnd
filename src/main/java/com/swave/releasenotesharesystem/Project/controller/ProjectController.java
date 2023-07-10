@@ -25,6 +25,7 @@ public class ProjectController {
     @PostMapping("/create")
     public String createProject(@RequestBody ProjectRequestDto project){
         projectService.createProject(project);
+        //projectService.updateUsers(project);
         return "Success";
 
     }
@@ -43,4 +44,6 @@ public class ProjectController {
     public loadOneProjectDto loadProject(@PathVariable Long projectId){
         return projectService.loadProject(projectId);
     }
+    
+    //팀 인원수 총합 구독자 빼고
 }

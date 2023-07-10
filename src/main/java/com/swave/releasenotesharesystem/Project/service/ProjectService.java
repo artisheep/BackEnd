@@ -8,10 +8,12 @@ import java.util.List;
 
 public interface ProjectService {
 
-    public String createProject(ProjectRequestDto projectRequestDto);
+    String createProject(ProjectRequestDto projectRequestDto);
 
     List<loadAllProjectDto> loadProjectList(Long userId);
 
     loadOneProjectDto loadProject(Long projectId);
+
+    String updateUsers(ProjectRequestDto project);
 }
 
