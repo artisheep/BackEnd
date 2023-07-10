@@ -30,6 +30,9 @@ public class UserController {
 
     private final UserServiceImpl userServiceImpl;
 
+        private final UserService userService; //(2)
+
+        private final UserRepository userRepository;
     /*
     Test code to show how api works, and how can derive header from it.
     Both codes do simple function: returns header and body.
@@ -92,5 +95,21 @@ public EmailCheckResponseDto checkValidEmail(@RequestBody EmailCheckRequestDto r
     @GetMapping("/login/deleteAccount")
     public void deleteUser(HttpServletRequest request, @RequestBody DeleteUserDto requestDTO ) throws UserNotFoundException{
         userServiceImpl.deleteUser(request, requestDTO);
+
+
+        @PostMapping("/oauth/token")
+        public ResponseEntity getLogin(@RequestParam("code") String code, @RequestParam("provider") String provider) throws JsonProcessingException {
+            return userService.getLogin(code,provider);
+        }
+
+        @GetMapping("/me")
+        public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) throws Exception { //(1)
+            return userService.getCurrentUser(request);
+        }
+
+
+        @PostMapping("/updatepage")
+        public String updateMyPage(HttpServletRequest request, @RequestBody UserUpdateRequest user) throws Exception { //(1)
+            return userService.updateMyPage(request,user);
     }
 }

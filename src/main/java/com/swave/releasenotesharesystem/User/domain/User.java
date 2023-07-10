@@ -23,6 +23,8 @@ public class User {
     private String department;
     @Column(name = "user_name")
     private String name;
+    @Column(name = "provider")
+    private String provider;
 
     // user 와 userinPorject mapping
     @Column(name = "user_in_project_id")
@@ -34,15 +36,12 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> commentList;
 
-    /*
-    Department has setting after register, when user first login, due to match with simple login.
-
-     */
     @Builder
-    public User(String email, String password, String name) {
+    public User(String email, String password, String department, String name, String provider) {
         this.email = email;
         this.password = password;
+//        this.department = department;
         this.name = name;
+        this.provider=provider;
     }
-
 }

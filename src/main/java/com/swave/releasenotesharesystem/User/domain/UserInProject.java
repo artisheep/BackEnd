@@ -1,5 +1,6 @@
 package com.swave.releasenotesharesystem.User.domain;
 
+import com.swave.releasenotesharesystem.Project.domain.Project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.swave.releasenotesharesystem.Project.domain.Project;
 import com.swave.releasenotesharesystem.Util.type.UserRole;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-//@Data
+
 @NoArgsConstructor
 public class UserInProject {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

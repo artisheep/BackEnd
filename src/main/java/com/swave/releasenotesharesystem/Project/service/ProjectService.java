@@ -14,4 +14,3 @@ public interface ProjectService {
 
     loadOneProjectDto loadProject(Long projectId);
 }
-

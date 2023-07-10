@@ -41,4 +41,14 @@ public default String checkEmailHead(HttpServletRequest request) throws  UserNot
     public default LoginResponseDTO userLogin(HttpServletRequest request, LoginRequestDTO requestDto) throws UserNotFoundException {return null;}
 
 public default void deleteUser (HttpServletRequest request, DeleteUserDto requestDTO) throws UserNotFoundException{}
+
+
+      public User getUser(HttpServletRequest request) ;
+      public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) throws InvalidTokenException;
+
+      public ResponseEntity getLogin(String code,String provider) throws JsonProcessingException;
+      public String updateMyPage(HttpServletRequest request, UserUpdateRequest userUpdateRequest) throws Exception;
+
+      public void checkInvalidToken(HttpServletRequest request) throws InvalidTokenException;
+
 }
