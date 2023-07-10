@@ -20,6 +20,7 @@ import java.util.List;
 
 ;
 
+//0710 확인 CR
 @Service
 @Slf4j
 public class ProjectServiceImpl implements ProjectService{
