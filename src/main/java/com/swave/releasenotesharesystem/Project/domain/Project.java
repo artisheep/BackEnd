@@ -35,6 +35,7 @@ public class Project {
     @Column(name = "release_note_id")
     private List<ReleaseNote> releaseNoteList;
 
+    @Builder
     public Project(String name, String description, Date createDate) {
         this.name = name;
         this.description = description;
