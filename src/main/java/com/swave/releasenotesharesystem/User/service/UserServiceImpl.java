@@ -23,7 +23,6 @@ import com.swave.releasenotesharesystem.User.domain.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -31,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-        private final OAuthService oAuthService;
+    private final OAuthService oAuthService;
 
 
     @Override
@@ -50,7 +49,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void createUser(RegisterRequestDto request) {
-
         User user = User.builder()
                 .email(request.getEmail())
                 .password(request.getPassword())
@@ -205,6 +203,4 @@ TODO: Make a validation for ID delete phase
         }
 //        log.info("토큰 체크 완료");
     }
-
-
 }

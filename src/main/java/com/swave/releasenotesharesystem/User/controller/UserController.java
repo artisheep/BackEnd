@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,42 +28,41 @@ TODO LIST: 1. mail validation system
            3. Code cleaning
 
  */
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
 
-
     private final UserService userService; //(2)
 
     private final UserRepository userRepository;
+    private final UserServiceImpl userServiceImpl;
 
     /*
     Test code to show how api works, and how can derive header from it.
     Both codes do simple function: returns header and body.
      */
     @PostMapping(value = "/api/test")
-    public String temp(HttpServletRequest request, @RequestBody RegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
-        log.info("PR :  " + String.valueOf(pageRequest));
-        log.info("request :  " + String.valueOf(request));
-
-        userService.test(request, pageRequest);
+    public String temp(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
+        log.info("PR :  "+String.valueOf(pageRequest));
+        log.info("request :  "+String.valueOf(request));
+        userServiceImpl.test(request, pageRequest);
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String temp = headerNames.nextElement().toString();
-            log.info("Header  " + temp);
-            log.info("Value  " + request.getHeader(temp).toString());
+            log.info("Header  " + headerNames.nextElement());
+            log.info("Value  " + request.getHeader(headerNames.nextElement()));
 
         }
-        return "Test Complete" + String.valueOf(pageRequest) + " " + String.valueOf(request);
+        return "Test Complete"+String.valueOf(pageRequest)+" "+String.valueOf(request);
     }
 
     @GetMapping(value = "/api/testGET")
-    public String testGET(HttpServletRequest request, @RequestBody RegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
-        log.info("PR :  " + String.valueOf(pageRequest));
-        log.info("request :  " + String.valueOf(request));
-        userService.testGET(request, pageRequest);
+    public String testGET(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
+        log.info("PR :  "+String.valueOf(pageRequest));
+        log.info("request :  "+String.valueOf(request));
+        userServiceImpl.testGET(request, pageRequest);
         Enumeration<String> headerNames = request.getHeaderNames();
         String Temp = "";
         while (headerNames.hasMoreElements()) {
@@ -135,5 +135,17 @@ public class UserController {
         log.info(" ID : "+Id + " name :"+user.getName());
 
         return "SUCUESS";
+    }
+        return "Test Complete "+String.valueOf(pageRequest)+" "+String.valueOf(request);
+    }
+
+    @PostMapping("/api/create/user")
+    public void createUser(@RequestBody UserRegisterRequestDto request) {
+        userServiceImpl.createUser(request);
+    }
+
+    @GetMapping("/api/MappingTest")
+    public String testController() {
+return "conffirmed";
     }
 }

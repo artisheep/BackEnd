@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,10 @@ public class ProjectRequestDto {
     String name;
     String description;
     Date createDate;
+
+    //managerID
     Long userId;
+    List<Long> users;
 
 
     public ProjectRequestDto(Long id, String name, String description, Date createDate) {

@@ -11,6 +11,7 @@ import com.swave.releasenotesharesystem.User.response.LoginResponseDTO;
 import com.swave.releasenotesharesystem.Util.exception.InvalidTokenException;
 import org.springframework.http.ResponseEntity;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.UnknownHostException;
 
@@ -34,7 +35,7 @@ public interface UserService {
 
      EmailCheckResponseDto checkEmailBody(EmailCheckRequestDto request);
 
-String checkEmailString(String request ) throws  UserNotFoundException;
+    String checkEmailString(String request ) throws  UserNotFoundException;
     void updateUser(HttpServletRequest request,UpdateUserDto requestDto) throws UserNotFoundException;
 
 

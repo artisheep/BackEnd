@@ -15,7 +15,7 @@ public class NoteBlock {
     private Long id;
 
     @Column(columnDefinition = "TEXT", name = "note_block_context")
-    private String note_block_context;
+    private String noteBlockContext;
 
     @ManyToOne
     @JoinColumn(name = "release_note_id")
@@ -23,8 +23,10 @@ public class NoteBlock {
     //todo : label 필드 생성
 
     @Builder
-    public NoteBlock(String note_block_context, ReleaseNote releaseNote) {
-        this.note_block_context = note_block_context;
+    public NoteBlock(String noteBlockContext, ReleaseNote releaseNote) {
+        this.noteBlockContext = noteBlockContext;
+
+        //다른 entity와의 연결
         this.releaseNote = releaseNote;
     }
 }
