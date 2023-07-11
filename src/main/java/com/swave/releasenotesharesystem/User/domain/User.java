@@ -1,15 +1,15 @@
 package com.swave.releasenotesharesystem.User.domain;
 
 import com.swave.releasenotesharesystem.ReleaseNote.domain.Comment;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+//@Data
 @NoArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,8 @@ public class User {
     private String department;
     @Column(name = "user_name")
     private String name;
+    @Column(name = "provider")
+    private String provider;
 
     // user 와 userinPorject mapping
     @Column(name = "user_in_project_id")
@@ -35,10 +37,11 @@ public class User {
     private List<Comment> commentList;
 
     @Builder
-    public User(String email, String password, String department, String name) {
+    public User(String email, String password, String department, String name, String provider) {
         this.email = email;
         this.password = password;
-        this.department = department;
+//        this.department = department;
         this.name = name;
+        this.provider=provider;
     }
 }

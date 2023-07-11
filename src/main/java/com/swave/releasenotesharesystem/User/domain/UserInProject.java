@@ -1,15 +1,18 @@
 package com.swave.releasenotesharesystem.User.domain;
 
 import com.swave.releasenotesharesystem.Project.domain.Project;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swave.releasenotesharesystem.Project.domain.Project;
 import com.swave.releasenotesharesystem.Util.type.UserRole;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
-
+//cnrk?asds
 @Entity
-@Data
+@Getter
+@Setter
+
 @NoArgsConstructor
 public class UserInProject {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +23,7 @@ public class UserInProject {
 
     // User 와 mapping
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -27,5 +31,13 @@ public class UserInProject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @Builder
+    public UserInProject(UserRole role, User user, Project project){
+        this.role=role;
+        this.user=user;
+        this.project=project;
+    }
+
 
 }
