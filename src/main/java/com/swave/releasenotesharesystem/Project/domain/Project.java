@@ -3,6 +3,7 @@ package com.swave.releasenotesharesystem.Project.domain;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.ReleaseNote;
 import com.swave.releasenotesharesystem.User.domain.UserInProject;
 import jdk.jfr.Timestamp;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+//tosting 에러가 나면 @data를 게터세터로 바꾼다
+
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Project {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")

@@ -22,7 +22,7 @@ public class Comment {
 
     @Column(name = "last_modified_date")
     private Date lastModifiedDate;
-
+  
     @ManyToOne
     @JoinColumn(name = "release_note_id")
     private ReleaseNote releaseNote;
