@@ -38,7 +38,8 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     @Column(name = "release_note_id")
     private List<ReleaseNote> releaseNoteList;
-@Builder
+
+    @Builder
     public Project(String name, String description, Date createDate) {
         this.name = name;
         this.description = description;

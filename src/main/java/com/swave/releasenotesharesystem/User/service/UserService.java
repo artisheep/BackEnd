@@ -1,5 +1,7 @@
 package com.swave.releasenotesharesystem.User.service;
 
+import com.swave.releasenotesharesystem.Util.type.UserRole;
+
 import com.swave.releasenotesharesystem.User.exception.InvalidIdException;
 import com.swave.releasenotesharesystem.User.request.UserRegisterRequestDto;
 
