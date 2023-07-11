@@ -19,7 +19,7 @@ public class Comment {
     @Column(columnDefinition="TEXT", name = "comment_context")
     private String commentContext;
 
-    @JoinColumn(name = "release_note_id")
+    @Column(name = "release_note_id")
     @ManyToOne
     private ReleaseNote releaseNote;
 

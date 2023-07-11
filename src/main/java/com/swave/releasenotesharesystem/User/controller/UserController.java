@@ -32,7 +32,7 @@ TODO LIST: 1. mail validation system
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
 public class UserController {
- 
+
 
     private final UserService userService; //(2)
 
@@ -104,7 +104,7 @@ public class UserController {
     public void deleteUser(HttpServletRequest request, @RequestBody DeleteUserDto requestDTO) throws UserNotFoundException {
         userService.deleteUser(request, requestDTO);
 
- 
+
     }
 
 
