@@ -56,16 +56,17 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
                 .noteBlockContext(newReleaseNoteDTO.getContent())
                 .build();
 
-        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
-                new ChatGPTQuestionRequestDTO(noteBlock.getNoteBlockContext() + "의 내용을 세줄로 요약해줘"));
+
+//        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
+//                new ChatGPTQuestionRequestDTO(noteBlock.getNoteBlockContext() + "의 내용을 세줄로 요약해줘"));
 
         ReleaseNote releaseNote = ReleaseNote.builder()
                 .version(newReleaseNoteDTO.getVersion())
                 .lastModifiedDate(currentDate)
                 .releaseDate(newReleaseNoteDTO.getReleaseDate())
                 .count(0)
-                .isUpdated(false)
-                .summary(chatGPTResultDTO.getText())
+                .isUpdated(false)   //                .summary(chatGPTResultDTO.getText())
+                .summary("Temp data until ChatGPT is OKAY")
                 .project(project)
                 .noteBlockList(new ArrayList<NoteBlock>(Collections.singletonList(noteBlock)))
                 .user(user)

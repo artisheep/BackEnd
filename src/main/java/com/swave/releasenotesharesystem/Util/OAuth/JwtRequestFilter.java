@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 
+import com.swave.releasenotesharesystem.ChatGPT.config.ChatGPTConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,8 +27,10 @@ import java.util.List;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
 
+
     // 인증에서 제외할 url
-    private static final String Exclude_url="/api/test,/login/createUser,/login/checkValidId,/login/login";
+    private static final String Exclude_url="/api/test,/login/createUser,/login/checkValidId,/login/login,/api/project/**,"+ChatGPTConfig.URL;
+
     private static final List<String> EXCLUDE_URL =
             Collections.unmodifiableList(
                     Arrays.asList(
@@ -49,7 +52,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         if (pathMatchesExcludePattern(request.getRequestURI())) {
             // Skip JWT authentication for excluded URLs
-            filterChain.doFilter(request, response);
+            try {
+                filterChain.doFilter(request, response);
+            }catch(Exception e)
+            {
+                log.info(e.toString());
+            }
             return;
         }
         else if(request.getHeader("Authorization") == null) {

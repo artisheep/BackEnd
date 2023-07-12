@@ -38,39 +38,38 @@ public class UserController {
     private final UserService userService; //(2)
 
     private final UserRepository userRepository;
-    private final UserServiceImpl userServiceImpl;
 
     /*
     Test code to show how api works, and how can derive header from it.
     Both codes do simple function: returns header and body.
      */
-    @PostMapping(value = "/api/test")
-    public String temp(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
-        log.info("PR :  "+String.valueOf(pageRequest));
-        log.info("request :  "+String.valueOf(request));
-        userServiceImpl.test(request, pageRequest);
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            log.info("Header  " + headerNames.nextElement());
-            log.info("Value  " + request.getHeader(headerNames.nextElement()));
+//    @PostMapping(value = "/api/test")
+//    public String temp(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
+//        log.info("PR :  "+String.valueOf(pageRequest));
+//        log.info("request :  "+String.valueOf(request));
+//        userServiceImpl.test(request, pageRequest);
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasMoreElements()) {
+//            log.info("Header  " + headerNames.nextElement());
+//            log.info("Value  " + request.getHeader(headerNames.nextElement()));
+//
+//        }
+//        return "Test Complete"+String.valueOf(pageRequest)+" "+String.valueOf(request);
+//    }
 
-        }
-        return "Test Complete"+String.valueOf(pageRequest)+" "+String.valueOf(request);
-    }
-
-    @GetMapping(value = "/api/testGET")
-    public String testGET(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
-        log.info("PR :  "+String.valueOf(pageRequest));
-        log.info("request :  "+String.valueOf(request));
-        userServiceImpl.testGET(request, pageRequest);
-        Enumeration<String> headerNames = request.getHeaderNames();
-        String Temp = "";
-        while (headerNames.hasMoreElements()) {
-            log.info("Header  " + headerNames.nextElement());
-            log.info("Value  " + request.getHeader(headerNames.nextElement()));
-        }
-        return "Test Complete " + String.valueOf(pageRequest) + " " + String.valueOf(request);
-    }
+//    @GetMapping(value = "/api/testGET")
+//    public String testGET(HttpServletRequest request, @RequestBody UserRegisterRequestDto pageRequest) throws InvalidIdException, UnknownHostException {
+//        log.info("PR :  "+String.valueOf(pageRequest));
+//        log.info("request :  "+String.valueOf(request));
+//        userServiceImpl.testGET(request, pageRequest);
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        String Temp = "";
+//        while (headerNames.hasMoreElements()) {
+//            log.info("Header  " + headerNames.nextElement());
+//            log.info("Value  " + request.getHeader(headerNames.nextElement()));
+//        }
+//        return "Test Complete " + String.valueOf(pageRequest) + " " + String.valueOf(request);
+//    }
 
     @PostMapping("/login/createUser")
     public String createUser(@RequestBody @Validated RegisterRequestDto request) {
@@ -128,7 +127,7 @@ public class UserController {
 
 
     @GetMapping("/TestForLogin")
-    public String hayday(HttpServletRequest request){
+    public String loginTest(HttpServletRequest request){
         Long Id = (Long) request.getAttribute("id");
         User user = userRepository.findById(Id).get();
 
@@ -136,14 +135,6 @@ public class UserController {
 
         return "SUCUESS";
     }
-        return "Test Complete "+String.valueOf(pageRequest)+" "+String.valueOf(request);
-    }
-
-    @PostMapping("/api/create/user")
-    public void createUser(@RequestBody UserRegisterRequestDto request) {
-        userServiceImpl.createUser(request);
-    }
-
     @GetMapping("/api/MappingTest")
     public String testController() {
 return "conffirmed";
