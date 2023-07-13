@@ -1,17 +1,20 @@
 package com.swave.releasenotesharesystem.ReleaseNote.controller;
 
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewCommentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewReleaseNoteDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.UpdateReleaseNoteDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.CommentContentListDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentListDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteVersionListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewCommentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestUpdateReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseCommentContentListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteVersionListDTO;
 import com.swave.releasenotesharesystem.ReleaseNote.service.ReleaseNoteAllServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.swave.releasenotesharesystem.Util.http.HttpResponse;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,37 +23,39 @@ public class ReleaseNoteController {
     private final ReleaseNoteAllServiceImpl releaseNoteAllService;
 
     @PostMapping("/api/project/{projectId}/release/create")
-    public Long createReleaseNote(@PathVariable Long projectId, @RequestBody NewReleaseNoteDTO newReleaseNoteDTO) {
-        return releaseNoteAllService.createReleaseNote(projectId, newReleaseNoteDTO);
+    public HttpResponse createReleaseNote(HttpServletRequest request, @PathVariable Long projectId, @RequestBody RequestNewReleaseNoteDTO requestNewReleaseNoteDTO) {
+        return releaseNoteAllService.createReleaseNote(request, projectId, requestNewReleaseNoteDTO);
     }
 
     @PostMapping("/api/project/release/update")
-    public Long UpdateReleaseNote(@RequestBody UpdateReleaseNoteDTO updateReleaseNoteDTO) {
-        return releaseNoteAllService.updateReleaseNote(updateReleaseNoteDTO);
+    public HttpResponse UpdateReleaseNote(HttpServletRequest request, @RequestBody RequestUpdateReleaseNoteDTO requestUpdateReleaseNoteDTO) {
+        return releaseNoteAllService.updateReleaseNote(request, requestUpdateReleaseNoteDTO);
     }
 
     @GetMapping("/api/project/release/load/{releaseNoteId}")
-    public ReleaseNoteContentDTO loadReleaseNote(@PathVariable Long releaseNoteId) {
+    public ResponseReleaseNoteContentDTO loadReleaseNote(@PathVariable Long releaseNoteId) {
         return releaseNoteAllService.loadReleaseNote(releaseNoteId);
     }
 
     @GetMapping("/api/project/{projectId}/release/load_all")
-    public ArrayList<ReleaseNoteContentListDTO> loadReleaseNoteList(@PathVariable Long projectId) {
+    public ArrayList<ResponseReleaseNoteContentListDTO> loadReleaseNoteList(@PathVariable Long projectId) {
         return releaseNoteAllService.loadReleaseNoteList(projectId);
     }
 
     @GetMapping("/api/project/{projectId}/release/version_list")
-    public ReleaseNoteVersionListDTO loadVersionList(@PathVariable Long projectId) {
+    public ResponseReleaseNoteVersionListDTO loadVersionList(@PathVariable Long projectId) {
         return releaseNoteAllService.loadVersionList(projectId);
     }
 
     @PostMapping("/api/project/release/comment/create")
-    public Long createComment(@RequestBody NewCommentDTO newCommentDTO){
-        return releaseNoteAllService.createComment(newCommentDTO);
+    public HttpResponse createComment(HttpServletRequest request, @RequestBody RequestNewCommentDTO requestNewCommentDTO){
+        return releaseNoteAllService.createComment(request, requestNewCommentDTO);
     }
 
     @GetMapping("/api/project/{projectId}/release/comment/load_recent")
-    public CommentContentListDTO loadRecentComment(@PathVariable Long projectId){
+    public ResponseCommentContentListDTO loadRecentComment(@PathVariable Long projectId){
         return releaseNoteAllService.loadRecentComment(projectId);
     }
+
+
 }

@@ -1,22 +1,22 @@
 package com.swave.releasenotesharesystem.ReleaseNote.responseDTO;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.ArrayList;
 import java.util.Date;
+
+//작성자
+//버전
+//최종 수정 날짜(내가 생성)
+//릴리즈 날짜(유저가)
+//내용
 
 @Data
 @NoArgsConstructor
-public class ReleaseNoteContentDTO {
+public class ResponseReleaseNoteContentListDTO {
 
     private String creator;
     private String version;
     private Date lastModified;
     private Date releaseDate;
     private String summary;
-    private String content;
-    private ArrayList<CommentContentDTO> comment;
-    private int count;
-    private int liked;
 }

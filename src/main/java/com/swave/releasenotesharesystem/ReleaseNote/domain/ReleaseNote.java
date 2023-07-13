@@ -1,12 +1,13 @@
 package com.swave.releasenotesharesystem.ReleaseNote.domain;
 
 import com.swave.releasenotesharesystem.Project.domain.Project;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentListDTO;
 import com.swave.releasenotesharesystem.User.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Data
+@ToString(exclude = {"user", "project", "commentList", "noteBlockList"})
 @NoArgsConstructor
 public class ReleaseNote {
     @Id @Column(name = "release_note_id")
@@ -68,35 +70,35 @@ public class ReleaseNote {
         this.noteBlockList = noteBlockList;
     }
 
-    public ReleaseNoteContentDTO makeReleaseNoteContentDTO(){
-        ReleaseNoteContentDTO releaseNoteContentDTO = new ReleaseNoteContentDTO();
+    public ResponseReleaseNoteContentDTO makeReleaseNoteContentDTO(){
+        ResponseReleaseNoteContentDTO responseReleaseNoteContentDTO = new ResponseReleaseNoteContentDTO();
         ArrayList<String> noteBlockContentList = new ArrayList<>();
 
         for (NoteBlock noteblock:this.noteBlockList){
             noteBlockContentList.add(noteblock.getNoteBlockContext());
         }
 
-        releaseNoteContentDTO.setCreator(this.user.getName());
-        releaseNoteContentDTO.setVersion(this.version);
-        releaseNoteContentDTO.setLastModified(this.lastModifiedDate);
-        releaseNoteContentDTO.setReleaseDate(this.releaseDate);
-        releaseNoteContentDTO.setContent(noteBlockContentList.toString());
-        releaseNoteContentDTO.setCount(this.count);
-        releaseNoteContentDTO.setSummary(this.summary);
+        responseReleaseNoteContentDTO.setCreator(this.user.getName());
+        responseReleaseNoteContentDTO.setVersion(this.version);
+        responseReleaseNoteContentDTO.setLastModified(this.lastModifiedDate);
+        responseReleaseNoteContentDTO.setReleaseDate(this.releaseDate);
+        responseReleaseNoteContentDTO.setContent(noteBlockContentList.toString());
+        responseReleaseNoteContentDTO.setCount(this.count);
+        responseReleaseNoteContentDTO.setSummary(this.summary);
         //releaseNoteContentDTO.setLiked(this);
 
-        return releaseNoteContentDTO;
+        return responseReleaseNoteContentDTO;
     }
 
-    public ReleaseNoteContentListDTO makeReleaseNoteContentListDTO(){
-        ReleaseNoteContentListDTO releaseNoteContentListDTO = new ReleaseNoteContentListDTO();
+    public ResponseReleaseNoteContentListDTO makeReleaseNoteContentListDTO(){
+        ResponseReleaseNoteContentListDTO responseReleaseNoteContentListDTO = new ResponseReleaseNoteContentListDTO();
 
-        releaseNoteContentListDTO.setCreator(this.user.getName());
-        releaseNoteContentListDTO.setReleaseDate(this.releaseDate);
-        releaseNoteContentListDTO.setLastModified(this.lastModifiedDate);
-        releaseNoteContentListDTO.setVersion(this.version);
-        releaseNoteContentListDTO.setSummary(this.summary);
+        responseReleaseNoteContentListDTO.setCreator(this.user.getName());
+        responseReleaseNoteContentListDTO.setReleaseDate(this.releaseDate);
+        responseReleaseNoteContentListDTO.setLastModified(this.lastModifiedDate);
+        responseReleaseNoteContentListDTO.setVersion(this.version);
+        responseReleaseNoteContentListDTO.setSummary(this.summary);
 
-        return releaseNoteContentListDTO;
+        return responseReleaseNoteContentListDTO;
     }
 }

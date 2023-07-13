@@ -29,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     // 인증에서 제외할 url
-    private static final String Exclude_url="/api/test,/login/createUser,/login/checkValidId,/login/login,/api/project/**,"+ChatGPTConfig.URL;
+    private static final String Exclude_url="/api/test,/login/createUser,/login/checkValidId,/login/login"+ChatGPTConfig.URL;
 
     private static final List<String> EXCLUDE_URL =
             Collections.unmodifiableList(
@@ -76,6 +76,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
 
         Long id = null;
+        String name = null;
 
         if (pathMatchesExcludePattern(request.getRequestURI())) {
             // Skip JWT authentication for excluded URLs
@@ -85,6 +86,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         else {
             try {
                 id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asLong();
+                name = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("name").asString();
                 System.out.println(id);
             } catch (TokenExpiredException e) {
                 e.printStackTrace();
@@ -103,6 +105,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 Request has now have attribute value
  */
         request.setAttribute("id", id);
+        request.setAttribute("name", name);
         filterChain.doFilter(request, response);
     }
     // Filter에서 제외할 URL 설정

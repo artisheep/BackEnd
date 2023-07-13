@@ -1,4 +1,4 @@
-package com.swave.releasenotesharesystem.ReleaseNote.RequestDTO;
+package com.swave.releasenotesharesystem.ReleaseNote.requestDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class UpdateReleaseNoteDTO {
+public class RequestUpdateReleaseNoteDTO {
     private Long releaseNoteId;
     private String version;
     private Date releaseDate;

@@ -1,11 +1,11 @@
-package com.swave.releasenotesharesystem.ReleaseNote.RequestDTO;
+package com.swave.releasenotesharesystem.ReleaseNote.requestDTO;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class NewCommentDTO {
+public class RequestNewCommentDTO {
     private Long releaseNoteId;
     private String content;
 }

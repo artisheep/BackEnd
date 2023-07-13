@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class CommentContentDTO {
+public class ResponseCommentContentDTO {
     private String name;
     private String context;
     private Date lastModifiedDate;

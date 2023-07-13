@@ -1,18 +1,20 @@
 package com.swave.releasenotesharesystem.ReleaseNote.service;
 
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewReleaseNoteDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.UpdateReleaseNoteDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteContentListDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ReleaseNoteVersionListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestUpdateReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteContentListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseReleaseNoteVersionListDTO;
+import com.swave.releasenotesharesystem.Util.http.HttpResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
 public interface  ReleaseNoteService {
 
-    public Long createReleaseNote(Long projectId, NewReleaseNoteDTO newReleaseNoteDTO);
-    public Long updateReleaseNote(UpdateReleaseNoteDTO updateReleaseNoteDTO);
-    public ArrayList<ReleaseNoteContentListDTO> loadReleaseNoteList(Long projectId);
-    public ReleaseNoteContentDTO loadReleaseNote(Long releaseNoteId);
-    public ReleaseNoteVersionListDTO loadVersionList(Long projectId);
+    public HttpResponse createReleaseNote(HttpServletRequest request, Long projectId, RequestNewReleaseNoteDTO requestNewReleaseNoteDTO);
+    public HttpResponse updateReleaseNote(HttpServletRequest request, RequestUpdateReleaseNoteDTO requestUpdateReleaseNoteDTO);
+    public ArrayList<ResponseReleaseNoteContentListDTO> loadReleaseNoteList(Long projectId);
+    public ResponseReleaseNoteContentDTO loadReleaseNote(Long releaseNoteId);
+    public ResponseReleaseNoteVersionListDTO loadVersionList(Long projectId);
 }

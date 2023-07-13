@@ -2,7 +2,9 @@ package com.swave.releasenotesharesystem.User.service;
 
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swave.releasenotesharesystem.User.domain.User;
@@ -24,6 +26,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+
+import static com.auth0.jwt.JWT.require;
 
 @Slf4j
 @Service
@@ -151,6 +155,5 @@ public class OAuthService {
 
         return jwtToken;
     }
-
 
 }
