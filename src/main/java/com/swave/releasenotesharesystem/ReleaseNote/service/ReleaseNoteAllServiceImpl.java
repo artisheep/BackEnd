@@ -14,8 +14,11 @@ import com.swave.releasenotesharesystem.ReleaseNote.repository.NoteBlockReposito
 import com.swave.releasenotesharesystem.ReleaseNote.repository.ReleaseNoteRepository;
 import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.*;
 import com.swave.releasenotesharesystem.User.domain.User;
+import com.swave.releasenotesharesystem.User.domain.UserInProject;
+import com.swave.releasenotesharesystem.User.repository.UserInProjectRepository;
 import com.swave.releasenotesharesystem.User.repository.UserRepository;
 import com.swave.releasenotesharesystem.Util.http.HttpResponse;
+import com.swave.releasenotesharesystem.Util.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,7 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
     private final ReleaseNoteRepository releaseNoteRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final UserInProjectRepository userInProjectRepository;
     private final ChatGPTService chatGPTService;
 
     @Override
@@ -43,7 +47,7 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
     public HttpResponse createReleaseNote(HttpServletRequest request, Long projectId, RequestNewReleaseNoteDTO requestNewReleaseNoteDTO) {
         Date currentDate = new Date();
         //SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        log.info(request.toString());
+
         User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
@@ -125,26 +129,13 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
     }
 
     @Override
-    public ResponseReleaseNoteVersionListDTO loadVersionList(Long projectId){
-        List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(projectId);
-
-        ResponseReleaseNoteVersionListDTO responseReleaseNoteVersionListDTO = new ResponseReleaseNoteVersionListDTO(new ArrayList<>());
-
-        for(ReleaseNote releaseNote : releaseNoteList){
-            responseReleaseNoteVersionListDTO.getVersionList().add(releaseNote.getVersion());
-        }
-
-        return responseReleaseNoteVersionListDTO;
-    }
-
-    @Override
     @Transactional
-    public HttpResponse createComment(HttpServletRequest request, RequestNewCommentDTO requestNewCommentDTO){
+    public HttpResponse createComment(HttpServletRequest request, Long releaseNoteId , RequestNewCommentDTO requestNewCommentDTO){
 
         User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
-        ReleaseNote releaseNote = releaseNoteRepository.findById(requestNewCommentDTO.getReleaseNoteId())
+        ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
         Comment comment = Comment.builder()
@@ -207,4 +198,33 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
 
         return responseCommentContentListDTO;
     }
+    public ArrayList<ResponseVersionListDTO> loadProjectVersionList(HttpServletRequest request){
+        ArrayList<ResponseVersionListDTO> responseVersionListDTOList = new ArrayList<>();
+        List<UserInProject> userInProjectList = userInProjectRepository.findByUser_Id((Long) request.getAttribute("id"));
+
+        for(UserInProject userInProject : userInProjectList){
+            ResponseVersionListDTO responseVersionListDTO = new ResponseVersionListDTO();
+
+            responseVersionListDTO.setProjectId(userInProject.getProject().getId());
+            responseVersionListDTO.setProjectName(userInProject.getProject().getName());
+            responseVersionListDTO.setSubscribe(UserRole.Subscriber == userInProject.getRole());
+
+            List<ReleaseNote> releaseNoteList = userInProject.getProject().getReleaseNoteList();
+            ArrayList<ResponseReleaseNoteVersionListDTO> responseReleaseNoteVersionListDTOList = new ArrayList<>();
+
+            for(ReleaseNote releaseNote : releaseNoteList){
+                ResponseReleaseNoteVersionListDTO responseReleaseNoteVersionListDTO = new ResponseReleaseNoteVersionListDTO();
+
+                responseReleaseNoteVersionListDTO.setReleaseNoteId(releaseNote.getId());
+                responseReleaseNoteVersionListDTO.setVersion(releaseNote.getVersion());
+
+                responseReleaseNoteVersionListDTOList.add(responseReleaseNoteVersionListDTO);
+            }
+            responseVersionListDTO.setReleaseNoteVersionList(responseReleaseNoteVersionListDTOList);
+
+            responseVersionListDTOList.add(responseVersionListDTO);
+        }
+        return responseVersionListDTOList;
+    };
+
 }

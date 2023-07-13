@@ -10,6 +10,7 @@ import com.swave.releasenotesharesystem.User.request.*;
 import com.swave.releasenotesharesystem.User.response.EmailCheckResponseDto;
 import com.swave.releasenotesharesystem.User.response.LoginResponseDTO;
 import com.swave.releasenotesharesystem.User.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ TODO LIST: 1. mail validation system
 
  */
 
+@Api(tags = "UserController")
 @RestController
 @RequiredArgsConstructor
 @Slf4j

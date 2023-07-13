@@ -8,6 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface CommentService {
 
-    public HttpResponse createComment(HttpServletRequest request, RequestNewCommentDTO requestNewCommentDTO);
+    public HttpResponse createComment(HttpServletRequest request, Long releaseNoteId ,RequestNewCommentDTO requestNewCommentDTO);
     public ResponseCommentContentListDTO loadRecentComment(Long projectId);
 }

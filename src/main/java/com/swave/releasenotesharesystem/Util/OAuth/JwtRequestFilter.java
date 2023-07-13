@@ -29,7 +29,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     // 인증에서 제외할 url
-    private static final String Exclude_url="/api/test,/login/createUser,/login/checkValidId,/login/login"+ChatGPTConfig.URL;
+    // 3번째줄 부터는 swagger
+    private static final String Exclude_url="/api/test," +
+            "/login/createUser,/login/checkValidId,/login/login," +
+            "/swagger/**,/v2/api-docs/**,/configuration/ui/**," +
+            "/swagger-resources/**,/configuration/security/**," +
+            "/swagger-ui/**,/webjars/**,/swagger-ui.html";
 
     private static final List<String> EXCLUDE_URL =
             Collections.unmodifiableList(
@@ -47,6 +52,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String[] excludeUrls = Exclude_url.split(",");
 
         log.info("EU : "+excludeUrls.length);
+        log.info(request.getRequestURI());
         for(int i=0;i<excludeUrls.length;i++){
             log.info("E "+i+" : "+excludeUrls[i] + "  : "+excludeUrls[i].equals(request.getRequestURI()));
         }
