@@ -3,12 +3,14 @@ package com.swave.releasenotesharesystem.ChatGPT.controller;
 import com.swave.releasenotesharesystem.ChatGPT.requestDTO.ChatGPTQuestionRequestDTO;
 import com.swave.releasenotesharesystem.ChatGPT.requestDTO.ChatGPTResultDTO;
 import com.swave.releasenotesharesystem.ChatGPT.service.ChatGPTService;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Api(tags = "ChatGptController")
 @RequestMapping("/api/gpt/")
 public class ChatGptController {
 

@@ -2,12 +2,12 @@ package com.swave.releasenotesharesystem.ReleaseNote.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.Comment;
-import com.swave.releasenotesharesystem.ReleaseNote.domain.QComment;
-import com.swave.releasenotesharesystem.ReleaseNote.domain.QReleaseNote;
+import static com.swave.releasenotesharesystem.ReleaseNote.domain.QComment.comment;
+import static com.swave.releasenotesharesystem.ReleaseNote.domain.QReleaseNote.releaseNote;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class CommentCustomRepositoryImpl implements CommentCustomRetository{
+public class CommentCustomRepositoryImpl implements CommentCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     public CommentCustomRepositoryImpl(JPAQueryFactory jpaQueryFactory) {
@@ -15,11 +15,14 @@ public class CommentCustomRepositoryImpl implements CommentCustomRetository{
     }
 
     @Override
-    public ArrayList<Comment> findTop5RecentComment(Long projectId){
-        ArrayList<Comment> comments = new ArrayList<>();
+    public List<Comment> findTop5RecentComment(Long projectId){
 
-        //todo : querydsl
-
-        return comments;
+        return jpaQueryFactory
+                .selectFrom(comment)
+                .join(releaseNote).on(releaseNote.id.eq(comment.releaseNote.id))
+                .where(releaseNote.project.id.eq(projectId))
+                .orderBy(comment.lastModifiedDate.desc())
+                .limit(5)
+                .fetch();
     }
 }

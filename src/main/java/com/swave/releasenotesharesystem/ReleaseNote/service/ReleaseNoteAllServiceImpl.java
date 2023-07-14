@@ -1,13 +1,11 @@
 package com.swave.releasenotesharesystem.ReleaseNote.service;
 
-import com.swave.releasenotesharesystem.ChatGPT.requestDTO.ChatGPTQuestionRequestDTO;
-import com.swave.releasenotesharesystem.ChatGPT.requestDTO.ChatGPTResultDTO;
 import com.swave.releasenotesharesystem.ChatGPT.service.ChatGPTService;
 import com.swave.releasenotesharesystem.Project.domain.Project;
 import com.swave.releasenotesharesystem.Project.repository.ProjectRepository;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewCommentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewReleaseNoteDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.UpdateReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewCommentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewReleaseNoteDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestUpdateReleaseNoteDTO;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.Comment;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.NoteBlock;
 import com.swave.releasenotesharesystem.ReleaseNote.domain.ReleaseNote;
@@ -16,17 +14,23 @@ import com.swave.releasenotesharesystem.ReleaseNote.repository.NoteBlockReposito
 import com.swave.releasenotesharesystem.ReleaseNote.repository.ReleaseNoteRepository;
 import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.*;
 import com.swave.releasenotesharesystem.User.domain.User;
+import com.swave.releasenotesharesystem.User.domain.UserInProject;
+import com.swave.releasenotesharesystem.User.repository.UserInProjectRepository;
 import com.swave.releasenotesharesystem.User.repository.UserRepository;
+import com.swave.releasenotesharesystem.Util.http.HttpResponse;
+import com.swave.releasenotesharesystem.Util.type.UserRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @EnableTransactionManagement
 public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockService, ReleaseNoteService{
 
@@ -35,17 +39,16 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
     private final ReleaseNoteRepository releaseNoteRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final UserInProjectRepository userInProjectRepository;
     private final ChatGPTService chatGPTService;
 
-
-    //todo : user의 정보를 세션에서 받아와서 user field를 채울 것 (세션/토큰 구현 후)
     @Override
     @Transactional
-    public Long createReleaseNote(Long projectId, NewReleaseNoteDTO newReleaseNoteDTO) {
+    public HttpResponse createReleaseNote(HttpServletRequest request, Long projectId, RequestNewReleaseNoteDTO requestNewReleaseNoteDTO) {
         Date currentDate = new Date();
         //SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
-        User user = userRepository.findById(1L) // test
+        User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
         Project project = projectRepository.findById(projectId)
@@ -53,19 +56,21 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
 
         //todo : 추후 noteBlock 제대로 구현시 create 방법을 고쳐야함
         NoteBlock noteBlock = NoteBlock.builder()
-                .noteBlockContext(newReleaseNoteDTO.getContent())
+                .noteBlockContext(requestNewReleaseNoteDTO.getContent())
                 .build();
 
-        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
-                new ChatGPTQuestionRequestDTO(noteBlock.getNoteBlockContext() + "의 내용을 세줄로 요약해줘"));
+
+//        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
+//                new ChatGPTQuestionRequestDTO(noteBlock.getNoteBlockContext() + "의 내용을 세줄로 요약해줘"));
 
         ReleaseNote releaseNote = ReleaseNote.builder()
-                .version(newReleaseNoteDTO.getVersion())
+                .version(requestNewReleaseNoteDTO.getVersion())
                 .lastModifiedDate(currentDate)
-                .releaseDate(newReleaseNoteDTO.getReleaseDate())
+                .releaseDate(requestNewReleaseNoteDTO.getReleaseDate())
                 .count(0)
                 .isUpdated(false)
-                .summary(chatGPTResultDTO.getText())
+//              .summary(chatGPTResultDTO.getText())
+                .summary("Temp data until ChatGPT is OKAY")
                 .project(project)
                 .noteBlockList(new ArrayList<NoteBlock>(Collections.singletonList(noteBlock)))
                 .user(user)
@@ -79,75 +84,63 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
         releaseNoteRepository.flush();
         noteBlockRepository.flush();
 
-        return releaseNote.getId();
+        return HttpResponse.builder()
+                .message("Release Note Created")
+                .description("Release Note ID : " + releaseNote.getId() + " Created")
+                .build();
     }
 
     //project id를 받아서 해당 project에 연결된 모든 releaseNote를 리스트로 반환 -> 전체 출력용
-    //todo : user의 정보를 세션에서 받아와서 user field를 채울 것 (세션/토큰 구현 후)
     //todo : noteBlock의 상세 구현법을 정한 이후에는 그것을 적용할 것 (현재는 단순히 글씨를 출력)
     @Override
-    public ArrayList<ReleaseNoteContentListDTO> loadReleaseNoteList(Long projectId){
+    public ArrayList<ResponseReleaseNoteContentListDTO> loadReleaseNoteList(Long projectId){
         List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(projectId);
 
-        ArrayList<ReleaseNoteContentListDTO> releaseNoteContentListDTOArrayList = new ArrayList<>();
+        ArrayList<ResponseReleaseNoteContentListDTO> responseReleaseNoteContentListDTOArrayList = new ArrayList<>();
 
         for(ReleaseNote releaseNote : releaseNoteList){
-            releaseNoteContentListDTOArrayList.add(releaseNote.makeReleaseNoteContentListDTO());
+            responseReleaseNoteContentListDTOArrayList.add(releaseNote.makeReleaseNoteContentListDTO());
         }
 
-        return releaseNoteContentListDTOArrayList;
+        return responseReleaseNoteContentListDTOArrayList;
     }
 
     @Override
-    public ReleaseNoteContentDTO loadReleaseNote(Long releaseNoteId){
+    public ResponseReleaseNoteContentDTO loadReleaseNote(Long releaseNoteId){
         ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
         ArrayList<Comment> commentList = commentRepository.findByReleaseNote_Id(releaseNoteId);
-        ArrayList<CommentContentDTO> commentContentList = new ArrayList<>();
+        ArrayList<ResponseCommentContentDTO> commentContentList = new ArrayList<>();
 
         for(Comment comment : commentList){
-            CommentContentDTO commentContentDTO = new CommentContentDTO();
-            commentContentDTO.setName(comment.getUser().getName());
-            commentContentDTO.setContext(comment.getCommentContext());
-            commentContentDTO.setLastModifiedDate(comment.getLastModifiedDate());
+            ResponseCommentContentDTO responseCommentContentDTO = new ResponseCommentContentDTO();
+            responseCommentContentDTO.setName(comment.getUser().getName());
+            responseCommentContentDTO.setContext(comment.getCommentContext());
+            responseCommentContentDTO.setLastModifiedDate(comment.getLastModifiedDate());
 
-            commentContentList.add((commentContentDTO));
+            commentContentList.add((responseCommentContentDTO));
         }
 
-        ReleaseNoteContentDTO releaseNoteContentDTO = releaseNote.makeReleaseNoteContentDTO();
-        releaseNoteContentDTO.setComment(commentContentList);
+        ResponseReleaseNoteContentDTO responseReleaseNoteContentDTO = releaseNote.makeReleaseNoteContentDTO();
+        responseReleaseNoteContentDTO.setComment(commentContentList);
 
-        return releaseNoteContentDTO;
+        return responseReleaseNoteContentDTO;
     }
 
-    @Override
-    public ReleaseNoteVersionListDTO loadVersionList(Long projectId){
-        List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(projectId);
-
-        ReleaseNoteVersionListDTO releaseNoteVersionListDTO = new ReleaseNoteVersionListDTO();
-
-        for(ReleaseNote releaseNote : releaseNoteList){
-            releaseNoteVersionListDTO.getVersionList().add(releaseNote.getVersion());
-        }
-
-        return releaseNoteVersionListDTO;
-    }
-
-    //todo : user의 정보를 세션에서 받아와서 user field를 채울 것 (세션/토큰 구현 후)
     @Override
     @Transactional
-    public Long createComment(NewCommentDTO newCommentDTO){
+    public HttpResponse createComment(HttpServletRequest request, Long releaseNoteId , RequestNewCommentDTO requestNewCommentDTO){
 
-        User user = userRepository.findById(1L) // test
+        User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
-        ReleaseNote releaseNote = releaseNoteRepository.findById(newCommentDTO.getReleaseNoteId())
+        ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
         Comment comment = Comment.builder()
                 .user(user)
-                .commentContext(newCommentDTO.getContent())
+                .commentContext(requestNewCommentDTO.getContent())
                 .releaseNote(releaseNote)
                 .lastModifiedDate(new Date())
                 .build();
@@ -160,33 +153,78 @@ public class ReleaseNoteAllServiceImpl implements CommentService, NoteBlockServi
         commentRepository.flush();
         releaseNoteRepository.flush();
 
-        return comment.getId();
+        return HttpResponse.builder()
+                .message("Comment Created")
+                .description("Comment ID : " + releaseNote.getId() + " Created")
+                .build();
     }
 
     //todo : user의 정보를 세션에서 받아와서 user field를 채울 것 (세션/토큰 구현 후)
     @Override
     @Transactional
-    public Long updateReleaseNote(UpdateReleaseNoteDTO updateReleaseNoteDTO){
-        User user = userRepository.findById(1L) // test
+    public HttpResponse updateReleaseNote(HttpServletRequest request, RequestUpdateReleaseNoteDTO requestUpdateReleaseNoteDTO){
+        User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
-        ReleaseNote releaseNote = releaseNoteRepository.findById(updateReleaseNoteDTO.getReleaseNoteId())
+        ReleaseNote releaseNote = releaseNoteRepository.findById(requestUpdateReleaseNoteDTO.getReleaseNoteId())
                 .orElseThrow(NoSuchElementException::new);
 
-        releaseNote.setVersion(updateReleaseNoteDTO.getVersion());
-        releaseNote.setReleaseDate(updateReleaseNoteDTO.getReleaseDate());
+        releaseNote.setVersion(requestUpdateReleaseNoteDTO.getVersion());
+        releaseNote.setReleaseDate(requestUpdateReleaseNoteDTO.getReleaseDate());
         releaseNote.setLastModifiedDate(new Date());
         //todo : 추후 noteBlock 제대로 구현시 업데이트 방법을 고쳐야함
-        releaseNote.getNoteBlockList().get(0).setNoteBlockContext(updateReleaseNoteDTO.getContent());
+        releaseNote.getNoteBlockList().get(0).setNoteBlockContext(requestUpdateReleaseNoteDTO.getContent());
         releaseNote.setUser(user);
         releaseNote.setUpdated(true);
 
-        return updateReleaseNoteDTO.getReleaseNoteId();
+        return HttpResponse.builder()
+                .message("Release Note Updated")
+                .description("Release Note ID : " + releaseNote.getId() + " Updated")
+                .build();
     };
-    public CommentContentListDTO loadRecentComment(Long projectId){
-        CommentContentListDTO commentContentListDTO = new CommentContentListDTO();
+    public ResponseCommentContentListDTO loadRecentComment(Long projectId){
+        ResponseCommentContentListDTO responseCommentContentListDTO = new ResponseCommentContentListDTO(new ArrayList<>());
+        List<Comment> comments = commentRepository.findTop5RecentComment(projectId);
 
+        for(Comment comment : comments) {
+            ResponseCommentContentDTO responseCommentContentDTO = new ResponseCommentContentDTO();
 
-        return commentContentListDTO;
+            responseCommentContentDTO.setName(comment.getUser().getName());
+            responseCommentContentDTO.setContext(comment.getCommentContext());
+            responseCommentContentDTO.setLastModifiedDate(comment.getLastModifiedDate());
+
+            responseCommentContentListDTO.getComments().add(responseCommentContentDTO);
+        }
+
+        return responseCommentContentListDTO;
     }
+    public ArrayList<ResponseVersionListDTO> loadProjectVersionList(HttpServletRequest request){
+        ArrayList<ResponseVersionListDTO> responseVersionListDTOList = new ArrayList<>();
+        List<UserInProject> userInProjectList = userInProjectRepository.findByUser_Id((Long) request.getAttribute("id"));
+
+        for(UserInProject userInProject : userInProjectList){
+            ResponseVersionListDTO responseVersionListDTO = new ResponseVersionListDTO();
+
+            responseVersionListDTO.setProjectId(userInProject.getProject().getId());
+            responseVersionListDTO.setProjectName(userInProject.getProject().getName());
+            responseVersionListDTO.setSubscribe(UserRole.Subscriber == userInProject.getRole());
+
+            List<ReleaseNote> releaseNoteList = userInProject.getProject().getReleaseNoteList();
+            ArrayList<ResponseReleaseNoteVersionListDTO> responseReleaseNoteVersionListDTOList = new ArrayList<>();
+
+            for(ReleaseNote releaseNote : releaseNoteList){
+                ResponseReleaseNoteVersionListDTO responseReleaseNoteVersionListDTO = new ResponseReleaseNoteVersionListDTO();
+
+                responseReleaseNoteVersionListDTO.setReleaseNoteId(releaseNote.getId());
+                responseReleaseNoteVersionListDTO.setVersion(releaseNote.getVersion());
+
+                responseReleaseNoteVersionListDTOList.add(responseReleaseNoteVersionListDTO);
+            }
+            responseVersionListDTO.setReleaseNoteVersionList(responseReleaseNoteVersionListDTOList);
+
+            responseVersionListDTOList.add(responseVersionListDTO);
+        }
+        return responseVersionListDTOList;
+    };
+
 }

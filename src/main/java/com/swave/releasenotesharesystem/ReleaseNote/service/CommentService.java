@@ -1,10 +1,13 @@
 package com.swave.releasenotesharesystem.ReleaseNote.service;
 
-import com.swave.releasenotesharesystem.ReleaseNote.RequestDTO.NewCommentDTO;
-import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.CommentContentListDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.requestDTO.RequestNewCommentDTO;
+import com.swave.releasenotesharesystem.ReleaseNote.responseDTO.ResponseCommentContentListDTO;
+import com.swave.releasenotesharesystem.Util.http.HttpResponse;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface CommentService {
 
-    public Long createComment(NewCommentDTO newCommentDTO);
-    public CommentContentListDTO loadRecentComment(Long projectId);
+    public HttpResponse createComment(HttpServletRequest request, Long releaseNoteId ,RequestNewCommentDTO requestNewCommentDTO);
+    public ResponseCommentContentListDTO loadRecentComment(Long projectId);
 }

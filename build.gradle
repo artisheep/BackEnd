@@ -55,6 +55,9 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa:5.0.0"
     implementation "com.querydsl:querydsl-apt:5.0.0"
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //Swagger
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
 }
 
 tasks.named('test') {
