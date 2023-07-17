@@ -8,16 +8,16 @@ import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 
 public class ReleaseNoteCustomRepositoryImpl implements ReleaseNoteCustomRepository{
 
-    private final JPAQueryFactory jpaqueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public ReleaseNoteCustomRepositoryImpl(EntityManager em){
-        this.jpaqueryFactory = new JPAQueryFactory(em);
+        this.jpaQueryFactory = new JPAQueryFactory(em);
     }
 
 
     @Override
     public String latestReleseNote(Long userId, Long projectId) {
-        return jpaqueryFactory
+        return jpaQueryFactory
                 .select(releaseNote.version)
                 .from(releaseNote)
                 .where(releaseNote.user.id.eq(userId).and(releaseNote.project.id.eq(projectId)))

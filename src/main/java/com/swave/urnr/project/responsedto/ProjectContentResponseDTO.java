@@ -1,6 +1,5 @@
 package com.swave.urnr.project.responsedto;
 
-import com.swave.urnr.Util.type.UserRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -16,16 +15,13 @@ import java.util.Date;
 @NoArgsConstructor
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
-@ApiModel(value = "프로젝트 싹다 가져오는 DTO")
-public class ProjectListResponseDTO {
+@ApiModel(value = "프로젝트 하나 가져오는 DTO")
+public class ProjectContentResponseDTO {
 
-    @ApiModelProperty(value="프로젝트 ID", example = "Wave Form", required = true)
+    @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
     Long id;
 
-    @ApiModelProperty(value="팀원 역할", example = "0:구독자 1:개발자 2:매니저", required = true)
-    UserRole role;
-
-    @ApiModelProperty(value="프로젝트 제목", example = "Wave Form", required = true)
+    @ApiModelProperty(value="프로젝트 이름", example = "Wave Form", required = true)
     String name;
 
     @ApiModelProperty(value="프로젝트 세부사항", example = "설문조사 프로그램", required = true)
@@ -34,10 +30,6 @@ public class ProjectListResponseDTO {
     @ApiModelProperty(value="프로젝트 생성날짜", example = "자동생성", required = true)
     Date createDate;
 
-    @ApiModelProperty(value="프로젝트 멤버수", example = "5", required = true)
-    int count;
 
-    @ApiModelProperty(value="프로젝트 최신버전", example = "3.5", required = true)
-    String version;
 
 }

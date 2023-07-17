@@ -6,7 +6,7 @@ import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
-import com.swave.urnr.project.responsedto.ProjectContentResponseDto;
+import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
 import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.user.domain.User;
@@ -188,8 +188,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectContentResponseDto loadProject(Long projectId) {
-        ProjectContentResponseDto getproject = new ProjectContentResponseDto();
+    public ProjectContentResponseDTO loadProject(Long projectId) {
+        ProjectContentResponseDTO getproject = new ProjectContentResponseDTO();
         Project project = projectRepository.findById(projectId).get();
         getproject.setId(project.getId());
         getproject.setName(project.getName());
@@ -206,9 +206,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectUpdateRequestDTO updateProject(ProjectUpdateRequestDTO projectUpdateRequestDto) {
+    public ProjectUpdateRequestDTO updateProject(Long projectId, ProjectUpdateRequestDTO projectUpdateRequestDto) {
 
-        Project project = projectRepository.findById(projectUpdateRequestDto.getId()).orElseThrow(null);
+        System.out.println(projectId);
+        Project project = projectRepository.findById(projectId).orElseThrow(null);
 
         project.setName(projectUpdateRequestDto.getName());
         project.setDescription(projectUpdateRequestDto.getDescription());
@@ -219,7 +220,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         for (Long deleteUserId : projectUpdateRequestDto.getDeleteUsers()){
-            int delete = userInProjectRepository.deleteUser(projectUpdateRequestDto.getId(),deleteUserId);
+            int delete = userInProjectRepository.deleteUser(projectId,deleteUserId);
             userInProjectRepository.flush();
         }
 
