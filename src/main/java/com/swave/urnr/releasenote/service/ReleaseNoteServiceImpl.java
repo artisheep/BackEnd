@@ -1,8 +1,8 @@
 package com.swave.urnr.releasenote.service;
 
 import com.swave.urnr.chatgpt.service.ChatGPTService;
-import com.swave.urnr.Project.domain.Project;
-import com.swave.urnr.Project.repository.ProjectRepository;
+import com.swave.urnr.project.domain.Project;
+import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
 import com.swave.urnr.releasenote.domain.Comment;
@@ -12,10 +12,10 @@ import com.swave.urnr.releasenote.repository.CommentRepository;
 import com.swave.urnr.releasenote.repository.NoteBlockRepository;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.releasenote.responsedto.*;
-import com.swave.urnr.User.domain.User;
-import com.swave.urnr.User.domain.UserInProject;
-import com.swave.urnr.User.repository.UserInProjectRepository;
-import com.swave.urnr.User.repository.UserRepository;
+import com.swave.urnr.user.domain.User;
+import com.swave.urnr.user.domain.UserInProject;
+import com.swave.urnr.user.repository.UserInProjectRepository;
+import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.Util.http.HttpResponse;
 import com.swave.urnr.Util.type.UserRole;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.swave.urnr.releasenote.domain;
 
-import com.swave.urnr.User.domain.User;
+import com.swave.urnr.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,9 @@
 package com.swave.urnr.releasenote.domain;
 
-import com.swave.urnr.Project.domain.Project;
+import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentListResponseDTO;
-import com.swave.urnr.User.domain.User;
+import com.swave.urnr.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
