@@ -20,7 +20,6 @@ TODO: Find how to implement NOTNULL VALIDATE without hardcoding, also need to fi
 @Data
 @ApiModel(value = "회원가입 DTO")
 @Validated
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisterRequestDto {

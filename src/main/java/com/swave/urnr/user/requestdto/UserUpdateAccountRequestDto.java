@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 @ApiModel(value = "업데이트 DTO")
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateAccountRequestDto {

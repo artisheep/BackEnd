@@ -18,7 +18,6 @@ import javax.validation.constraints.Email;
  */
 @Data
 @ApiModel(value = "이메일 DTO")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated

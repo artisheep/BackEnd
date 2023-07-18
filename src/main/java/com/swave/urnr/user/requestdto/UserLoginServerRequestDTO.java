@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 @ApiModel(value = "로그인 DTO")
-
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserLoginServerRequestDTO {

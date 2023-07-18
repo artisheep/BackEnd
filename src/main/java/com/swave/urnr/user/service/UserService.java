@@ -1,7 +1,7 @@
 package com.swave.urnr.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.swave.urnr.util.common.response.ResponseDto;
+import com.swave.urnr.util.common.ResponseDto;
 import com.swave.urnr.util.exception.InvalidTokenException;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.exception.UserNotFoundException;
@@ -22,7 +22,7 @@ public interface UserService {
 
     String initDepartment(HttpServletRequest request, String requestDto) throws UserNotFoundException;
 
-    String getTokenByLogin(HttpServletRequest request, UserLoginServerRequestDTO requestDto) throws UserNotFoundException;
+    String getTokenByLogin(UserLoginServerRequestDTO requestDto) throws UserNotFoundException;
 
     ResponseEntity<String> setTemporaryPassword(UserValidateEmailDTO request) throws Exception;
 

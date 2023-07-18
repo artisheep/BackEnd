@@ -1,7 +1,7 @@
 package com.swave.urnr.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.swave.urnr.util.common.response.ResponseDto;
+import com.swave.urnr.util.common.ResponseDto;
 import com.swave.urnr.util.exception.InvalidTokenException;
 import com.swave.urnr.util.oauth.JwtProperties;
 import com.swave.urnr.util.oauth.OauthToken;
@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,8 +33,13 @@ public class UserServiceImpl implements UserService {
     private final OAuthService oAuthService;
     private final MailSendImp mailSendImp;
     private final TokenService tokenService;
+
+    public PasswordEncoder encoder = new BCryptPasswordEncoder();
+
+
     @Override
     public ResponseEntity<ResponseDto> createAccountByServer(UserRegisterRequestDto request) {
+
 
         ResponseDto testDto;
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -45,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
         User user = User.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(encoder.encode( request.getPassword()))
                 .name(request.getName())
                 .provider("server")
                 .build();
@@ -126,14 +133,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getTokenByLogin(HttpServletRequest request, UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
+    public String getTokenByLogin( UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
 
         String email = requestDto.getEmail();
         Optional<User> optionalUser = userRepository.findByEmail(email);
         String result = "Information Not valid";
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if (user.getPassword().equals(requestDto.getPassword())) {
+            if (encoder.matches( requestDto.getPassword(),user.getPassword())){
                 result =  tokenService.createToken(user);
             }
         }

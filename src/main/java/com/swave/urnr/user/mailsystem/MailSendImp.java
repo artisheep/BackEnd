@@ -5,6 +5,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -22,7 +23,7 @@ public class MailSendImp implements MailServiceInter {
 
     // 메일 내용 작성
     @Override
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
+    public MimeMessage createMessage(String to) throws  MessagingException, UnsupportedEncodingException {
 		System.out.println("보내는 대상 : " + to);
 		System.out.println("인증 번호 : " + ePw);
 
@@ -86,17 +87,17 @@ public class MailSendImp implements MailServiceInter {
     // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
     // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
     @Override
-    public String sendSimpleMessage(String to) throws Exception {
+    public String sendSimpleMessage(String to) throws RuntimeException {
 
         ePw = createKey(); // 랜덤 인증번호 생성
 
         // TODO Auto-generated method stub
-        MimeMessage message = createMessage(to); // 메일 발송
         try {// 예외처리
+            MimeMessage message = createMessage(to); // 메일 발송
             emailsender.send(message);
-        } catch (MailException es) {
+        } catch (MessagingException | UnsupportedEncodingException es ) {
             es.printStackTrace();
-            throw new IllegalArgumentException();
+            throw new RuntimeException();
         }
 
 
