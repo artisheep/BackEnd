@@ -1,6 +1,6 @@
 package com.swave.urnr.util.exception;
 
-public class InvalidTokenException extends RuntimeException{
+public class InvalidTokenException extends Exception{
     private static final String MESSAGE = "인가되지 않은 사용자입니다";
     public InvalidTokenException() {
         super(MESSAGE);

@@ -20,7 +20,8 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 @ConditionalOnDefaultWebSecurity
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-public class SecurityConfig {
+public class SecurityConfig{
+
 
 
     public static final String FRONT_URL = "http://localhost:5173";
@@ -48,12 +49,14 @@ public class SecurityConfig {
         http.headers().frameOptions().sameOrigin();
 
         http.authorizeRequests()
-                .antMatchers(FRONT_URL + "/main/**")
+                .antMatchers(FRONT_URL+"/main/**")
                 .authenticated()
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+
 
 
         http.addFilterBefore(new JwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);

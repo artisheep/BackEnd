@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,11 +28,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
     // 인증에서 제외할 url
-    private static final String Exclude_url="/api/test,/api/project/**,/personal/**,/api/user/create,/api/user/login,/api/user/sendmail,/api/user/temp/**," +
-                    "/api/user/prelogin/**,/swagger/**,/v2/api-docs/**,/configuration/ui/**," +
-                    "/swagger-resources/**,/configuration/security/**," +
-                    "/swagger-ui/**,/webjars/**,/swagger-ui.html"+
-                    ",/v2/api-docs,/favicon.ico,/";
+    // 3번째줄 부터는 swagger
+    private static final String Exclude_url="/api/test," +
+            "/login/createUser,/login/checkValidId,/login/login," +
+            "/swagger/**,/v2/api-docs/**,/configuration/ui/**," +
+            "/swagger-resources/**,/configuration/security/**," +
+            "/swagger-ui/**,/webjars/**,/swagger-ui.html";
 
     private static final List<String> EXCLUDE_URL =
             Collections.unmodifiableList(
@@ -41,12 +43,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtHeader = ((HttpServletRequest)request).getHeader(JwtProperties.HEADER_STRING);
+        log.info(request.toString());
+        log.info(response.toString());
         log.info(request.getRequestURI());
-        String[] excludeUrls = Exclude_url.split(",");
-        for (String excludeUrl : excludeUrls) {
-            log.info(excludeUrl+" "+request.getRequestURI());
-        }
+//        log.info(request.getHeader("Authorization").toString());
 
+        String[] excludeUrls = Exclude_url.split(",");
+
+        log.info("EU : "+excludeUrls.length);
+        log.info(request.getRequestURI());
+        for(int i=0;i<excludeUrls.length;i++){
+            log.info("E "+i+" : "+excludeUrls[i] + "  : "+excludeUrls[i].equals(request.getRequestURI()));
+        }
         if (pathMatchesExcludePattern(request.getRequestURI())) {
             // Skip JWT authentication for excluded URLs
             try {
@@ -58,8 +66,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
         else if(request.getHeader("Authorization") == null) {
+            log.info("error");
             request.setAttribute(JwtProperties.HEADER_STRING, "Authorization이 없습니다.");
-            log.info("Authorization needed");
+            System.out.println("Authorization");
             throw new ServletException();
         }
         // header 가 정상적인 형식인지 확인
@@ -72,6 +81,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
 
         Long id = null;
+        String name = null;
 
         if (pathMatchesExcludePattern(request.getRequestURI())) {
             // Skip JWT authentication for excluded URLs
@@ -81,6 +91,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         else {
             try {
                 id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asLong();
+                name = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("name").asString();
                 System.out.println(id);
             } catch (TokenExpiredException e) {
                 e.printStackTrace();
@@ -99,6 +110,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 Request has now have attribute value
  */
         request.setAttribute("id", id);
+        request.setAttribute("name", name);
         filterChain.doFilter(request, response);
     }
     // Filter에서 제외할 URL 설정

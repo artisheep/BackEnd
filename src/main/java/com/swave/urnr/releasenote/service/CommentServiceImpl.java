@@ -81,6 +81,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public HttpResponse deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
 

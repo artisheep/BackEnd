@@ -1,5 +1,6 @@
 package com.swave.urnr.releasenote.responsedto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class CommentContentResponseDTO {
     private String name;
     @ApiModelProperty(value="댓글 내용", example = "ASUS도 너프 해야한다.", required = true)
     private String context;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @ApiModelProperty(value="최종 수정 시각", example = "2023-07-08", required = true)
     private Date lastModifiedDate;
 }
