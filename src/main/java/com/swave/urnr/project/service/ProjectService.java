@@ -1,7 +1,7 @@
 package com.swave.urnr.project.service;
 
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
-import com.swave.urnr.project.responsedto.ProjectContentResponseDto;
+import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 
@@ -15,9 +15,9 @@ public interface ProjectService {
 
     List<ProjectListResponseDTO> loadProjectList(HttpServletRequest request);
 
-    ProjectContentResponseDto loadProject(Long projectId);
+    ProjectContentResponseDTO loadProject(Long projectId);
 
-    ProjectUpdateRequestDTO updateProject(ProjectUpdateRequestDTO projectUpdateRequestDto);
+    ProjectUpdateRequestDTO updateProject(Long projectId, ProjectUpdateRequestDTO projectUpdateRequestDto);
 
     HttpResponse deleteProject(Long projectId);
 
