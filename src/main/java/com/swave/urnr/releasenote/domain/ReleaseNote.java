@@ -32,7 +32,7 @@ public class ReleaseNote {
     private Date lastModifiedDate;
     @Column(name = "release_date")
     private Date releaseDate;
-    @Column(name = "count")
+    @Column(name = "count", columnDefinition = "integer default 0", nullable = false)
     private int count; // 조회수
     @Column(name = "is_updated")
     private boolean isUpdated = false;
@@ -107,5 +107,9 @@ public class ReleaseNote {
         releaseNoteContentListResponseDTO.setSummary(this.summary);
 
         return releaseNoteContentListResponseDTO;
+    }
+
+    public void addViewCount(){
+        this.count ++;
     }
 }

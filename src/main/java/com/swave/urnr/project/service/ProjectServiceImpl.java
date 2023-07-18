@@ -6,7 +6,7 @@ import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
-import com.swave.urnr.project.responsedto.ProjectContentResponseDto;
+import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
 import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.user.domain.User;
@@ -55,10 +55,12 @@ public class ProjectServiceImpl implements ProjectService {
         log.info(project.getDescription().toString());
 
         //유저리스트 받아서 설정
-        project.setUserInProjectList(new ArrayList<>());
+        project.setUserInProjectList(new ArrayList<>()); //빌더에 넣어보기
         log.info(projectCreateRequestDto.getUserId().toString());
         //projectRequestDto.getUserId()
         User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
+        //user대신에 명확한 변수명 사용 manager?
+        
         //UserInProject.setUserInProject(new ArrayList<>());
         //builder를 이용한 userInProject 생성
 
@@ -73,6 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
         //리스트형식에서 삽입을 위한 list생성 빈칸생성은 아닌듯
         //유저의 프로젝트 리스트를 가져와서 추가해서 넣어줌 기존에 유저가 가입된 프로젝트 리스트
         ArrayList<UserInProject> list = new ArrayList<>(user.getUserInProjectList());
+        //리스트는 리스트로
 
         //현재 프로젝트 추가
         list.add(userInProject);
@@ -173,7 +176,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .orElseThrow(NoSuchFieldError::new);
             List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(project.getId());
             int count = userInProjectRepository.countMember(project.getId());
-            String version = releaseNoteRepository.latestReleseNote((Long)request.getAttribute("id"),project.getId());
+            String version = releaseNoteRepository.latestReleseNote(project.getId());
             log.info(version);
             System.out.println(version+(Long)request.getAttribute("id")+project.getId());
             projectList.add(new ProjectListResponseDTO(project.getId(),userInProject.getRole(),project.getName(),project.getDescription(),project.getCreateDate(),count,version));
@@ -188,8 +191,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectContentResponseDto loadProject(Long projectId) {
-        ProjectContentResponseDto getproject = new ProjectContentResponseDto();
+    public ProjectContentResponseDTO loadProject(Long projectId) {
+        ProjectContentResponseDTO getproject = new ProjectContentResponseDTO();
         Project project = projectRepository.findById(projectId).get();
         getproject.setId(project.getId());
         getproject.setName(project.getName());
@@ -206,9 +209,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectUpdateRequestDTO updateProject(ProjectUpdateRequestDTO projectUpdateRequestDto) {
+    public ProjectUpdateRequestDTO updateProject(Long projectId, ProjectUpdateRequestDTO projectUpdateRequestDto) {
 
-        Project project = projectRepository.findById(projectUpdateRequestDto.getId()).orElseThrow(null);
+        System.out.println(projectId);
+        Project project = projectRepository.findById(projectId).orElseThrow(null);
 
         project.setName(projectUpdateRequestDto.getName());
         project.setDescription(projectUpdateRequestDto.getDescription());
@@ -219,7 +223,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         for (Long deleteUserId : projectUpdateRequestDto.getDeleteUsers()){
-            int delete = userInProjectRepository.deleteUser(projectUpdateRequestDto.getId(),deleteUserId);
+            int delete = userInProjectRepository.deleteUser(projectId,deleteUserId);
             userInProjectRepository.flush();
         }
 

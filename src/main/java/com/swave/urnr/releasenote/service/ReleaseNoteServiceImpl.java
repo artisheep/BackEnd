@@ -3,6 +3,8 @@ package com.swave.urnr.releasenote.service;
 import com.swave.urnr.chatgpt.service.ChatGPTService;
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
+import com.swave.urnr.releasenote.domain.SeenCheck;
+import com.swave.urnr.releasenote.repository.SeenCheckRepository;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
 import com.swave.urnr.releasenote.domain.Comment;
@@ -20,16 +22,19 @@ import com.swave.urnr.util.http.HttpResponse;
 import com.swave.urnr.util.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @EnableTransactionManagement
 public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteService{
 
@@ -40,6 +45,9 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
     private final UserRepository userRepository;
     private final UserInProjectRepository userInProjectRepository;
     private final ChatGPTService chatGPTService;
+    private final SeenCheckRepository seenCheckRepository;
+
+    private final EntityManager em;
 
     @Override
     @Transactional
@@ -57,6 +65,8 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         NoteBlock noteBlock = NoteBlock.builder()
                 .noteBlockContext(releaseNoteCreateRequestDTO.getContent())
                 .build();
+
+        noteBlockRepository.save(noteBlock);
 
 
 //        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
@@ -76,9 +86,8 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
                 .commentList(new ArrayList<Comment>())
                 .build();
 
-        noteBlock.setReleaseNote(releaseNote);
         releaseNoteRepository.save(releaseNote);
-        noteBlockRepository.save(noteBlock);
+        noteBlock.setReleaseNote(releaseNote);
 
         releaseNoteRepository.flush();
         noteBlockRepository.flush();
@@ -105,7 +114,13 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
     }
 
     @Override
-    public ReleaseNoteContentResponseDTO loadReleaseNote(Long releaseNoteId){
+    public ReleaseNoteContentResponseDTO loadReleaseNote(HttpServletRequest request, Long releaseNoteId){
+        UserInProject userInProject = releaseNoteRepository.findUserInProjectByUserIdAndReleaseNoteId((Long) request.getAttribute("id"), releaseNoteId);
+
+        if(userInProject == null){
+            throw new AccessDeniedException("해당 프로젝트의 접근 권한이 없습니다.");
+        }
+
         ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
@@ -124,10 +139,12 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = releaseNote.makeReleaseNoteContentDTO();
         releaseNoteContentResponseDTO.setComment(commentContentList);
 
+        increaseViewCount(releaseNoteId);
+        seenCheck(request, releaseNote, userInProject);
+
         return releaseNoteContentResponseDTO;
     }
 
-    //todo : user의 정보를 세션에서 받아와서 user field를 채울 것 (세션/토큰 구현 후)
     @Override
     @Transactional
     public HttpResponse updateReleaseNote(HttpServletRequest request, ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO){
@@ -182,6 +199,7 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
     };
 
     @Override
+    @Transactional
     public HttpResponse deleteReleaseNote(Long releaseNoteId){
         releaseNoteRepository.deleteById(releaseNoteId);
 
@@ -189,5 +207,37 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
                 .message("Release Note Deleted")
                 .description("Release Note ID : " + releaseNoteId + " Deleted")
                 .build();
+    }
+
+    @Override
+    public ReleaseNoteContentResponseDTO loadRecentReleaseNote(HttpServletRequest request){
+        ReleaseNote releaseNote = releaseNoteRepository.findMostRecentReleaseNote((Long) request.getAttribute("id"));
+
+        return releaseNote.makeReleaseNoteContentDTO();
+    }
+
+    @Override
+    public void increaseViewCount(Long releaseNoteId){
+        ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
+                .orElseThrow(NoSuchElementException::new);
+        releaseNote.addViewCount();
+        releaseNoteRepository.flush();
+    }
+
+    @Override
+    @Transactional
+    public void seenCheck(HttpServletRequest request, ReleaseNote releaseNote, UserInProject userInProject){
+        if(seenCheckRepository.findByUserInProjectIdAndReleaseNoteId(userInProject.getId(), releaseNote.getId()) != null) {
+            return;
+        }
+
+        SeenCheck seenCheck = SeenCheck.builder()
+                .userName((String) request.getAttribute("name"))
+                .releaseNote(releaseNote)
+                .userInProject(userInProject)
+                .build();
+
+        seenCheckRepository.save(seenCheck);
+        seenCheckRepository.flush();
     }
 }
