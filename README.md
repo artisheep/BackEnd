@@ -1,29 +1,31 @@
-# 우리누리 백엔드 레파지토리
+# SWAVE Project - URINURI
 
-## 우리누리란?
+---
 
- 우리누리는 회사나 팀과 같은 조직 내에서 릴리즈 노트를 공유하는 과정을 간소화하도록 설계된 강력하고 효율적인 사내 릴리즈 노트 공유 시스템입니다. 소프트웨어 개발 팀, 제품 관리 팀 및 릴리즈  정보를 전달해야 하는 다른 그룹에 관계없이 우리누리는 워크플로우를 단순화하고 최적화시킬 수 있습니다
+### Introduction
 
-## 레퍼지토리 구성
+URINURI is a powerful and efficient in-house release note sharing system designed to streamline the process of sharing release notes within your organization. Whether you are a software development team, a product management team, or any other group that needs to communicate release information, URINURI is here to simplify and enhance your workflow.
 
-해당 레퍼지토리에서는 우리누리 프로젝트에서 사용된 스프링 부트 서버의 코드들이 저장되어 있습니다. 또한, 주요 기능들 및 컨트롤러 여부를 기준으로 구성들으로 나누어 쉬운 접근이 가능하도록 구성되어 있습니다.
-## 컨트롤러 보유 레퍼지토리
+---
+## Repository Structure
+This repository contains the code for the Spring Boot server used in the OurNuri project. It is structured to facilitate easy access based on the main features and whether they have controllers.
+## Repositories with Controllers
 ### chatgpt 
-챗지피티 api를 통하여 구현한 기능들과 관련된 코드들이 저장되어 있습니다.
+This repository contains the code related to the functionalities implemented through the ChatGPT API.
 ### project
-프로젝트 관리와 관련된 코드들이 저장되어 있습니다.
+This repository contains the code related to project management.
 ### releasenote
-릴리즈 노트 및 댓글 시스템과 관련된 코드들이 저장되어 있습니다.
+This repository contains the code related to release notes and comment systems.
 ### user 
-사용자와 그 관리에 관련된 기능들을 구현한 코드들이 저장되어 있습니다.
-## 컨트롤러 미보유 레파지토리  
+This repository contains the code related to user management and associated functionalities.
+## Repositories without Controllers
 ### util 
-컨트롤러는 없으나, 다른 기능들과 상호작용하거나 재사용성이 있는 코드들이 저장되어 있습니다.  
+This repository contains code that interacts with other functionalities or has reusability, although it does not have controllers.
 ### 
 
 
-### 커뮤니티 
+### Community
 
-💬 [ 우리누리 노션 커뮤니티 링크입니다.](https://www.notion.so/dogfactory/6ecf52d6df0c40d2b54326502b0fa1cb?v=0135a9ffc7d74984be969a94061b91cd)
+💬 [Join the #URINURI Notion Community!](https://www.notion.so/dogfactory/6ecf52d6df0c40d2b54326502b0fa1cb?v=0135a9ffc7d74984be969a94061b91cd)
 
-💬 [ 우리누리 지라 커뮤니티 링크입니다.](https://swavejira.atlassian.net/jira/core/projects/REL/board)
+💬 [Join the #URINURI Jira Community!](https://swavejira.atlassian.net/jira/core/projects/REL/board)
