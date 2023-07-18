@@ -16,11 +16,11 @@ public class ReleaseNoteCustomRepositoryImpl implements ReleaseNoteCustomReposit
 
 
     @Override
-    public String latestReleseNote(Long userId, Long projectId) {
+    public String latestReleseNote( Long projectId) {
         return jpaQueryFactory
                 .select(releaseNote.version)
                 .from(releaseNote)
-                .where(releaseNote.user.id.eq(userId).and(releaseNote.project.id.eq(projectId)))
+                .where(releaseNote.project.id.eq(projectId))
                 .orderBy(releaseNote.id.desc())
                 .fetchFirst();
     }

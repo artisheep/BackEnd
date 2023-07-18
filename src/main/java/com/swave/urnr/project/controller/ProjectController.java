@@ -74,8 +74,8 @@ public class ProjectController {
     }
 
 
-
-    //@DeleteMapping("/delete/{projectId}")
-    //@SQLDelete()
-    //QUERY DSL
+    //검색
+    //이름
+    //프로젝트 검색
+    //인덱스 생성
 }

@@ -19,7 +19,7 @@ import java.util.Date;
 @ApiModel(value = "프로젝트 싹다 가져오는 DTO")
 public class ProjectListResponseDTO {
 
-    @ApiModelProperty(value="프로젝트 ID", example = "Wave Form", required = true)
+    @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
     Long id;
 
     @ApiModelProperty(value="팀원 역할", example = "0:구독자 1:개발자 2:매니저", required = true)
