@@ -2,6 +2,7 @@ package com.swave.urnr.releasenote.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swave.urnr.releasenote.domain.Comment;
+
 import static com.swave.urnr.releasenote.domain.QComment.comment;
 import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 

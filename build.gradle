@@ -67,6 +67,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail:2.2.6.RELEASE'
     implementation 'javax.mail:javax.mail-api'
     implementation 'org.springframework:spring-context-support'
+
+    //mapStruct
+    implementation("org.mapstruct:mapstruct:1.4.2.Final")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.4.2.Final")
 }
 
 tasks.named('test') {
