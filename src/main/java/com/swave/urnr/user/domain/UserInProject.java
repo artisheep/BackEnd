@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -14,8 +16,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-
 @NoArgsConstructor
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user_in_project SET is_deleted = true WHERE user_in_project_id = ?")
 public class UserInProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +37,9 @@ public class UserInProject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    @Column(name = "is_deleted")
+    private boolean isDeleted = Boolean.FALSE;
 
     @Builder
     public UserInProject(UserRole role, User user, Project project) {

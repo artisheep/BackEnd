@@ -22,7 +22,7 @@ public interface UserService {
 
     String initDepartment(HttpServletRequest request, String requestDto) throws UserNotFoundException;
 
-    String getTokenByLogin(HttpServletRequest request, UserLoginServerRequestDTO requestDto) throws UserNotFoundException;
+    String getTokenByLogin( UserLoginServerRequestDTO requestDto) throws UserNotFoundException;
 
     ResponseEntity<String> setTemporaryPassword(UserValidateEmailDTO request) throws Exception;
 
