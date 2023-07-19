@@ -49,14 +49,15 @@ public class ProjectServiceImpl implements ProjectService {
                 .name(projectCreateRequestDto.getProjectName())
                 .description(projectCreateRequestDto.getDescription())
                 .createDate(new Date())
+                .userInProjectList(new ArrayList<>())
                 .build();
 
         log.info(request.toString());
         log.info(project.getDescription().toString());
 
         //유저리스트 받아서 설정
-        project.setUserInProjectList(new ArrayList<>()); //빌더에 넣어보기
-        log.info(projectCreateRequestDto.getUserId().toString());
+        //project.setUserInProjectList(new ArrayList<>()); //빌더에 넣어보기
+        //log.info(projectCreateRequestDto.getUserId().toString());
         //projectRequestDto.getUserId()
         User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
         //user대신에 명확한 변수명 사용 manager?
@@ -66,7 +67,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         //유저인 프로젝트 생성
         //todo:워너비는 유저인 프로젝트를 크리에이트 하는 것이 아닌 프로젝트 생성시 자동으로 생성되게 하는 것이 아닌지?
-        UserInProject userInProject = com.swave.urnr.user.domain.UserInProject.builder()
+        UserInProject userInProject = UserInProject.builder()
                 .role(UserRole.Manager)
                 .user(user)
                 .project(project)
@@ -192,12 +193,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectContentResponseDTO loadProject(Long projectId) {
-        ProjectContentResponseDTO getproject = new ProjectContentResponseDTO();
         Project project = projectRepository.findById(projectId).get();
+        ProjectContentResponseDTO getproject = ProjectContentResponseDTO.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .createDate(project.getCreateDate())
+                .build();
+        /*
+
         getproject.setId(project.getId());
         getproject.setName(project.getName());
         getproject.setDescription(project.getDescription());
-        getproject.setCreateDate(project.getCreateDate());
+        getproject.setCreateDate(project.getCreateDate());*/
         /*
         List<ProjectRequestDto> loadAll = new ArrayList<>();
         for (Project project : projectRequestDtos){
@@ -257,7 +265,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         projectRepository.deleteById(projectId);
         return HttpResponse.builder()
-                .message("Project Created")
+                .message("Project Deleted")
                 .description("Project Id "+ projectId +" deleted")
                 .build();
     }

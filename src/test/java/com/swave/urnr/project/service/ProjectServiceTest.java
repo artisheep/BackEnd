@@ -4,12 +4,17 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
+import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
+import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
+import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 import com.swave.urnr.user.domain.User;
+import com.swave.urnr.user.domain.UserInProject;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.repository.UserInProjectRepository;
 import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.user.requestdto.UserLoginServerRequestDTO;
 import com.swave.urnr.user.service.UserService;
+import com.swave.urnr.util.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,9 +29,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,20 +61,22 @@ class ProjectServiceTest {
     @Autowired
     UserRepository userRepository;
 
+    MockHttpServletRequest request;
+
     @BeforeEach
     void setUp() throws UserNotFoundException {
         User user = User.builder()
                 .name("kang")
-                .email("korea@naver.com")
+                .email("admin@naver.com")
                 .provider("server")
-                .password("1236")
+                .password("1234")
                 .build();
         userRepository.save(user);
 
         UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO();
         userLoginServerRequestDTO.setEmail(user.getEmail());
         userLoginServerRequestDTO.setPassword(user.getPassword());
-        String token = userService.getTokenByLogin(userLoginServerRequestDTO);
+        //String token = userService.getTokenByLogin(userLoginServerRequestDTO);
 
         User user2 = User.builder()
                 .name("kim")
@@ -99,9 +113,17 @@ class ProjectServiceTest {
 
         userRepository.save(user5);
 
+        MockHttpSession httpSession = new MockHttpSession();
+        request = new MockHttpServletRequest();
+        request.setSession(httpSession);
+        request.setAttribute("id", 1L);
+        request.setAttribute("username", "kang");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
     }
 
     @Test
+    @Transactional
     void createProject() {
         //테스트 코드는 무언가를 받을 필요가 없나?
         System.out.println("시작");
@@ -110,30 +132,101 @@ class ProjectServiceTest {
                 .description("굳잡")
                 .build();
 
-        Project project = Project.builder()
-                .name(projectCreateRequestDTO.getProjectName())
-                .description(projectCreateRequestDTO.getDescription())
-                .createDate(new Date())
-                .build();
+        List<Long> users = new ArrayList<>(){
+            {
+                add(2L);
+                add(3L);
+                add(4L);
+            }
+        };
+        projectCreateRequestDTO.setUsers(users);
+
+        //projectCreateRequestDTO.setUserId((Long)request.getAttribute("id"));
+
+        HttpResponse httpResponse = projectService.createProject(request,projectCreateRequestDTO);
 
 
-        assertEquals(project.getName(),"SwaveForm");
-        assertEquals(project.getDescription(),"굳잡");
+        assertEquals(httpResponse.getDescription(),"Project Id 10 created");
+
+        Pattern pattern = Pattern.compile("\\d+"); // Matches one or more digits
+        Matcher matcher = pattern.matcher(httpResponse.getDescription());
+        if (matcher.find()) {
+            String numberString = matcher.group(); // Extract the matched digits as a string
+            long number = Long.parseLong(numberString); // Convert the string to an integer
+
+            Project project = projectRepository.findById(number).get();
+            //assertEquals(project.getId(),"9");
+            assertEquals(project.getName(),"SwaveForm");
+            assertEquals(project.getDescription(),"굳잡");
+            //assertEquals(project.getId(),"8");
+            
+            //assertEquals(number,"8");
+        }
+
+
     }
 
     @Test
     void loadProjectList() {
+        List<ProjectListResponseDTO> projectListResponseDTOList = projectService.loadProjectList(request);
+
+
+
+        assertEquals(projectListResponseDTOList.get(0).getName(),"니거무라");
+        assertEquals(projectListResponseDTOList.get(0).getDescription(),"이거도");
+        assertEquals(projectListResponseDTOList.get(0).getId(),3L);
     }
 
     @Test
     void loadProject() {
+        Long projectId = 3L;
+        ProjectContentResponseDTO projectContentResponseDTO =  projectService.loadProject(projectId);
+
+        assertEquals(projectContentResponseDTO.getName(),"니거무라");
+        assertEquals(projectContentResponseDTO.getDescription(),"이거도");
+        assertEquals(projectContentResponseDTO.getId(),3L);
     }
 
     @Test
     void updateProject() {
+        Long projectId = 3L;
+
+        List<Long> deleteUsers = new ArrayList<>(){
+            {
+                add(4L);
+            }
+        };
+        List<Long> updateUsers = new ArrayList<>(){
+            {
+
+                add(66L);
+            }
+        };
+
+        ProjectUpdateRequestDTO projectUpdateRequestDTO = ProjectUpdateRequestDTO.builder()
+                .name("집가고싶다")
+                .description("안녕하세요")
+                .deleteUsers(deleteUsers)
+                .updateUsers(updateUsers)
+                .build();
+
+        ProjectUpdateRequestDTO projectUpdateResponseDTO = projectService.updateProject(projectId,projectUpdateRequestDTO);
+
+
+        assertEquals(projectUpdateResponseDTO.getName(),"집가고싶다");
+        assertEquals(projectUpdateResponseDTO.getDescription(),"안녕하세요");
+        assertEquals(projectUpdateResponseDTO.getDeleteUsers(),projectUpdateRequestDTO.getDeleteUsers());
+        assertEquals(projectUpdateResponseDTO.getUpdateUsers(),projectUpdateRequestDTO.getUpdateUsers());
+
+        
     }
 
     @Test
     void deleteProject() {
+
+        Long projectId = 3L;
+        HttpResponse httpResponse = projectService.deleteProject(projectId);
+        assertEquals(httpResponse.getDescription(),"Project Id 3 deleted");
+
     }
 }

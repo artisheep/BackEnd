@@ -1,6 +1,7 @@
 package com.swave.urnr.project.domain;
 
 import com.swave.urnr.releasenote.domain.ReleaseNote;
+import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
 import jdk.jfr.Timestamp;
 
@@ -49,9 +50,10 @@ public class Project {
 
 
     @Builder
-    public Project(String name, String description, Date createDate) {
+    public Project(String name, String description, Date createDate, List<UserInProject> userInProjectList) {
         this.name = name;
         this.description = description;
         this.createDate = createDate;
+        this.userInProjectList = userInProjectList;
     }
 }

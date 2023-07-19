@@ -3,6 +3,7 @@ package com.swave.urnr.project.responsedto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -16,6 +17,7 @@ import java.util.Date;
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
 @ApiModel(value = "프로젝트 하나 가져오는 DTO")
+@Builder
 public class ProjectContentResponseDTO {
 
     @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
@@ -29,6 +31,8 @@ public class ProjectContentResponseDTO {
 
     @ApiModelProperty(value="프로젝트 생성날짜", example = "자동생성", required = true)
     Date createDate;
+
+
 
 
 
