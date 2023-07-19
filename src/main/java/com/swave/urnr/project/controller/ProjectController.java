@@ -5,6 +5,7 @@ import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 
+import com.swave.urnr.project.responsedto.ProjectManagementContentResponseDTO;
 import com.swave.urnr.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,12 @@ public class ProjectController {
     @GetMapping("/load/one/{projectId}")
     public ProjectContentResponseDTO loadProject(@PathVariable Long projectId){
         return projectService.loadProject(projectId);
+    }
+
+    @Operation(summary="프로젝트 하나 가져오기(관리페이지)", description="프로젝트ID를 가져와 프로젝트와 유저정보를 표시합니다.")
+    @GetMapping("/manage/{projectId}")
+    public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request, @PathVariable Long projectId){
+        return projectService.loadManagementProject(request,projectId);
     }
 
     //멤버 편집

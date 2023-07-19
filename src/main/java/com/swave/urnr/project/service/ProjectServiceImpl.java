@@ -7,12 +7,14 @@ import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
+import com.swave.urnr.project.responsedto.ProjectManagementContentResponseDTO;
 import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
 import com.swave.urnr.user.repository.UserInProjectRepository;
 import com.swave.urnr.user.repository.UserRepository;
+import com.swave.urnr.user.responsedto.UserMemberInfoResponseDTO;
 import com.swave.urnr.util.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import com.swave.urnr.util.http.HttpResponse;
@@ -213,6 +215,30 @@ public class ProjectServiceImpl implements ProjectService {
             loadAll.add(new ProjectRequestDto(project.getId(),project.getName(),project.getDescription(),project.getCreateDate()));
         }*/
         return getproject;
+    }
+
+    @Override
+    public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request,Long projectId) {
+        //유저가 해당 프로젝트 멤버인지 확인 UserInList확인
+        //유저가 관리자인지 확인 UserInList확인
+        Project project = projectRepository.findById(projectId).get();
+        User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
+        List<UserMemberInfoResponseDTO> getMembers = userInProjectRepository.getMembers(projectId);
+
+        log.info(getMembers.get(0).getUser_Name());
+        //유저인프로젝트 유저 조인 유저인프로젝트에나온 프로젝트 아이디로 유저 셀렉트트
+        ProjectManagementContentResponseDTO projectManagementContentResponseDTO = ProjectManagementContentResponseDTO.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .createDate(project.getCreateDate())
+                .managerId((Long)request.getAttribute("id"))
+                .managerName(user.getUsername())
+                .managerDepartment(user.getDepartment())
+                .teamMembers(getMembers)
+                .build();
+
+        return projectManagementContentResponseDTO;
     }
 
     @Override

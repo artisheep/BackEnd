@@ -1,24 +1,23 @@
 package com.swave.urnr.project.responsedto;
 
+import com.swave.urnr.user.domain.User;
+import com.swave.urnr.user.responsedto.UserMemberInfoResponseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Where(clause = "is_deleted = false")
-//@SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
-@ApiModel(value = "프로젝트 하나 가져오는 DTO")
+@ApiModel(value = "프로젝트 하나 가져오는 DTO(관리페이지용)")
 @Builder
-public class ProjectContentResponseDTO {
+public class ProjectManagementContentResponseDTO {
 
     @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
     Long id;
@@ -32,8 +31,15 @@ public class ProjectContentResponseDTO {
     @ApiModelProperty(value="프로젝트 생성날짜", example = "자동생성", required = true)
     Date createDate;
 
+    @ApiModelProperty(value="프로젝트 관리자ID", example = "1", required = true)
+    Long managerId;
 
+    @ApiModelProperty(value="프로젝트 관리자 이름", example = "Kang", required = true)
+    String managerName;
 
+    @ApiModelProperty(value="프로젝트 관리자 부서", example = "개발1팀", required = true)
+    String managerDepartment;
 
-
+    @ApiModelProperty(value="프로젝트 참여자", example = "참가자 리스트", required = true)
+    List<UserMemberInfoResponseDTO> teamMembers;
 }
