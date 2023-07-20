@@ -64,7 +64,6 @@ public class ProjectController {
     }
 
     //멤버 편집
-
     @Operation(summary="프로젝트 수정", description="프로젝트ID를 받아 프로젝트를 수정합니다. 멤버를 추가하거나 제거할 수 있습니다.")
     @PutMapping("/update/{projectId}")
     public ProjectUpdateRequestDTO updateProject(@PathVariable Long projectId,@RequestBody ProjectUpdateRequestDTO projectUpdateRequestDto){

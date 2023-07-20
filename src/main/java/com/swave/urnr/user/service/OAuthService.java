@@ -38,7 +38,7 @@ public class OAuthService {
             grantType = "authorization_code";
             clientId = "4646a32b25c060e42407ceb8c13ef14a";
             clientSecret = "AWyAH1M24R9EYfUjJ1KCxcsh3DwvK8F7";
-            redirectUri = "http://127.0.0.1:5173/oauth/callback/kakao";
+            redirectUri = "http://localhost:3000/oauth/callback/kakao";
         } else {
             throw new IllegalArgumentException("Invalid Provider: " + provider);
         }
