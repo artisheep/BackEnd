@@ -177,7 +177,7 @@ public class ProjectServiceImpl implements ProjectService {
         for(UserInProject userInProject: userInProjectList){
             Project project = projectRepository.findById(userInProject.getProject().getId())
                     .orElseThrow(NoSuchFieldError::new);
-            List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(project.getId());
+            //List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(project.getId());
             int count = userInProjectRepository.countMember(project.getId());
             String version = releaseNoteRepository.latestReleseNote(project.getId());
             log.info(version);
@@ -225,7 +225,8 @@ public class ProjectServiceImpl implements ProjectService {
         User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
         List<UserMemberInfoResponseDTO> getMembers = userInProjectRepository.getMembers(projectId);
 
-        log.info(getMembers.get(0).getUser_Name());
+        //널에러 즉 팀원이 없을 때 해결하기
+        //log.info(getMembers.get(0).getUser_Name());
         //유저인프로젝트 유저 조인 유저인프로젝트에나온 프로젝트 아이디로 유저 셀렉트트
         ProjectManagementContentResponseDTO projectManagementContentResponseDTO = ProjectManagementContentResponseDTO.builder()
                 .id(project.getId())
@@ -257,7 +258,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         for (Long deleteUserId : projectUpdateRequestDto.getDeleteUsers()){
-            int delete = userInProjectRepository.deleteUser(projectId,deleteUserId);
+            int delete = userInProjectRepository.deleteUser(deleteUserId,projectId);
             userInProjectRepository.flush();
         }
 
@@ -295,7 +296,8 @@ public class ProjectServiceImpl implements ProjectService {
                 .description("Project Id "+ projectId +" deleted")
                 .build();
     }
-    //삭제 소프트들리트를 믿어보자
+
+
 
 
 }

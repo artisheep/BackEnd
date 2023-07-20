@@ -9,9 +9,11 @@ public interface UserInProjectCustomRepository {
 
     Integer countMember(Long projectId);
 
-    Integer deleteUser(Long projectId, Long deleteUserId);
+    Integer deleteUser( Long deleteUserId,Long projectId);
 
     List<UserMemberInfoResponseDTO> getMembers(Long projectId);
+
+    Integer dropProject(Long userId, Long projectId);
 
 
 }

@@ -36,7 +36,7 @@ public class UserInProjectCustomRepositoryImpl implements UserInProjectCustomRep
     }
 
     @Override
-    public Integer deleteUser(Long projectId, Long deleteUserId) {
+    public Integer deleteUser( Long deleteUserId, Long projectId) {
         return Math.toIntExact(queryFactory
                 .delete(userInProject)
                 .where(userInProject.project.id.eq(projectId).and(userInProject.user.id.eq(deleteUserId)))
@@ -52,5 +52,13 @@ public class UserInProjectCustomRepositoryImpl implements UserInProjectCustomRep
                 .join(user).on(userInProject.user.id.eq(user.user.id))
                 .where(userInProject.project.id.eq(projectId).and(userInProject.role.eq(UserRole.Developer)))
                 .fetch();
+    }
+
+    @Override
+    public Integer dropProject(Long userId, Long projectId) {
+        return Math.toIntExact(queryFactory.update(userInProject)
+                .set(userInProject.isDeleted, true)
+                .where(userInProject.project.id.eq(projectId).and(userInProject.user.id.eq(userId)))
+                .execute());
     }
 }

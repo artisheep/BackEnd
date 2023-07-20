@@ -17,15 +17,15 @@ public class UserMemberInfoResponseDTO {
     Long user_Id;
 
     @ApiModelProperty(value="유저(멤버) 이름", example = "전강훈", required = true)
-    String user_Name;
+    String username;
 
     @ApiModelProperty(value="유저(멤버) 소속", example = "가천대학교", required = true)
     String user_Department;
 
     @QueryProjection
-    public UserMemberInfoResponseDTO(Long user_Id, String user_Name, String user_Department) {
+    public UserMemberInfoResponseDTO(Long user_Id, String username, String user_Department) {
         this.user_Id = user_Id;
-        this.user_Name = user_Name;
+        this.username = username;
         this.user_Department = user_Department;
     }
 }
