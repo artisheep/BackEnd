@@ -1,8 +1,7 @@
-	<div align="center">
-	<img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Java&logoColor=white" />
-	<img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=HTML5&logoColor=white" />
-	<img src="https://img.shields.io/badge/MySql-4479A1?style=flat&logo=CSS3&logoColor=white" />
-</div>
+ <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat&logo=Spring&logoColor=white"/>
+ <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/>
+ <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white"/>
+
 SWAVE Project - URINURI
 Introduction
 URINURI is a powerful and efficient in-house release note sharing system designed to streamline the process of sharing release notes within your organization. Whether you are a software development team, a product management team, or any other group that needs to communicate release information, URINURI is here to simplify and enhance your workflow.
