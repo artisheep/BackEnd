@@ -46,16 +46,6 @@ class ProjectServiceTest {
 
     @BeforeEach
     void setUp() {
-        User user = User.builder()
-                .name("kang")
-                .email("korea@naver.com")
-                .provider("server")
-                .password("1236")
-                .department("영업")
-                .build();
-        userRepository.save(user);
-
-        String token = userService.getLogin(user);
     }
 
     @Test

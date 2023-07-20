@@ -147,11 +147,11 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
 
     @Override
     @Transactional
-    public HttpResponse updateReleaseNote(HttpServletRequest request, ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO){
+    public HttpResponse updateReleaseNote(HttpServletRequest request, Long releaseNoteId, ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO){
         User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
 
-        ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteUpdateRequestDTO.getReleaseNoteId())
+        ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
         releaseNote.setVersion(releaseNoteUpdateRequestDTO.getVersion());
@@ -232,7 +232,7 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         }
 
         SeenCheck seenCheck = SeenCheck.builder()
-                .userName((String) request.getAttribute("name"))
+                .userName((String) request.getAttribute("username"))
                 .releaseNote(releaseNote)
                 .userInProject(userInProject)
                 .build();
