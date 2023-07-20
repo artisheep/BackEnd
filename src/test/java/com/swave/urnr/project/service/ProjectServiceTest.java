@@ -64,6 +64,7 @@ class ProjectServiceTest {
     MockHttpServletRequest request;
 
     @BeforeEach
+
     void setUp() throws UserNotFoundException {
         User user = User.builder()
                 .name("kang")

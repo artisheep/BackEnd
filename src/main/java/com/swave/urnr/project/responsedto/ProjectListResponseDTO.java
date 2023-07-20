@@ -1,6 +1,7 @@
 package com.swave.urnr.project.responsedto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.swave.urnr.util.type.UserRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
