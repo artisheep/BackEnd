@@ -1,7 +1,7 @@
 package com.swave.urnr.user.controller;
 
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
-import com.swave.urnr.util.common.ResponseDto;
+import com.swave.urnr.util.common.ResponseDTO;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.requestdto.*;
 import com.swave.urnr.user.service.UserService;
@@ -31,7 +31,7 @@ public class UserController {
 
     @Operation(summary="유저 계정 생성", description="유저 정보를 생성합니다.")
     @PostMapping("/prelogin/create")
-    public ResponseEntity<ResponseDto> createAccountByEmail(@RequestBody @Valid UserRegisterRequestDto request) {
+    public ResponseEntity<ResponseDTO> createAccountByEmail(@RequestBody @Valid UserRegisterRequestDTO request) {
         return userService.createAccountByEmail(request);
     }
 
@@ -51,7 +51,7 @@ public class UserController {
     @Operation(summary="사용자 계정 수정", description="로그인한 사용자로부터 받은 정보로 사용자의 계정 정보를 수정합니다.")
     @PutMapping("/update")
     @SecurityRequirement(name = "Authorization")
-    public  ResponseEntity<String> updateUser(HttpServletRequest request, @RequestBody UserUpdateAccountRequestDto requestDto)  {
+    public  ResponseEntity<String> updateUser(HttpServletRequest request, @RequestBody UserUpdateAccountRequestDTO requestDto)  {
         return userService.updateUser(request, requestDto);
     }
 
@@ -59,7 +59,7 @@ public class UserController {
     @Operation(summary="사용자 소속 등록", description="로그인한 사용자로부터 받은 정보로 사용자의 계정 정보를 수정합니다.")
     @PatchMapping("/department")
     @SecurityRequirement(name = "JWT 토큰")
-    public  ResponseEntity<ResponseDto> initDepartment(HttpServletRequest request, @RequestBody UserDepartmentRequestDto requestDto) throws UserNotFoundException {
+    public  ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, @RequestBody UserDepartmentRequestDTO requestDto) throws UserNotFoundException {
         return userService.initDepartment(request, requestDto);
     }
     @Operation(summary="이메일 로그인", description="입력된 이메일 계정과 비밀번호가 동일하면 토큰값을 반환합니다.")

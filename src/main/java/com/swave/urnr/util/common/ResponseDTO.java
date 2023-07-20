@@ -8,14 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
  @Data
 @ApiModel(value = "응답 전송용 DTO")
 @AllArgsConstructor
  @Builder
 @NoArgsConstructor
-public class ResponseDto<T> {
+public class ResponseDTO<T> {
 
     @ApiModelProperty(value="HTTP 상태 코드", example = "404", required = true)
     @ApiParam(value = "상태 코드", required = true, example = "상태 코드를 입력하세요")

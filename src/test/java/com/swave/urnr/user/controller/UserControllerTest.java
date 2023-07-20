@@ -1,14 +1,11 @@
 package com.swave.urnr.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.user.requestdto.*;
-import com.swave.urnr.user.responsedto.UserListResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +20,9 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -53,7 +46,7 @@ class UserControllerTest {
     @BeforeEach
     @DisplayName("유저 생성 테스트")
     void setAccountToServer() throws Exception {
-        UserRegisterRequestDto userRegisterRequestDto = UserRegisterRequestDto.builder()
+        UserRegisterRequestDTO userRegisterRequestDto = UserRegisterRequestDTO.builder()
                 .email("corgiwalke@gmail.com")
                 .name("전강훈")
                 .password("1q2w3e4r")
@@ -84,7 +77,7 @@ class UserControllerTest {
         정상 생성 케이스 및 중복, 그리고 유효성 없는 이메일로 테스트 진행
          */
 
-        UserRegisterRequestDto userRegisterRequestDto = UserRegisterRequestDto.builder()
+        UserRegisterRequestDTO userRegisterRequestDto = UserRegisterRequestDTO.builder()
                 .email("artisheep@naver.com")
                 .name("전강훈")
                 .password("1q2w3e4r")
@@ -103,7 +96,7 @@ class UserControllerTest {
                         .content(json))
                 .andExpect(status().is(409))
                 .andReturn();
-        userRegisterRequestDto = UserRegisterRequestDto.builder()
+        userRegisterRequestDto = UserRegisterRequestDTO.builder()
                 .email("artisheepnavercom")
                 .name("전강훈")
                 .password("1q2w3e4r")
@@ -134,6 +127,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("유저 업데이트 테스트")
     void updateUser() throws Exception{
 
         UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
@@ -147,7 +141,7 @@ class UserControllerTest {
                         .content(json))
                 .andExpect(status().is(200))
                 .andReturn();
-        UserUpdateAccountRequestDto userUpdateAccountRequestDto = UserUpdateAccountRequestDto.builder()
+        UserUpdateAccountRequestDTO userUpdateAccountRequestDto = UserUpdateAccountRequestDTO.builder()
                 .department("Good bye")
                 .password("Seeyou")
                 .name("Ganghoon jeon")
@@ -164,6 +158,7 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("부서 입력 테스트")
     void initDepartment() throws Exception {
 
         UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
@@ -178,7 +173,7 @@ class UserControllerTest {
                 .andExpect(status().is(200))
                 .andReturn();
 
-        UserDepartmentRequestDto userDepartmentRequestDto = UserDepartmentRequestDto.builder()
+        UserDepartmentRequestDTO userDepartmentRequestDto = UserDepartmentRequestDTO.builder()
                 .department("Test")
                 .build();
 
@@ -222,7 +217,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Delete")
+    @DisplayName("삭제 테스트")
     void deleteUser() throws  Exception {
 
         UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()

@@ -1,8 +1,8 @@
 package com.swave.urnr.user.service;
 
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
-import com.swave.urnr.util.common.ResponseDto;
-import com.swave.urnr.user.domain.User;
+import com.swave.urnr.user.responsedto.UserResponseDTO;
+import com.swave.urnr.util.common.ResponseDTO;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.requestdto.*;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +13,13 @@ import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<ResponseDto> createAccountByEmail(UserRegisterRequestDto request);
+    ResponseEntity<ResponseDTO> createAccountByEmail(UserRegisterRequestDTO request);
 
     ResponseEntity<String> getValidationCode(UserValidateEmailDTO request) ;
 
-    ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDto requestDto);
+    ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDTO requestDto);
 
-    ResponseEntity<ResponseDto> initDepartment(HttpServletRequest request, UserDepartmentRequestDto requestDto) ;
+    ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto) ;
 
     ResponseEntity<String> getTokenByLogin(UserLoginServerRequestDTO requestDto) ;
 
@@ -27,7 +27,7 @@ public interface UserService {
 
     ResponseEntity<String> deleteUser(HttpServletRequest request);
 
-    User getUser(HttpServletRequest request) throws UserNotFoundException;
+    UserResponseDTO getUser(HttpServletRequest request) throws UserNotFoundException;
 
     ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request) throws RuntimeException;
 

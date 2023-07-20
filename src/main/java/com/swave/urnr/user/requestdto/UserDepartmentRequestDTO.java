@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "회원소속 입력 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDepartmentRequestDto {
+public class UserDepartmentRequestDTO {
 
     @ApiModelProperty(value="사용자 소속", example = "가천대학교", required = true)
     @ApiParam(value = "소속", required = true, example = "소속을 입력하세요.")

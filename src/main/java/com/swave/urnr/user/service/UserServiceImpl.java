@@ -1,7 +1,8 @@
 package com.swave.urnr.user.service;
 
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
-import com.swave.urnr.util.common.ResponseDto;
+import com.swave.urnr.user.responsedto.UserResponseDTO;
+import com.swave.urnr.util.common.ResponseDTO;
 import com.swave.urnr.util.oauth.JwtProperties;
 import com.swave.urnr.util.oauth.OauthToken;
 import com.swave.urnr.user.domain.User;
@@ -37,13 +38,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<ResponseDto> createAccountByEmail(UserRegisterRequestDto request) {
+    public ResponseEntity<ResponseDTO> createAccountByEmail(UserRegisterRequestDTO request) {
 
-        ResponseDto testDto;
+        ResponseDTO testDto;
         log.info("Email : ", request.getEmail());
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            testDto= ResponseDto.builder()
+            testDto= ResponseDTO.builder()
                     .status(409)
                     .data("The mail already exists")
                     .build();
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         userRepository.flush();
-        testDto= ResponseDto.builder()
+        testDto= ResponseDTO.builder()
                 .status(201)
                 .data("User created")
                 .build();
@@ -71,16 +72,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<ResponseDto> initDepartment(HttpServletRequest request, UserDepartmentRequestDto requestDto)  {
+    public ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto)  {
 
 
 
         Long id = (Long) request.getAttribute("id");
         log.info(id.toString());
 
-        ResponseDto responseDto;
+        ResponseDTO responseDto;
         if (!userRepository.findById(id).isPresent()) {
-            responseDto= ResponseDto.builder()
+            responseDto= ResponseDTO.builder()
                     .status(409)
                     .data("The account does not exists")
                     .build();
@@ -92,7 +93,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             userRepository.flush();
 
-            responseDto= ResponseDto.builder()
+            responseDto= ResponseDTO.builder()
                     .status(409)
                     .data(user.getDepartment())
                     .build();
@@ -115,24 +116,35 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User getUser(HttpServletRequest request) throws UserNotFoundException {
+    public UserResponseDTO getUser(HttpServletRequest request) throws UserNotFoundException {
         Long userCode = (Long) request.getAttribute("id");
         User user = userRepository.findById(userCode).orElseThrow(UserNotFoundException::new);
-        return user;
+        UserResponseDTO result = UserResponseDTO.builder()
+                .department(user.getDepartment())
+                .isDeleted(user.isDeleted())
+                .username(user.getUsername())
+                .id(user.getId())
+                .email(user.getEmail())
+                .provider(user.getProvider())
+                .password(user.getPassword())
+                .build();
+        return result;
     }
+
 
 
     @Override
     public ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request) throws  RuntimeException {
-        User user =null;
+        UserResponseDTO user =null;
         try {
             checkInvalidToken(request);
              user = getUser(request);
-             log.info(user.getEmail());
+             log.info("EMAIL : "+user.getEmail());
         }catch(Exception e)
         {
 
         }
+        log.info("PVD: "+user.getProvider());
         return ResponseEntity.ok().body(user);
     }
 
@@ -177,10 +189,10 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDto requestDto) {
+    public ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDTO requestDto) {
 
 
-        ResponseDto testDto;
+        ResponseDTO testDto;
         Long id = (Long) request.getAttribute("id");
         if(!userRepository.findById(id).isPresent())
         {
