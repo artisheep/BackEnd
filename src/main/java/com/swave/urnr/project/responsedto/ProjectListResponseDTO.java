@@ -1,6 +1,6 @@
 package com.swave.urnr.project.responsedto;
 
-import com.swave.urnr.Util.type.UserRole;
+import com.swave.urnr.util.type.UserRole;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

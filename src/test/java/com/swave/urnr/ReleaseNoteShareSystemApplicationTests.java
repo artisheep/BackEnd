@@ -8,6 +8,7 @@ class ReleaseNoteShareSystemApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
