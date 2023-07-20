@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "로그인 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserLoginServerRequestDTO {
 
     @ApiModelProperty(value="사용자 이메일", example = "artisheep@naver.com", required = true)

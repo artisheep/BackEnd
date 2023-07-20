@@ -22,6 +22,7 @@ TODO: Find how to implement NOTNULL VALIDATE without hardcoding, also need to fi
 @Validated
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserRegisterRequestDto {
     @NotNull
     @Email

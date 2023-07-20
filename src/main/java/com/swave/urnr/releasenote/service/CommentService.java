@@ -11,4 +11,4 @@ public interface CommentService {
     public HttpResponse createComment(HttpServletRequest request, Long releaseNoteId , CommentCreateRequestDTO commentCreateRequestDTO);
     public CommentContentListResponseDTO loadRecentComment(Long projectId);
     public HttpResponse deleteComment(Long commentId);
-}
+} 

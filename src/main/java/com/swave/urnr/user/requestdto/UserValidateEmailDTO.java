@@ -21,6 +21,7 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 @NoArgsConstructor
 @Validated
+@Builder
 public class UserValidateEmailDTO {
     @Email
     @ApiModelProperty(value="사용자 이메일", example = "artisheep@naver.com", required = true)
