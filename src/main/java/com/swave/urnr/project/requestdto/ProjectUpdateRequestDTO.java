@@ -2,6 +2,7 @@ package com.swave.urnr.project.requestdto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,7 @@ public class ProjectUpdateRequestDTO {
     @ApiModelProperty(value="프로젝트 포함 명단", example = "[6]", required = true)
     List<Long> updateUsers;
 
+    @Builder
     public ProjectUpdateRequestDTO( String name, String description, List<Long> deleteUsers, List<Long> updateUsers) {
 
         this.name = name;

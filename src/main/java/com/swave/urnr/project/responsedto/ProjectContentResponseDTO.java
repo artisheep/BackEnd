@@ -1,8 +1,10 @@
 package com.swave.urnr.project.responsedto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -13,9 +15,10 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
+//@Where(clause = "is_deleted = false")
+//@SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
 @ApiModel(value = "프로젝트 하나 가져오는 DTO")
+@Builder
 public class ProjectContentResponseDTO {
 
     @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
@@ -27,8 +30,11 @@ public class ProjectContentResponseDTO {
     @ApiModelProperty(value="프로젝트 세부사항", example = "설문조사 프로그램", required = true)
     String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     @ApiModelProperty(value="프로젝트 생성날짜", example = "자동생성", required = true)
     Date createDate;
+
+
 
 
 

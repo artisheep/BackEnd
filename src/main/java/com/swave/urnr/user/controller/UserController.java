@@ -65,8 +65,8 @@ public class UserController {
     }
     @Operation(summary="일반 로그인", description="입력된 계정과 비밀번호가 동일하면 토큰값을 반환합니다.")
     @PostMapping("/prelogin/login-by-server")
-    public String getTokenByLogin(HttpServletRequest request, @RequestBody UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
-        return userService.getTokenByLogin(request, requestDto);
+    public String getTokenByLogin( @RequestBody UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
+        return userService.getTokenByLogin(requestDto);
     }
 
     @Operation(summary="사용자 계정 삭제", description="사용자의 계정을 삭제합니다.")
