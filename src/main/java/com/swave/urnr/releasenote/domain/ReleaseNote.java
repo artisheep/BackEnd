@@ -1,6 +1,8 @@
 package com.swave.urnr.releasenote.domain;
 
 import com.swave.urnr.project.domain.Project;
+import com.swave.urnr.releasenote.responsedto.BlockContextContentResponseDTO;
+import com.swave.urnr.releasenote.responsedto.NoteBlockContentResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentListResponseDTO;
 import com.swave.urnr.user.domain.User;
@@ -20,7 +22,7 @@ import java.util.List;
 @Data
 @Where(clause = "is_deleted = false")
 @ToString(exclude = {"user", "project", "commentList", "noteBlockList"})
-@SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE comment_id = ?")
+@SQLDelete(sql = "UPDATE release_note SET is_deleted = true WHERE release_note_id = ?")
 @NoArgsConstructor
 public class ReleaseNote {
     @Id @Column(name = "release_note_id")
@@ -49,7 +51,7 @@ public class ReleaseNote {
     private Project project;
 
     // Comment 와 mapping
-    @OneToMany(mappedBy = "releaseNote", fetch = FetchType.LAZY, orphanRemoval = true )
+    @OneToMany(mappedBy = "releaseNote", orphanRemoval = true )
     @Column(name = "comment_id")
     private List<Comment> commentList;
 
@@ -79,17 +81,32 @@ public class ReleaseNote {
 
     public ReleaseNoteContentResponseDTO makeReleaseNoteContentDTO(){
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = new ReleaseNoteContentResponseDTO();
-        ArrayList<String> noteBlockContentList = new ArrayList<>();
+        ArrayList<NoteBlockContentResponseDTO> noteBlockContentList = new ArrayList<>();
 
-        for (NoteBlock noteblock:this.noteBlockList){
-            noteBlockContentList.add(noteblock.getNoteBlockContext());
+        for (NoteBlock noteblock : this.noteBlockList){
+            NoteBlockContentResponseDTO noteBlockContentResponseDTO = new NoteBlockContentResponseDTO();
+
+            ArrayList<BlockContextContentResponseDTO> blockContextContentList = new ArrayList<>();
+            for (BlockContext blockContext : noteblock.getBlockContextList()){
+                BlockContextContentResponseDTO blockContextContentResponseDTO = new BlockContextContentResponseDTO();
+
+                blockContextContentResponseDTO.setContext(blockContext.getContext());
+                blockContextContentResponseDTO.setTag(blockContext.getTag());
+                blockContextContentResponseDTO.setIndex(blockContext.getId());
+
+                blockContextContentList.add(blockContextContentResponseDTO);
+            }
+            noteBlockContentResponseDTO.setLabel(noteblock.getLabel());
+            noteBlockContentResponseDTO.setContexts(blockContextContentList);
+
+            noteBlockContentList.add(noteBlockContentResponseDTO);
         }
 
         releaseNoteContentResponseDTO.setCreator(this.user.getUsername());
         releaseNoteContentResponseDTO.setVersion(this.version);
         releaseNoteContentResponseDTO.setLastModified(this.lastModifiedDate);
         releaseNoteContentResponseDTO.setReleaseDate(this.releaseDate);
-        releaseNoteContentResponseDTO.setContent(noteBlockContentList.toString());
+        releaseNoteContentResponseDTO.setBlocks(noteBlockContentList);
         releaseNoteContentResponseDTO.setCount(this.count);
         releaseNoteContentResponseDTO.setSummary(this.summary);
         //releaseNoteContentDTO.setLiked(this);

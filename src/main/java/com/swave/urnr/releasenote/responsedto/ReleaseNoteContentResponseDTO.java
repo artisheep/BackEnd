@@ -6,8 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ApiModel(value = "릴리즈 노트 하나 가져오 DTO")
@@ -26,10 +26,10 @@ public class ReleaseNoteContentResponseDTO {
     private Date releaseDate;
     @ApiModelProperty(value="세 줄 요약", example = "DELL의 성능을 조정했습니다.", required = true)
     private String summary;
-    @ApiModelProperty(value="릴리즈 노트 내용", example = "DELL의 성능을 조정했습니다.", required = true)
-    private String content;
+    @ApiModelProperty(value="노트 블럭 리스트", required = true)
+    private List<NoteBlockContentResponseDTO> blocks;
     @ApiModelProperty(value="댓글 리스트", required = true)
-    private ArrayList<CommentContentResponseDTO> comment;
+    private List<CommentContentResponseDTO> comment;
     @ApiModelProperty(value="조회수", example = "3", required = true)
     private int count;
     @ApiModelProperty(value="좋아요 수", example = "-1", required = true)

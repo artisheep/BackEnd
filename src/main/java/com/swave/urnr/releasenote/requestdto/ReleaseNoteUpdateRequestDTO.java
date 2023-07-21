@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ApiModel(value = "릴리즈 노트 업데이트 DTO")
@@ -17,6 +18,6 @@ public class ReleaseNoteUpdateRequestDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @ApiModelProperty(value="릴리즈 날짜", example = "2023-07-08", required = true)
     private Date releaseDate;
-    @ApiModelProperty(value="업데이트할 내용", example = "그램을 너프 했습니다.", required = true)
-    private String content;
+    @ApiModelProperty(value="노트 블럭 리스트", required = true)
+    private List<NoteBlockCreateRequestDTO> blocks;
 }
