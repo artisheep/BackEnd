@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getTokenByLogin(HttpServletRequest request, UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
+    public String getTokenByLogin( UserLoginServerRequestDTO requestDto) throws UserNotFoundException {
 
         String email = requestDto.getEmail();
         Optional<User> optionalUser = userRepository.findByEmail(email);

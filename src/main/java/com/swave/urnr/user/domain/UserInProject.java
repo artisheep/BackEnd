@@ -19,6 +19,8 @@ import javax.persistence.*;
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE comment_id = ?")
 @NoArgsConstructor
+@Where(clause = "is_deleted = false")
+@SQLDelete(sql = "UPDATE user_in_project SET is_deleted = true WHERE user_in_project_id = ?")
 public class UserInProject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

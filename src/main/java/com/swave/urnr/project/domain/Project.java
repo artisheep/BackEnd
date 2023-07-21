@@ -1,6 +1,7 @@
 package com.swave.urnr.project.domain;
 
 import com.swave.urnr.releasenote.domain.ReleaseNote;
+import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
 import jdk.jfr.Timestamp;
 
@@ -14,6 +15,8 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import static java.lang.Boolean.FALSE;
 
 //tosting 에러가 나면 @data를 게터세터로 바꾼다
 
@@ -49,9 +52,10 @@ public class Project {
 
 
     @Builder
-    public Project(String name, String description, Date createDate) {
+    public Project(String name, String description, Date createDate, List<UserInProject> userInProjectList) {
         this.name = name;
         this.description = description;
         this.createDate = createDate;
+        this.userInProjectList = userInProjectList;
     }
 }
