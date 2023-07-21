@@ -59,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
 
         return HttpResponse.builder()
                 .message("Comment Created")
-                .description("Comment ID : " + releaseNote.getId() + " Created")
+                .description("Comment ID : " + comment.getId() + " Created")
                 .build();
     }
 

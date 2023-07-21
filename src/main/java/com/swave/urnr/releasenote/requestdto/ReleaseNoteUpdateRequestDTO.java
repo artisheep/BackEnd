@@ -12,8 +12,6 @@ import java.util.Date;
 @ApiModel(value = "릴리즈 노트 업데이트 DTO")
 @NoArgsConstructor
 public class ReleaseNoteUpdateRequestDTO {
-    @ApiModelProperty(value="릴리즈 노트 ID", example = "1.", required = true)
-    private Long releaseNoteId;
     @ApiModelProperty(value="버전 명", example = "1.0.1", required = true)
     private String version;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
