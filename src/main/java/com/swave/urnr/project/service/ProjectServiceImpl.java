@@ -7,12 +7,14 @@ import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
+import com.swave.urnr.project.responsedto.ProjectManagementContentResponseDTO;
 import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
 import com.swave.urnr.user.repository.UserInProjectRepository;
 import com.swave.urnr.user.repository.UserRepository;
+import com.swave.urnr.user.responsedto.UserMemberInfoResponseDTO;
 import com.swave.urnr.util.type.UserRole;
 import lombok.RequiredArgsConstructor;
 import com.swave.urnr.util.http.HttpResponse;
@@ -49,14 +51,15 @@ public class ProjectServiceImpl implements ProjectService {
                 .name(projectCreateRequestDto.getProjectName())
                 .description(projectCreateRequestDto.getDescription())
                 .createDate(new Date())
+                .userInProjectList(new ArrayList<>())
                 .build();
 
         log.info(request.toString());
         log.info(project.getDescription().toString());
 
         //유저리스트 받아서 설정
-        project.setUserInProjectList(new ArrayList<>()); //빌더에 넣어보기
-        log.info(projectCreateRequestDto.getUserId().toString());
+        //project.setUserInProjectList(new ArrayList<>()); //빌더에 넣어보기
+        //log.info(projectCreateRequestDto.getUserId().toString());
         //projectRequestDto.getUserId()
         User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
         //user대신에 명확한 변수명 사용 manager?
@@ -66,7 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         //유저인 프로젝트 생성
         //todo:워너비는 유저인 프로젝트를 크리에이트 하는 것이 아닌 프로젝트 생성시 자동으로 생성되게 하는 것이 아닌지?
-        UserInProject userInProject = com.swave.urnr.user.domain.UserInProject.builder()
+        UserInProject userInProject = UserInProject.builder()
                 .role(UserRole.Manager)
                 .user(user)
                 .project(project)
@@ -174,7 +177,7 @@ public class ProjectServiceImpl implements ProjectService {
         for(UserInProject userInProject: userInProjectList){
             Project project = projectRepository.findById(userInProject.getProject().getId())
                     .orElseThrow(NoSuchFieldError::new);
-            List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(project.getId());
+            //List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(project.getId());
             int count = userInProjectRepository.countMember(project.getId());
             String version = releaseNoteRepository.latestReleseNote(project.getId());
             log.info(version);
@@ -192,12 +195,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectContentResponseDTO loadProject(Long projectId) {
-        ProjectContentResponseDTO getproject = new ProjectContentResponseDTO();
         Project project = projectRepository.findById(projectId).get();
+        ProjectContentResponseDTO getproject = ProjectContentResponseDTO.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .createDate(project.getCreateDate())
+                .build();
+        /*
+
         getproject.setId(project.getId());
         getproject.setName(project.getName());
         getproject.setDescription(project.getDescription());
-        getproject.setCreateDate(project.getCreateDate());
+        getproject.setCreateDate(project.getCreateDate());*/
         /*
         List<ProjectRequestDto> loadAll = new ArrayList<>();
         for (Project project : projectRequestDtos){
@@ -205,6 +215,31 @@ public class ProjectServiceImpl implements ProjectService {
             loadAll.add(new ProjectRequestDto(project.getId(),project.getName(),project.getDescription(),project.getCreateDate()));
         }*/
         return getproject;
+    }
+
+    @Override
+    public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request,Long projectId) {
+        //유저가 해당 프로젝트 멤버인지 확인 UserInList확인
+        //유저가 관리자인지 확인 UserInList확인
+        Project project = projectRepository.findById(projectId).get();
+        User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
+        List<UserMemberInfoResponseDTO> getMembers = userInProjectRepository.getMembers(projectId);
+
+        //널에러 즉 팀원이 없을 때 해결하기
+        //log.info(getMembers.get(0).getUser_Name());
+        //유저인프로젝트 유저 조인 유저인프로젝트에나온 프로젝트 아이디로 유저 셀렉트트
+        ProjectManagementContentResponseDTO projectManagementContentResponseDTO = ProjectManagementContentResponseDTO.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .createDate(project.getCreateDate())
+                .managerId((Long)request.getAttribute("id"))
+                .managerName(user.getUsername())
+                .managerDepartment(user.getDepartment())
+                .teamMembers(getMembers)
+                .build();
+
+        return projectManagementContentResponseDTO;
     }
 
     @Override
@@ -223,7 +258,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         for (Long deleteUserId : projectUpdateRequestDto.getDeleteUsers()){
-            int delete = userInProjectRepository.deleteUser(projectId,deleteUserId);
+            int delete = userInProjectRepository.deleteUser(deleteUserId,projectId);
             userInProjectRepository.flush();
         }
 
@@ -257,11 +292,13 @@ public class ProjectServiceImpl implements ProjectService {
         }
         projectRepository.deleteById(projectId);
         return HttpResponse.builder()
-                .message("Project Created")
+                .message("Project Deleted")
                 .description("Project Id "+ projectId +" deleted")
                 .build();
+
     }
-    //삭제 소프트들리트를 믿어보자
+
+
 
 
 }
