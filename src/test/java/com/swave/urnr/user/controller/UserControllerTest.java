@@ -88,7 +88,7 @@ class UserControllerTest {
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().is(201))
+                .andExpect(status().is(409))
                 .andReturn();
 
         result = mockmvc.perform(post("/api/user/prelogin/create")

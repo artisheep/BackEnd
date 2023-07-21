@@ -1,6 +1,7 @@
 package com.swave.urnr.user.controller;
 
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
+import com.swave.urnr.user.responsedto.UserResponseDTO;
 import com.swave.urnr.util.common.ResponseDTO;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.requestdto.*;
@@ -88,7 +89,7 @@ public class UserController {
 
     @Operation(summary="사용자 계정 확인", description="사용자의 계정 정보를 반환합니다.")
     @GetMapping("/getuser")
-    public ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request)  {
+    public ResponseEntity<UserResponseDTO> getCurrentUserInformation(HttpServletRequest request)  {
         return userService.getCurrentUserInformation(request);
     }
 }

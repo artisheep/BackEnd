@@ -29,7 +29,7 @@ public interface UserService {
 
     UserResponseDTO getUser(HttpServletRequest request) throws UserNotFoundException;
 
-    ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request) throws RuntimeException;
+    ResponseEntity<UserResponseDTO> getCurrentUserInformation(HttpServletRequest request) throws RuntimeException;
 
     ResponseEntity getTokenByOauth(String code, String provider) throws RuntimeException;
 

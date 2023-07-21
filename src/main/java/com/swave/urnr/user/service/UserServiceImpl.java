@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
             userRepository.flush();
 
             responseDto= ResponseDTO.builder()
-                    .status(409)
+                    .status(200)
                     .data(user.getDepartment())
                     .build();
             return ResponseEntity.status(200).body(responseDto);
@@ -134,17 +134,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request) throws  RuntimeException {
+    public ResponseEntity<UserResponseDTO> getCurrentUserInformation(HttpServletRequest request) throws  RuntimeException {
         UserResponseDTO user =null;
         try {
             checkInvalidToken(request);
              user = getUser(request);
-             log.info("EMAIL : "+user.getEmail());
         }catch(Exception e)
         {
-
+            e.printStackTrace();
+            log.info(e.toString());
         }
-        log.info("PVD: "+user.getProvider());
         return ResponseEntity.ok().body(user);
     }
 
