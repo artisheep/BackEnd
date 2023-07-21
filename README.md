@@ -23,8 +23,9 @@
 
 <img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=flat&logo=IntelliJ IDEA&logoColor=white" />
 
+<img src="https://img.shields.io/badge/Swagger IDEA-85EA2D?style=flat&logo=Swagger&logoColor=white" />
 
-<img src="https://img.shields.io/badge/NGINX-009639?style=flat&logo=NGINX&logoColor=white" />
+
 
 
  <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white" />
@@ -35,7 +36,7 @@
 
 
 
-SWAVE Project - URINURI
+<h1>SWAVE Project - URINURI</h1>
 Introduction
 URINURI is a powerful and efficient in-house release note sharing system designed to streamline the process of sharing release notes within your organization. Whether you are a software development team, a product management team, or any other group that needs to communicate release information, URINURI is here to simplify and enhance your workflow.
 
