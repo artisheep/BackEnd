@@ -36,6 +36,8 @@
 </br>
  <h2>Version</h2>
  <h3>Java : 17</h3>
+ <h3>Spring : 2.7.13</h3>
+ <h3>lombok : 1.18.22</h3>
  <h3>MySQL : 8.0</h3>
  <h3>QueryDSL : 5.0</h3>
  <h3>Junit : 5</h3>
