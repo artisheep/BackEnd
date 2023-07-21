@@ -4,7 +4,7 @@
  
  📖Tech Stack📖 </br>
  
- 🚉Platforms & Languages🚉
+ 🚉Platforms & Languages🚉</br>
  <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Conda-Forge&logoColor=white" />
 	
 
