@@ -16,6 +16,8 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
+
 //tosting 에러가 나면 @data를 게터세터로 바꾼다
 
 @Entity

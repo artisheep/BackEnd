@@ -17,6 +17,7 @@ import com.swave.urnr.user.service.UserService;
 import com.swave.urnr.util.http.HttpResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -65,7 +66,10 @@ class ProjectServiceTest {
 
     @BeforeEach
 
+    @DisplayName("유저 등록")
     void setUp() throws UserNotFoundException {
+
+
         User user = User.builder()
                 .name("kang")
                 .email("admin@naver.com")
@@ -170,9 +174,7 @@ class ProjectServiceTest {
     @Test
     void loadProjectList() {
         List<ProjectListResponseDTO> projectListResponseDTOList = projectService.loadProjectList(request);
-
-
-
+        
         assertEquals(projectListResponseDTOList.get(0).getName(),"니거무라");
         assertEquals(projectListResponseDTOList.get(0).getDescription(),"이거도");
         assertEquals(projectListResponseDTOList.get(0).getId(),3L);

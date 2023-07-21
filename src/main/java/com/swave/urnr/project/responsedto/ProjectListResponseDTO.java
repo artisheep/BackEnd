@@ -16,8 +16,6 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Where(clause = "is_deleted = false")
-//@SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
 @ApiModel(value = "프로젝트 싹다 가져오는 DTO")
 public class ProjectListResponseDTO {
 
