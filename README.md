@@ -78,6 +78,12 @@
  <h4>hotfix : 출시 버전에서 발생한 버그를 수정 하는 브랜치 </h4>
   <h4>각 기능별로 브랜치를 구분합니다. 우리누리는 아직 미출시 제품이므로 주로 feature에서 기능별로 구현한 뒤, develop에 merge하는 방식으로 진행했습니다. 나중에 완성되면 master로 올리고 다음 버전이나 버그를 수정해야할 때 release와 hotfix브랜치를 생성하여 진행할 예정입니다. </h4>
 </br>
+
+### 커뮤니티
+
+💬 [Join the #URINURI Notion Community!](https://www.notion.so/dogfactory/6ecf52d6df0c40d2b54326502b0fa1cb?v=0135a9ffc7d74984be969a94061b91cd)
+
+💬 [Join the #URINURI Jira Community!](https://swavejira.atlassian.net/jira/core/projects/REL/board)
 # SWAVE Project - URINURI
 
 ---
