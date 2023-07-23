@@ -27,12 +27,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
 
-    /*
-    인증 제외 URI 리스트
-    user쪽 비로그인 : 1줄
-    swagger: 2 - 4줄 까지
-     */
-    private static final String Exclude_url="/api/user/prelogin/**," +
+    // 인증에서 제외할 url
+    // 3번째줄 부터는 swagger
+    private static final String Exclude_url="/api/test," +
+            "/api/user/prelogin/**," +
             "/swagger/**,/v2/api-docs/**,/configuration/ui/**," +
             "/swagger-resources/**,/configuration/security/**," +
             "/swagger-ui/**,/webjars/**,/swagger-ui.html";

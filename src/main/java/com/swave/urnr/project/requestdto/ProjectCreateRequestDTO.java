@@ -3,6 +3,7 @@ package com.swave.urnr.project.requestdto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,7 @@ public class ProjectCreateRequestDTO {
     List<Long> users;
 
 
+    @Builder
     public ProjectCreateRequestDTO(String projectName, String description) {
 
         this.projectName = projectName;
@@ -37,6 +39,7 @@ public class ProjectCreateRequestDTO {
 
 
     }
+
 
 
 }

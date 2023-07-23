@@ -5,6 +5,7 @@ import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
 import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
 
+import com.swave.urnr.project.responsedto.ProjectManagementContentResponseDTO;
 import com.swave.urnr.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,13 @@ public class ProjectController {
         return projectService.loadProject(projectId);
     }
 
-    //멤버 편집
+    @Operation(summary="프로젝트 하나 가져오기(관리페이지)", description="프로젝트ID를 가져와 프로젝트와 유저정보를 표시합니다.")
+    @GetMapping("/manage/{projectId}")
+    public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request, @PathVariable Long projectId){
+        return projectService.loadManagementProject(request,projectId);
+    }
 
+    //멤버 편집
     @Operation(summary="프로젝트 수정", description="프로젝트ID를 받아 프로젝트를 수정합니다. 멤버를 추가하거나 제거할 수 있습니다.")
     @PutMapping("/update/{projectId}")
     public ProjectUpdateRequestDTO updateProject(@PathVariable Long projectId,@RequestBody ProjectUpdateRequestDTO projectUpdateRequestDto){
@@ -72,6 +78,8 @@ public class ProjectController {
     public HttpResponse deleteProject(@PathVariable Long projectId){
         return projectService.deleteProject(projectId);
     }
+
+
 
 
     //검색
