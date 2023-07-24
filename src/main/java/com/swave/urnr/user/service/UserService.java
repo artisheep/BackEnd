@@ -31,7 +31,7 @@ public interface UserService {
 
     ResponseEntity<UserResponseDTO> getCurrentUserInformation(HttpServletRequest request) throws RuntimeException;
 
-    ResponseEntity getTokenByOauth(String code, String provider) throws RuntimeException;
+    ResponseEntity getTokenByOauth(String code, String provider) ;
 
     void checkInvalidToken(HttpServletRequest request) ;
 

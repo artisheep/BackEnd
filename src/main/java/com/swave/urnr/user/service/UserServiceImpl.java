@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity getTokenByOauth(String code, String provider) throws RuntimeException {
+    public ResponseEntity getTokenByOauth(String code, String provider) {
         OauthToken oauthToken = oAuthService.getOauthAccessToken(code, provider);
         String jwtToken = oAuthService.getTokenByOauth(oauthToken.getAccess_token(), provider);
         HttpHeaders headers = new HttpHeaders();

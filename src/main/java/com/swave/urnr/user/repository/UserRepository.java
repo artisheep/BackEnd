@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
     User findByEmailAndProvider(String email, String provider);
-    @Query(value = "SELECT user_id,username,department FROM User where is_deleted = false;", nativeQuery = true)
+    @Query(value = "SELECT user_id AS userId,username,department FROM User where is_deleted = false;", nativeQuery = true)
     List<UserListResponseDTO> findAllUser();
 
 }
