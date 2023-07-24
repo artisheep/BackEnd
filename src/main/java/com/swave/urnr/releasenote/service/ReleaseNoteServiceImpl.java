@@ -30,7 +30,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @EnableTransactionManagement
-public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteService{
+public class ReleaseNoteServiceImpl implements ReleaseNoteService{
 
     private final CommentRepository commentRepository;
     private final NoteBlockRepository noteBlockRepository;
@@ -306,3 +306,4 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         seenCheckRepository.flush();
     }
 }
+

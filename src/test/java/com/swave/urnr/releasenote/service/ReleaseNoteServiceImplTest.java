@@ -60,8 +60,6 @@ class ReleaseNoteServiceImplTest {
     private ReleaseNoteRepository releaseNoteRepository;
     @Autowired
     private SeenCheckRepository seenCheckRepository;
-    @Autowired
-    private BlockContextRepository blockContextRepository;
 
     private MockHttpServletRequest request;
 

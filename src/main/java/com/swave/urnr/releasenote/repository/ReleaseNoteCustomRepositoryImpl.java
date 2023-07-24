@@ -5,6 +5,7 @@ import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.user.domain.UserInProject;
 
 import static com.swave.urnr.project.domain.QProject.project;
+import static com.swave.urnr.releasenote.domain.QNoteBlock.noteBlock;
 import static com.swave.urnr.user.domain.QUserInProject.userInProject;
 import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 
@@ -22,7 +23,9 @@ public class ReleaseNoteCustomRepositoryImpl implements ReleaseNoteCustomReposit
                 .select(releaseNote)
                 .from(userInProject)
                 .join(project).on(userInProject.project.id.eq(project.id))
-                .join(releaseNote).on(project.id.eq(releaseNote.project.id))
+                .join(releaseNote).on(project.id.eq(releaseNote.project.id),
+                        project.isDeleted.eq(false),
+                        releaseNote.isDeleted.eq(false))
                 .where(userInProject.user.id.eq(userId))
                 .orderBy(releaseNote.lastModifiedDate.desc())
                 .fetchFirst();
@@ -36,7 +39,10 @@ public class ReleaseNoteCustomRepositoryImpl implements ReleaseNoteCustomReposit
                 .from(userInProject)
                 .join(project).on(project.id.eq(userInProject.project.id))
                 .join(releaseNote).on(releaseNote.project.id.eq(project.id))
-                .where(releaseNote.id.eq(releaseNote_id),userInProject.user.id.eq(userId))
+                .where(releaseNote.id.eq(releaseNote_id),
+                        userInProject.user.id.eq(userId),
+                        project.isDeleted.eq(false),
+                        releaseNote.isDeleted.eq(false))
                 .fetchOne();
     }
 
