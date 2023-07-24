@@ -25,7 +25,8 @@ public class OAuthService {
 
     private final UserRepository userRepository;
     private final TokenService tokenService;
-    public OauthToken getOauthAccessToken(String code, String provider) throws JsonProcessingException {
+    //TODO: Need to Custom Excepition
+    public OauthToken getOauthAccessToken(String code, String provider) throws RuntimeException {
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -40,7 +41,7 @@ public class OAuthService {
             clientSecret = "AWyAH1M24R9EYfUjJ1KCxcsh3DwvK8F7";
             redirectUri = "http://localhost:3000/oauth/callback/kakao";
         } else {
-            throw new IllegalArgumentException("Invalid Provider: " + provider);
+            throw new RuntimeException("Invalid Provider: " + provider);
         }
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -61,7 +62,12 @@ public class OAuthService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         OauthToken oauthToken = null;
-        oauthToken = objectMapper.readValue(tokenResponse.getBody(), OauthToken.class);
+        try{
+            oauthToken = objectMapper.readValue(tokenResponse.getBody(), OauthToken.class);
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
 
         return oauthToken;
     }
@@ -111,7 +117,6 @@ public class OAuthService {
             KakaoProfile profile = findKakaoProfile(token);
 
             //회원 정보 조회 by Email
-//            User user = userRepository.findByEmail(profile.getKakao_account().getEmail());
             User user = userRepository.findByEmailAndProvider(profile.getKakao_account().getEmail(), provider);
             if (user == null) {
                 user = User.builder()
@@ -121,13 +126,14 @@ public class OAuthService {
 //                        .userRole("ROLE_USER").build();
 
                 userRepository.save(user);
-            } else if (provider.equals("server")) {
+            } else if (provider.equals("email")) {
 
             } else {
                 log.info("기존 회원 -> 회원 가입 건너 뜀");
             }
             return   tokenService.createToken(user);
         } else {
+            //TODO: UnsupportedProviderExceptiob
             throw new RuntimeException("Unsupported provider: " + provider);
         }
     }

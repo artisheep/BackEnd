@@ -43,33 +43,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtHeader = ((HttpServletRequest)request).getHeader(JwtProperties.HEADER_STRING);
-        log.info(request.toString());
-        log.info(response.toString());
-        log.info(request.getRequestURI());
-//        log.info(request.getHeader("Authorization").toString());
 
-        String[] excludeUrls = Exclude_url.split(",");
-
-        log.info("EU : "+excludeUrls.length);
-        log.info(request.getRequestURI());
-        for(int i=0;i<excludeUrls.length;i++){
-            log.info("E "+i+" : "+excludeUrls[i] + "  : "+excludeUrls[i].equals(request.getRequestURI()));
-        }
         if (pathMatchesExcludePattern(request.getRequestURI())) {
             // Skip JWT authentication for excluded URLs
             try {
                 filterChain.doFilter(request, response);
-            }catch(Exception e)
+            }catch(RuntimeException e)
             {
                 log.info(e.toString());
             }
             return;
         }
         else if(request.getHeader("Authorization") == null) {
-            log.info("error");
-            request.setAttribute(JwtProperties.HEADER_STRING, "Authorization이 없습니다.");
-            System.out.println("Authorization");
-            throw new ServletException();
+            //TODO: Custom exception
+            log.info("error: No Authorization token on header");
+            request.setAttribute(JwtProperties.HEADER_STRING, "Authorization 이 없습니다.");
+            throw new RuntimeException();
         }
         // header 가 정상적인 형식인지 확인
         if(jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
@@ -92,16 +81,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asLong();
                 name = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("name").asString();
-                System.out.println(id);
+                log.info(id.toString());
             } catch (TokenExpiredException e) {
                 e.printStackTrace();
                 request.setAttribute(JwtProperties.HEADER_STRING, "토큰이 만료되었습니다.");
-                System.out.println("토큰 만료");
+                log.info("만료된 토큰");
                 throw new ServletException();
             } catch (JWTVerificationException e) {
                 e.printStackTrace();
                 request.setAttribute(JwtProperties.HEADER_STRING, "유효하지 않은 토큰입니다.");
-                System.out.println("유효x");
+                log.info("유효하지 않은 토큰");
                 throw new ServletException();
             }
         }

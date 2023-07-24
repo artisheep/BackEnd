@@ -1,9 +1,8 @@
 package com.swave.urnr.user.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.swave.urnr.util.common.response.ResponseDto;
-import com.swave.urnr.util.exception.InvalidTokenException;
-import com.swave.urnr.user.domain.User;
+import com.swave.urnr.user.responsedto.UserListResponseDTO;
+import com.swave.urnr.user.responsedto.UserResponseDTO;
+import com.swave.urnr.util.common.ResponseDTO;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.requestdto.*;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +13,27 @@ import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<ResponseDto> createAccountByServer(UserRegisterRequestDto request);
+    ResponseEntity<ResponseDTO> createAccountByEmail(UserRegisterRequestDTO request);
 
-    ResponseEntity<String> getValidationCode(UserValidateEmailDTO request) throws Exception;
+    ResponseEntity<String> getValidationCode(UserValidateEmailDTO request) ;
 
-    ResponseEntity<ResponseDto> updateUser(HttpServletRequest request, UserUpdateAccountRequestDto requestDto) throws UserNotFoundException;
+    ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDTO requestDto);
 
-    String initDepartment(HttpServletRequest request, String requestDto) throws UserNotFoundException;
+    ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto) ;
+ 
+    ResponseEntity<String> getTokenByLogin(UserLoginServerRequestDTO requestDto) ;
 
-    String getTokenByLogin( UserLoginServerRequestDTO requestDto) throws UserNotFoundException;
+    ResponseEntity<String> setTemporaryPassword(UserValidateEmailDTO request) ;
 
-    ResponseEntity<String> setTemporaryPassword(UserValidateEmailDTO request) throws Exception;
+    ResponseEntity<String> deleteUser(HttpServletRequest request);
 
-    void deleteUser(HttpServletRequest request) throws UserNotFoundException;
+    UserResponseDTO getUser(HttpServletRequest request) throws UserNotFoundException;
 
-    User getUser(HttpServletRequest request) throws UserNotFoundException;
+    ResponseEntity<UserResponseDTO> getCurrentUserInformation(HttpServletRequest request) throws RuntimeException;
 
-    ResponseEntity<Object> getCurrentUserInformation(HttpServletRequest request) throws InvalidTokenException, UserNotFoundException;
+    ResponseEntity getTokenByOauth(String code, String provider) ;
 
-    ResponseEntity getTokenByOauth(String code, String provider) throws JsonProcessingException;
+    void checkInvalidToken(HttpServletRequest request) ;
 
-    void checkInvalidToken(HttpServletRequest request) throws InvalidTokenException;
-
-    List getUserInformationList();
+    List<UserListResponseDTO> getUserInformationList();
 }

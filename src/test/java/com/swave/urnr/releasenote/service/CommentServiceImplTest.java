@@ -92,7 +92,7 @@ class CommentServiceImplTest {
         commentCreateRequestDTO.setContent("test");
 
         HttpResponse httpResponse = commentService.createComment(request, releaseNote.getId(),commentCreateRequestDTO);
-        Comment comment = commentRepository.findById(Long.parseLong(httpResponse.getDescription().substring(13,15)))
+        Comment comment = commentRepository.findById(Long.parseLong(httpResponse.getDescription().substring(13,16).replace(" ","").replace("C", "")))
                 .orElseThrow(NoSuchElementException::new);
 
         Assertions.assertAll(
@@ -181,7 +181,7 @@ class CommentServiceImplTest {
 
         HttpResponse httpResponse = commentService.createComment(request, releaseNote.getId(),commentCreateRequestDTO);
 
-        Long commentId = Long.parseLong(httpResponse.getDescription().substring(13,15));
+        Long commentId = Long.parseLong(httpResponse.getDescription().substring(13,16).replace(" ","").replace("C", ""));
         commentService.deleteComment(commentId);
 
         Comment comment = commentRepository.findById(commentId).orElse(null);
