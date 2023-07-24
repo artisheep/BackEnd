@@ -1,11 +1,15 @@
 package com.swave.urnr.releasenote.repository;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.swave.urnr.releasenote.domain.Comment;
+import com.swave.urnr.releasenote.responsedto.CommentContentResponseDTO;
+import io.swagger.annotations.ApiModelProperty;
 
 import static com.swave.urnr.releasenote.domain.QComment.comment;
 import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 
+import java.util.Date;
 import java.util.List;
 
 public class CommentCustomRepositoryImpl implements CommentCustomRepository {
@@ -16,10 +20,15 @@ public class CommentCustomRepositoryImpl implements CommentCustomRepository {
     }
 
     @Override
-    public List<Comment> findTop5RecentComment(Long projectId){
-
+    public List<CommentContentResponseDTO> findTop5RecentComment(Long projectId){
         return jpaQueryFactory
-                .selectFrom(comment)
+                .select(Projections.fields(CommentContentResponseDTO.class,
+                                comment.commentContext.as("context"),
+                                comment.lastModifiedDate.as("lastModifiedDate"),
+                                comment.user.username.as("name"),
+                                releaseNote.version.as("version"),
+                                releaseNote.id.as("releaseNoteId")))
+                .from(comment)
                 .join(releaseNote).on(releaseNote.id.eq(comment.releaseNote.id))
                 .where(releaseNote.project.id.eq(projectId))
                 .orderBy(comment.lastModifiedDate.desc())

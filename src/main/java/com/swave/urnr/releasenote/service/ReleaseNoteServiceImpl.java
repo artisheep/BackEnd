@@ -1,18 +1,15 @@
 package com.swave.urnr.releasenote.service;
 
+import com.swave.urnr.chatgpt.responsedto.ChatGPTResultResponseDTO;
 import com.swave.urnr.chatgpt.service.ChatGPTService;
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
-import com.swave.urnr.releasenote.domain.SeenCheck;
-import com.swave.urnr.releasenote.repository.SeenCheckRepository;
+import com.swave.urnr.releasenote.domain.*;
+import com.swave.urnr.releasenote.repository.*;
+import com.swave.urnr.releasenote.requestdto.BlockContextCreateRequestDTO;
+import com.swave.urnr.releasenote.requestdto.NoteBlockCreateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
-import com.swave.urnr.releasenote.domain.Comment;
-import com.swave.urnr.releasenote.domain.NoteBlock;
-import com.swave.urnr.releasenote.domain.ReleaseNote;
-import com.swave.urnr.releasenote.repository.CommentRepository;
-import com.swave.urnr.releasenote.repository.NoteBlockRepository;
-import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.releasenote.responsedto.*;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
@@ -40,6 +37,7 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
 
     private final CommentRepository commentRepository;
     private final NoteBlockRepository noteBlockRepository;
+    private final BlockContextRepository blockContextRepository;
     private final ReleaseNoteRepository releaseNoteRepository;
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
@@ -53,7 +51,6 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
     @Transactional
     public HttpResponse createReleaseNote(HttpServletRequest request, Long projectId, ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO) {
         Date currentDate = new Date();
-        //SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         User user = userRepository.findById((Long) request.getAttribute("id"))
                 .orElseThrow(NoSuchElementException::new);
@@ -61,36 +58,62 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(NoSuchElementException::new);
 
-        //todo : 추후 noteBlock 제대로 구현시 create 방법을 고쳐야함
-        NoteBlock noteBlock = NoteBlock.builder()
-                .noteBlockContext(releaseNoteCreateRequestDTO.getContent())
-                .build();
-
-        noteBlockRepository.save(noteBlock);
-
-
-//        ChatGPTResultDTO chatGPTResultDTO =  chatGPTService.chatGptResult(
-//                new ChatGPTQuestionRequestDTO(noteBlock.getNoteBlockContext() + "의 내용을 세줄로 요약해줘"));
-
         ReleaseNote releaseNote = ReleaseNote.builder()
                 .version(releaseNoteCreateRequestDTO.getVersion())
                 .lastModifiedDate(currentDate)
                 .releaseDate(releaseNoteCreateRequestDTO.getReleaseDate())
                 .count(0)
                 .isUpdated(false)
-//              .summary(chatGPTResultDTO.getText())
                 .summary("Temp data until ChatGPT is OKAY")
                 .project(project)
-                .noteBlockList(new ArrayList<NoteBlock>(Collections.singletonList(noteBlock)))
                 .user(user)
                 .commentList(new ArrayList<Comment>())
                 .build();
 
         releaseNoteRepository.save(releaseNote);
-        noteBlock.setReleaseNote(releaseNote);
+
+
+        StringBuilder content = new StringBuilder(new String());
+        List<NoteBlock> noteBlockList = new ArrayList<>();
+
+        for(NoteBlockCreateRequestDTO noteBlockCreateRequestDTO : releaseNoteCreateRequestDTO.getBlocks()){
+            NoteBlock noteBlock = NoteBlock.builder()
+                    .label(noteBlockCreateRequestDTO.getLabel())
+                    .releaseNote(releaseNote)
+                    .build();
+
+            noteBlockRepository.save(noteBlock);
+
+            List<BlockContext> blockContextList = new ArrayList<>();
+
+            for (BlockContextCreateRequestDTO blockContextCreateRequestDTO : noteBlockCreateRequestDTO.getContexts()){
+                BlockContext blockContext = BlockContext.builder()
+                        .context(blockContextCreateRequestDTO.getContext())
+                        .tag(blockContextCreateRequestDTO.getTag())
+                        .index(blockContextCreateRequestDTO.getIndex())
+                        .noteBlock(noteBlock)
+                        .build();
+                content.append(blockContext.getContext());
+
+                blockContextRepository.save(blockContext);
+
+                blockContextList.add(blockContext);
+            }
+            blockContextRepository.flush();
+
+            noteBlock.setBlockContextList(blockContextList);
+
+            noteBlockList.add(noteBlock);
+        }
+        blockContextRepository.flush();
+
+//        ChatGPTResultDTO ChatGPTResultDTO =  chatGPTService.chatGptResult(
+//                new ChatGPTQuestionRequestDTO(content.toString() + "의 내용을 세줄로 요약해줘"));
+
+        releaseNote.setNoteBlockList(noteBlockList);
+        //releaseNote.setSummary(ChatGPTResultDTO.getText());
 
         releaseNoteRepository.flush();
-        noteBlockRepository.flush();
 
         return HttpResponse.builder()
                 .message("Release Note Created")
@@ -99,7 +122,6 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
     }
 
     //project id를 받아서 해당 project에 연결된 모든 releaseNote를 리스트로 반환 -> 전체 출력용
-    //todo : noteBlock의 상세 구현법을 정한 이후에는 그것을 적용할 것 (현재는 단순히 글씨를 출력)
     @Override
     public ArrayList<ReleaseNoteContentListResponseDTO> loadReleaseNoteList(Long projectId){
         List<ReleaseNote> releaseNoteList = releaseNoteRepository.findByProject_Id(projectId);
@@ -154,11 +176,57 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NoSuchElementException::new);
 
+        for(NoteBlock noteBlock : releaseNote.getNoteBlockList()){
+            noteBlockRepository.deleteById(noteBlock.getId());
+        }
+
+        releaseNote.getNoteBlockList().clear();
+
+        StringBuilder content = new StringBuilder(new String());
+        List<NoteBlock> noteBlockList = new ArrayList<>();
+
+        for(NoteBlockCreateRequestDTO noteBlockCreateRequestDTO : releaseNoteUpdateRequestDTO.getBlocks()){
+            NoteBlock noteBlock = NoteBlock.builder()
+                    .label(noteBlockCreateRequestDTO.getLabel())
+                    .releaseNote(releaseNote)
+                    .build();
+
+            noteBlockRepository.save(noteBlock);
+
+            List<BlockContext> blockContextList = new ArrayList<>();
+
+            for (BlockContextCreateRequestDTO blockContextCreateRequestDTO : noteBlockCreateRequestDTO.getContexts()){
+                BlockContext blockContext = BlockContext.builder()
+                        .context(blockContextCreateRequestDTO.getContext())
+                        .tag(blockContextCreateRequestDTO.getTag())
+                        .index(blockContextCreateRequestDTO.getIndex())
+                        .noteBlock(noteBlock)
+                        .build();
+                content.append(blockContext.getContext());
+
+                blockContextRepository.save(blockContext);
+
+                blockContextList.add(blockContext);
+            }
+            blockContextRepository.flush();
+
+            noteBlock.setBlockContextList(blockContextList);
+
+            noteBlockList.add(noteBlock);
+        }
+        blockContextRepository.flush();
+
+
+//        ChatGPTResultDTO ChatGPTResultDTO =  chatGPTService.chatGptResult(
+//                new ChatGPTQuestionRequestDTO(content.toString() + "의 내용을 세줄로 요약해줘"));
+
+
         releaseNote.setVersion(releaseNoteUpdateRequestDTO.getVersion());
         releaseNote.setReleaseDate(releaseNoteUpdateRequestDTO.getReleaseDate());
         releaseNote.setLastModifiedDate(new Date());
-        //todo : 추후 noteBlock 제대로 구현시 업데이트 방법을 고쳐야함
-        releaseNote.getNoteBlockList().get(0).setNoteBlockContext(releaseNoteUpdateRequestDTO.getContent());
+        releaseNote.getNoteBlockList().addAll(noteBlockList);
+        releaseNote.setSummary("Temp data until ChatGPT is OKAY");
+        //releaseNote.setSummary(ChatGPTResultDTO.getText());
         releaseNote.setUser(user);
         releaseNote.setUpdated(true);
 

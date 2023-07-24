@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 //프로젝트 id
 //버전
@@ -19,8 +20,8 @@ public class ReleaseNoteCreateRequestDTO {
     @ApiModelProperty(value="릴리즈 노트 버전", example = "1.0.0", required = true)
     private String version;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    @ApiModelProperty(value="릴리즈 날", example = "2023-07-08", required = true)
+    @ApiModelProperty(value="릴리즈 날짜", example = "2023-07-08", required = true)
     private Date releaseDate;
-    @ApiModelProperty(value="릴리즈 노트 내용", example = "맥북을 상향 했습니다.", required = true)
-    private String content;
+    @ApiModelProperty(value="노트 블럭 리스트", required = true)
+    private List<NoteBlockCreateRequestDTO> blocks;
 }

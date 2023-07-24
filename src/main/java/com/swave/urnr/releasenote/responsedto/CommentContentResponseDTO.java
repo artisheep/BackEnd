@@ -19,4 +19,9 @@ public class CommentContentResponseDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     @ApiModelProperty(value="최종 수정 시각", example = "2023-07-08", required = true)
     private Date lastModifiedDate;
+    @ApiModelProperty(value="릴리즈 노트 버전", example = "1.0.0", required = true)
+    private String version;
+    @ApiModelProperty(value="릴리즈 노트 id", example = "25", required = true)
+    private Long releaseNoteId;
+
 }
