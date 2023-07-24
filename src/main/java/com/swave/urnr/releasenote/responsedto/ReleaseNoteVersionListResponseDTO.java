@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ApiModel(value = "릴리즈 노트 버전 리스트 가져오기 DTO")
@@ -18,5 +18,5 @@ public class ReleaseNoteVersionListResponseDTO {
     @ApiModelProperty(value="구독중인가?", example = "true", required = true)
     private boolean isSubscribe;
     @ApiModelProperty(value="릴리즈 노트 버전 리스트", required = true)
-    private ArrayList<ReleaseNoteVersionResponseDTO> releaseNoteVersionList;
+    private List<ReleaseNoteVersionResponseDTO> releaseNoteVersionList;
 }

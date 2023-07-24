@@ -10,6 +10,7 @@ import com.swave.urnr.releasenote.responsedto.CommentContentListResponseDTO;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.util.http.HttpResponse;
+import groovy.lang.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,16 +66,10 @@ public class CommentServiceImpl implements CommentService {
 
     public CommentContentListResponseDTO loadRecentComment(Long projectId){
         CommentContentListResponseDTO commentContentListResponseDTO = new CommentContentListResponseDTO(new ArrayList<>());
-        List<Comment> comments = commentRepository.findTop5RecentComment(projectId);
+        List<CommentContentResponseDTO> comments = commentRepository.findTop5RecentComment(projectId);
 
-        for(Comment comment : comments) {
-            CommentContentResponseDTO commentContentResponseDTO = new CommentContentResponseDTO();
-
-            commentContentResponseDTO.setName(comment.getUser().getUsername());
-            commentContentResponseDTO.setContext(comment.getCommentContext());
-            commentContentResponseDTO.setLastModifiedDate(comment.getLastModifiedDate());
-
-            commentContentListResponseDTO.getComments().add(commentContentResponseDTO);
+        for(CommentContentResponseDTO comment : comments) {
+            commentContentListResponseDTO.getComments().add(comment);
         }
 
         return commentContentListResponseDTO;

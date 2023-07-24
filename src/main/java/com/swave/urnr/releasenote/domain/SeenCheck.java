@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Where(clause = "is_deleted = false")
-@SQLDelete(sql = "UPDATE comment SET is_deleted = true WHERE comment_id = ?")
+@SQLDelete(sql = "UPDATE seen_check SET is_deleted = true WHERE seen_check_id = ?")
 @NoArgsConstructor
 public class SeenCheck {
     @Id
