@@ -1,4 +1,4 @@
- package com.swave.urnr.util.common.response;
+ package com.swave.urnr.util.common;
 
 
 import io.swagger.annotations.ApiModel;
@@ -9,12 +9,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@ApiModel(value = "응답 DTO")
+ @Data
+@ApiModel(value = "응답 전송용 DTO")
 @AllArgsConstructor
+ @Builder
 @NoArgsConstructor
-@Builder
-public class ResponseDto<T> {
+public class ResponseDTO<T> {
 
     @ApiModelProperty(value="HTTP 상태 코드", example = "404", required = true)
     @ApiParam(value = "상태 코드", required = true, example = "상태 코드를 입력하세요")
@@ -22,4 +22,5 @@ public class ResponseDto<T> {
     @ApiModelProperty(value="전송 데이터", example = "artisheep@naver.com", required = true)
     @ApiParam(value = "전송 데이터", required = true, example = "전송할 데이터를 입력하세요.")
     private T data;
+
 }
