@@ -19,5 +19,5 @@ public class ReleaseNoteUpdateRequestDTO {
     @ApiModelProperty(value="릴리즈 날짜", example = "2023-07-08", required = true)
     private Date releaseDate;
     @ApiModelProperty(value="노트 블럭 리스트", required = true)
-    private List<NoteBlockCreateRequestDTO> blocks;
+    private List<NoteBlockUpdateRequestDTO> blocks;
 }

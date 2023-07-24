@@ -1,8 +1,7 @@
 package com.swave.urnr.releasenote.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
+import com.swave.urnr.releasenote.requestdto.*;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentListResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteVersionListResponseDTO;
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -60,8 +60,24 @@ class ReleaseNoteControllerTest {
                 .description("Release Note ID : " + 1L + " Created")
                 .build();
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
         releaseNoteCreateRequestDTO.setVersion("1.0.0");
         releaseNoteCreateRequestDTO.setReleaseDate(new Date());
 
@@ -87,8 +103,24 @@ class ReleaseNoteControllerTest {
                 .description("Release Note ID : " + 1L + " Updated")
                 .build();
 
+        List<BlockContextUpdateRequestDTO> blockContextUpdateRequestDTOList = new ArrayList<>();
+        List<NoteBlockUpdateRequestDTO> noteBlockUpdateRequestDTOList = new ArrayList<>();
+
+        BlockContextUpdateRequestDTO blockContextUpdateRequestDTO = new BlockContextUpdateRequestDTO();
+        blockContextUpdateRequestDTO.setContext("test");
+        blockContextUpdateRequestDTO.setTag("H1");
+        blockContextUpdateRequestDTO.setIndex(1L);
+
+        blockContextUpdateRequestDTOList.add(blockContextUpdateRequestDTO);
+
+        NoteBlockUpdateRequestDTO noteBlockUpdateRequestDTO = new NoteBlockUpdateRequestDTO();
+        noteBlockUpdateRequestDTO.setLabel("update");
+        noteBlockUpdateRequestDTO.setContexts(blockContextUpdateRequestDTOList);
+
+        noteBlockUpdateRequestDTOList.add(noteBlockUpdateRequestDTO);
+
         ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO = new ReleaseNoteUpdateRequestDTO();
-        releaseNoteUpdateRequestDTO.setContent("test");
+        releaseNoteUpdateRequestDTO.setBlocks(noteBlockUpdateRequestDTOList);
         releaseNoteUpdateRequestDTO.setVersion("1.0.0");
         releaseNoteUpdateRequestDTO.setReleaseDate(new Date());
 
@@ -112,7 +144,7 @@ class ReleaseNoteControllerTest {
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = new ReleaseNoteContentResponseDTO();
         releaseNoteContentResponseDTO.setReleaseDate(new Date());
         releaseNoteContentResponseDTO.setLastModified(new Date());
-        releaseNoteContentResponseDTO.setContent("test");
+        releaseNoteContentResponseDTO.setBlocks(null);
         releaseNoteContentResponseDTO.setComment(null);
         releaseNoteContentResponseDTO.setCreator("Kim");
         releaseNoteContentResponseDTO.setLiked(0);
@@ -214,7 +246,7 @@ class ReleaseNoteControllerTest {
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = new ReleaseNoteContentResponseDTO();
         releaseNoteContentResponseDTO.setReleaseDate(new Date());
         releaseNoteContentResponseDTO.setLastModified(new Date());
-        releaseNoteContentResponseDTO.setContent("test");
+        releaseNoteContentResponseDTO.setBlocks(null);
         releaseNoteContentResponseDTO.setComment(null);
         releaseNoteContentResponseDTO.setCreator("Kim");
         releaseNoteContentResponseDTO.setLiked(0);

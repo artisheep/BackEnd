@@ -3,19 +3,13 @@ package com.swave.urnr.releasenote.service;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
-import com.swave.urnr.releasenote.domain.Comment;
-import com.swave.urnr.releasenote.domain.NoteBlock;
-import com.swave.urnr.releasenote.domain.ReleaseNote;
-import com.swave.urnr.releasenote.domain.SeenCheck;
+import com.swave.urnr.releasenote.domain.*;
+import com.swave.urnr.releasenote.repository.BlockContextRepository;
 import com.swave.urnr.releasenote.repository.NoteBlockRepository;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.releasenote.repository.SeenCheckRepository;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
-import com.swave.urnr.releasenote.responsedto.CommentContentResponseDTO;
-import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentListResponseDTO;
-import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
-import com.swave.urnr.releasenote.responsedto.ReleaseNoteVersionListResponseDTO;
+import com.swave.urnr.releasenote.requestdto.*;
+import com.swave.urnr.releasenote.responsedto.*;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
 import com.swave.urnr.user.repository.UserInProjectRepository;
@@ -64,15 +58,12 @@ class ReleaseNoteServiceImplTest {
     private ProjectRepository projectRepository;
     @Autowired
     private ReleaseNoteRepository releaseNoteRepository;
-
     @Autowired
     private SeenCheckRepository seenCheckRepository;
     @Autowired
-    private EntityManagerFactory emf;
+    private BlockContextRepository blockContextRepository;
 
     private MockHttpServletRequest request;
-
-    private EntityManager em;
 
     @BeforeEach
     void setUp() {
@@ -107,11 +98,27 @@ class ReleaseNoteServiceImplTest {
 
         projectRepository.saveAndFlush(project);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
         HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
         ReleaseNote releaseNote = releaseNoteRepository.findById(Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", ""))).orElse(null);
@@ -119,7 +126,7 @@ class ReleaseNoteServiceImplTest {
         Assertions.assertAll(
                 () -> assertNotEquals(null, releaseNote, () -> "릴리즈 노트가 제대로 생성 되지 않았습니다."),
                 () -> assertEquals("1.9.9", releaseNote.getVersion(),() -> "릴리즈 노트 버전이 제대로 생성 되지 않았습니다."),
-                () -> assertEquals("test", releaseNote.getNoteBlockList().get(0).getNoteBlockContext(),() -> "릴리즈 노트 내용이 제대로 생성 되지 않았습니다."),
+                () -> assertEquals("new", releaseNote.getNoteBlockList().get(0).getLabel(),() -> "릴리즈 노트 내용이 제대로 생성 되지 않았습니다."),
                 () -> assertEquals(testDate, releaseNote.getReleaseDate(), () -> "릴리즈 노트 날짜가 제대로 생성 되지 않았습니다.")
         );
     }
@@ -147,7 +154,7 @@ class ReleaseNoteServiceImplTest {
 
         Date testDate = new Date();
         NoteBlock noteBlock = NoteBlock.builder()
-                .noteBlockContext("test")
+                .label("new")
                 .build();
 
         noteBlockRepository.save(noteBlock);
@@ -210,17 +217,33 @@ class ReleaseNoteServiceImplTest {
 
         userInProjectRepository.saveAndFlush(userInProject);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
         HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
 
         Assertions.assertAll(
-                () -> assertEquals("[test]", releaseNoteContentResponseDTO.getContent(), () -> "릴리즈 노트가 제대로 로딩 되지 않았습니다."),
+                () -> assertEquals("new", releaseNoteContentResponseDTO.getBlocks().get(0).getLabel(), () -> "릴리즈 노트가 제대로 로딩 되지 않았습니다."),
                 () -> assertEquals("1.9.9", releaseNoteContentResponseDTO.getVersion(),() -> "릴리즈 노트 버전이 제대로 로딩 되지 않았습니다."),
                 () -> assertEquals("Kim", releaseNoteContentResponseDTO.getCreator(),() -> "릴리즈 노트 작성자가 제대로 로딩 되지 않았습니다."),
                 () -> assertEquals(testDate, releaseNoteContentResponseDTO.getReleaseDate(), () -> "릴리즈 노트 날짜가 제대로 로딩 되지 않았습니다.")
@@ -232,7 +255,7 @@ class ReleaseNoteServiceImplTest {
     @DisplayName("릴리즈 노트 수정 테스트")
     void updateReleaseNote() {
         NoteBlock noteBlock = NoteBlock.builder()
-                .noteBlockContext("test")
+                .label("new")
                 .build();
 
         noteBlockRepository.save(noteBlock);
@@ -252,12 +275,28 @@ class ReleaseNoteServiceImplTest {
 
         releaseNoteRepository.saveAndFlush(releaseNote);
 
+        List<BlockContextUpdateRequestDTO> blockContextUpdateRequestDTOList = new ArrayList<>();
+        List<NoteBlockUpdateRequestDTO> noteBlockUpdateRequestDTOList = new ArrayList<>();
+
+        BlockContextUpdateRequestDTO blockContextUpdateRequestDTO = new BlockContextUpdateRequestDTO();
+        blockContextUpdateRequestDTO.setContext("test");
+        blockContextUpdateRequestDTO.setTag("H1");
+        blockContextUpdateRequestDTO.setIndex(1L);
+
+        blockContextUpdateRequestDTOList.add(blockContextUpdateRequestDTO);
+
+        NoteBlockUpdateRequestDTO noteBlockUpdateRequestDTO = new NoteBlockUpdateRequestDTO();
+        noteBlockUpdateRequestDTO.setLabel("update");
+        noteBlockUpdateRequestDTO.setContexts(blockContextUpdateRequestDTOList);
+
+        noteBlockUpdateRequestDTOList.add(noteBlockUpdateRequestDTO);
+
         Date testDate = new Date();
 
         ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO = new ReleaseNoteUpdateRequestDTO();
         releaseNoteUpdateRequestDTO.setVersion("2.9.9");
         releaseNoteUpdateRequestDTO.setReleaseDate(testDate);
-        releaseNoteUpdateRequestDTO.setContent("test2");
+        releaseNoteUpdateRequestDTO.setBlocks(noteBlockUpdateRequestDTOList);
 
         releaseNoteService.updateReleaseNote(request, releaseNote.getId() ,releaseNoteUpdateRequestDTO);
 
@@ -265,7 +304,7 @@ class ReleaseNoteServiceImplTest {
 
 
         Assertions.assertAll(
-                () -> assertEquals("test2", releaseNoteTest.getNoteBlockList().get(0).getNoteBlockContext(), () -> "릴리즈 노트 내용이 제대로 수정 되지 않았습니다."),
+                () -> assertEquals("update", releaseNoteTest.getNoteBlockList().get(0).getLabel(), () -> "릴리즈 노트 내용이 제대로 수정 되지 않았습니다."),
                 () -> assertEquals("2.9.9", releaseNoteTest.getVersion(),() -> "릴리즈 노트 버전이 제대로 수정 되지 않았습니다."),
                 () -> assertEquals(testDate, releaseNoteTest.getReleaseDate(), () -> "릴리즈 노트 날짜가 제대로 수정 되지 않았습니다.")
         );
@@ -303,18 +342,34 @@ class ReleaseNoteServiceImplTest {
 
         userInProjectRepository.saveAndFlush(userInProject);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
         HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
 
-        ReleaseNote releaseNote = releaseNoteRepository.findById(Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", ""))).orElse(null);
+        //ReleaseNote releaseNote = releaseNoteRepository.findById(Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", ""))).orElse(null);
 
-        projectRepository.flush();
-        Project project1 = projectRepository.findById(project.getId()).orElse(null);
+        //projectRepository.flush();
+        //Project project1 = projectRepository.findById(project.getId()).orElse(null);
 
         ArrayList<ReleaseNoteVersionListResponseDTO> releaseNoteVersionListResponseDTO = releaseNoteService.loadProjectVersionList(request);
 
@@ -384,13 +439,29 @@ class ReleaseNoteServiceImplTest {
 
         userInProjectRepository.saveAndFlush(userInProject);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
-        HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
+        releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
 
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = releaseNoteService.loadRecentReleaseNote(request);
 
@@ -398,7 +469,7 @@ class ReleaseNoteServiceImplTest {
                 () -> assertEquals("1.9.9", releaseNoteContentResponseDTO.getVersion(), () -> "릴리즈 노트 버전이 제대로 로딩 되지 않았습니다."),
                 () -> assertEquals("Kim", releaseNoteContentResponseDTO.getCreator(), () -> "릴리즈 노트 작성자가 제대로 로딩 되지 않았습니다."),
                 () -> assertEquals(testDate, releaseNoteContentResponseDTO.getReleaseDate(), () -> "릴리즈 노트 날짜가 제대로 로딩 되지 않았습니다."),
-                () -> assertEquals("[test]", releaseNoteContentResponseDTO.getContent(), () -> "릴리즈 노트 내용이 제대로 로딩 되지 않았습니다.")
+                () -> assertEquals("new", releaseNoteContentResponseDTO.getBlocks().get(0).getLabel(), () -> "릴리즈 노트 내용이 제대로 로딩 되지 않았습니다.")
         );
     }
 
@@ -433,18 +504,34 @@ class ReleaseNoteServiceImplTest {
 
         userInProjectRepository.saveAndFlush(userInProject);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
         HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
+        releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
         ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
-        ReleaseNoteContentResponseDTO releaseNoteContentResponseDTOTest = releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
 
         Assertions.assertAll(
-                () -> assertEquals(1, releaseNoteContentResponseDTOTest.getCount(), () -> "조회수 증가가 제대로 되지 않았습니다.")
+                () -> assertEquals(1, releaseNoteContentResponseDTO.getCount(), () -> "조회수 증가가 제대로 되지 않았습니다.")
         );
     }
 
@@ -479,14 +566,30 @@ class ReleaseNoteServiceImplTest {
 
         userInProjectRepository.saveAndFlush(userInProject);
 
+        List<BlockContextCreateRequestDTO> blockContextContentResponseDTOList = new ArrayList<>();
+        List<NoteBlockCreateRequestDTO> noteBlockCreateRequestDTOList = new ArrayList<>();
+
+        BlockContextCreateRequestDTO blockContextCreateRequestDTO = new BlockContextCreateRequestDTO();
+        blockContextCreateRequestDTO.setContext("test");
+        blockContextCreateRequestDTO.setTag("H1");
+        blockContextCreateRequestDTO.setIndex(1L);
+
+        blockContextContentResponseDTOList.add(blockContextCreateRequestDTO);
+
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+        noteBlockCreateRequestDTO.setContexts(blockContextContentResponseDTOList);
+
+        noteBlockCreateRequestDTOList.add(noteBlockCreateRequestDTO);
+
         Date testDate = new Date();
         ReleaseNoteCreateRequestDTO releaseNoteCreateRequestDTO = new ReleaseNoteCreateRequestDTO();
         releaseNoteCreateRequestDTO.setReleaseDate(testDate);
         releaseNoteCreateRequestDTO.setVersion("1.9.9");
-        releaseNoteCreateRequestDTO.setContent("test");
+        releaseNoteCreateRequestDTO.setBlocks(noteBlockCreateRequestDTOList);
 
         HttpResponse httpResponse = releaseNoteService.createReleaseNote(request, project.getId(), releaseNoteCreateRequestDTO);
-        ReleaseNoteContentResponseDTO releaseNoteContentResponseDTO = releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
+        releaseNoteService.loadReleaseNote(request, Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
 
         SeenCheck seenCheck = seenCheckRepository.findByUserInProjectIdAndReleaseNoteId(userInProject.getId(), Long.parseLong(httpResponse.getDescription().substring(18,21).replace(" ","").replace("C", "")));
 

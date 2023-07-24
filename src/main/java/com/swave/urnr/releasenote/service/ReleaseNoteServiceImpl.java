@@ -6,10 +6,7 @@ import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.releasenote.domain.*;
 import com.swave.urnr.releasenote.repository.*;
-import com.swave.urnr.releasenote.requestdto.BlockContextCreateRequestDTO;
-import com.swave.urnr.releasenote.requestdto.NoteBlockCreateRequestDTO;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
-import com.swave.urnr.releasenote.requestdto.ReleaseNoteUpdateRequestDTO;
+import com.swave.urnr.releasenote.requestdto.*;
 import com.swave.urnr.releasenote.responsedto.*;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.domain.UserInProject;
@@ -185,9 +182,9 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
         StringBuilder content = new StringBuilder(new String());
         List<NoteBlock> noteBlockList = new ArrayList<>();
 
-        for(NoteBlockCreateRequestDTO noteBlockCreateRequestDTO : releaseNoteUpdateRequestDTO.getBlocks()){
+        for(NoteBlockUpdateRequestDTO noteBlockUpdateRequestDTO : releaseNoteUpdateRequestDTO.getBlocks()){
             NoteBlock noteBlock = NoteBlock.builder()
-                    .label(noteBlockCreateRequestDTO.getLabel())
+                    .label(noteBlockUpdateRequestDTO.getLabel())
                     .releaseNote(releaseNote)
                     .build();
 
@@ -195,11 +192,11 @@ public class ReleaseNoteServiceImpl implements NoteBlockService, ReleaseNoteServ
 
             List<BlockContext> blockContextList = new ArrayList<>();
 
-            for (BlockContextCreateRequestDTO blockContextCreateRequestDTO : noteBlockCreateRequestDTO.getContexts()){
+            for (BlockContextUpdateRequestDTO blockContextUpdateRequestDTO : noteBlockUpdateRequestDTO.getContexts()){
                 BlockContext blockContext = BlockContext.builder()
-                        .context(blockContextCreateRequestDTO.getContext())
-                        .tag(blockContextCreateRequestDTO.getTag())
-                        .index(blockContextCreateRequestDTO.getIndex())
+                        .context(blockContextUpdateRequestDTO.getContext())
+                        .tag(blockContextUpdateRequestDTO.getTag())
+                        .index(blockContextUpdateRequestDTO.getIndex())
                         .noteBlock(noteBlock)
                         .build();
                 content.append(blockContext.getContext());
