@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
-@ApiModel(value = "응답 DTO")
+@ApiModel(value = "유저 정보 리스트 반환용 DTO")
 public interface UserListResponseDTO {
 
     @ApiModelProperty(value="사용자 식별번호", example = "1", required = true)

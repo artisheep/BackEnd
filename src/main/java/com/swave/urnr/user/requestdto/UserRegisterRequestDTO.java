@@ -18,7 +18,7 @@ TODO: Find how to implement NOTNULL VALIDATE without hardcoding, also need to fi
 
  */
 @Data
-@ApiModel(value = "회원가입 DTO")
+@ApiModel(value = "회원가입 요청용 DTO")
 @Validated
 @AllArgsConstructor
 @NoArgsConstructor

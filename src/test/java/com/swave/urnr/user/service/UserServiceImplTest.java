@@ -63,11 +63,12 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("소속 등록 테스트")
+    @DisplayName("소속 수정 테스트")
     void initDepartment() {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("id",(long) 1);
+        User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
+        request.setAttribute("id", user.getId());
 
         UserDepartmentRequestDTO userDepartmentRequestDTO = UserDepartmentRequestDTO.builder()
                 .department("test")
@@ -85,6 +86,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("인증코드 반환 테스트")
     void getValidationCode() {
 
         UserValidateEmailDTO request = UserValidateEmailDTO.builder()
@@ -98,13 +100,12 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("유저 정보 반환 테스트")
     void getUser() throws UserNotFoundException {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("id",(long) 1);
-
-        Long userCode = 1L;
-        User user = userRepository.findById(userCode).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
+        request.setAttribute("id", user.getId());
         UserResponseDTO resultExcepted = UserResponseDTO.builder()
                 .department(user.getDepartment())
                 .isDeleted(user.isDeleted())
@@ -124,31 +125,35 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("현재 유저 정보 반환 테스트")
     void getCurrentUserInformation() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("id", (long) 1);
-        request.addHeader("Authorization","Hamburger");
-        User user = userRepository.findById((long) 1).get();
+        User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
+        request.setAttribute("id", user.getId());
+        request.addHeader("Authorization","test");
         ResponseEntity<UserResponseDTO> useTr = userService.getCurrentUserInformation(request);
         assertEquals( useTr.getStatusCode().value(), 200);
     }
 
     @Test
+    @DisplayName("토큰 확인 테스트")
     void checkInvalidToken() {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setAttribute("id", (long) 1);
-        request.addHeader("Authorization","Hamburger");
+        request.addHeader("Authorization","test");
         userService.checkInvalidToken(request);
 
     }
 
     @Test
+    @DisplayName("유저 정보 리스트 반환 테스트")
     void getUserInformationList() {
         userService.getUserInformationList();
     }
 
     @Test
+    @DisplayName("로그인 테스트")
     void getTokenByLogin() {
         UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
                 .email("corgiwalke@gmail.com")
@@ -164,11 +169,13 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("유저 정보 업데이트 테스트")
     void updateUser() {
 
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("id",(long) 1);
+        User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
+        request.setAttribute("id", user.getId());
 
 
         UserUpdateAccountRequestDTO userUpdateAccountRequestDTO = UserUpdateAccountRequestDTO.builder()
@@ -185,6 +192,7 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("임시 비밀번호 발급 테스트")
     void setTemporaryPassword() {
 
         UserValidateEmailDTO userValidateEmailDTO = UserValidateEmailDTO.builder()
@@ -197,12 +205,11 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("유저 삭제 테스트")
     void deleteUser() {
-
-
-
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setAttribute("id",(long) 1);
+        User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
+        request.setAttribute("id", user.getId());
 
         ResponseEntity<String> result = userService.deleteUser(request);
 

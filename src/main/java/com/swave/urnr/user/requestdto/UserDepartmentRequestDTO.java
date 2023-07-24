@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@ApiModel(value = "회원소속 입력 DTO")
+@ApiModel(value = "회원소속 입력 요청용 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDepartmentRequestDTO {

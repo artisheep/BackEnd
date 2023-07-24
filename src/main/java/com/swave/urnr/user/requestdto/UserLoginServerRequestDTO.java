@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@ApiModel(value = "로그인 DTO")
+@ApiModel(value = "로그인 요청용 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

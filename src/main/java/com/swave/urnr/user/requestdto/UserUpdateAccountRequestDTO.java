@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@ApiModel(value = "업데이트 DTO")
+@ApiModel(value = "사용자 정보 업데이트 요청용 DTO")
 @Data
 @Builder
 @AllArgsConstructor

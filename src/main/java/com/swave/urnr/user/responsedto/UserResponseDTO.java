@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.List;
 
 
-@ApiModel(value = "유저 데이터 응답 DTO")
+@ApiModel(value = "유저 정보 반환용 DTO")
 @Data
 @Builder
 @AllArgsConstructor
