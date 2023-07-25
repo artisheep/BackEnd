@@ -22,7 +22,5 @@ public interface ReleaseNoteService {
     public ReleaseNoteContentResponseDTO loadReleaseNote(HttpServletRequest request, Long releaseNoteId);
     public ArrayList<ReleaseNoteVersionListResponseDTO> loadProjectVersionList(HttpServletRequest request);
     public ReleaseNoteContentResponseDTO loadRecentReleaseNote(HttpServletRequest request);
-    public void increaseViewCount(Long releaseNoteId);
-    public void seenCheck(HttpServletRequest request, ReleaseNote releaseNote, UserInProject userInProject);
 
 }
