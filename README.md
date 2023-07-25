@@ -1,22 +1,23 @@
+# SWAVE Project - URINURI
 
 
 <div align="center">
- 
- <p>📖Tech Stack📖</p> 
- 
+
+ <p>📖Tech Stack📖</p>
+
  <p>🚉Platforms & Languages🚉</p>
  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white" />
- 
+
  <img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Conda-Forge&logoColor=white" />
-	
+
 
 
 
 
  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=MySQL&logoColor=white"/>
 
- 
- 
+
+
  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white"/>
 
 <p>🔋Tools🔋</p>
@@ -41,8 +42,8 @@
  <h3>MySQL : 8.0</h3>
  <h3>QueryDSL : 5.0</h3>
  <h3>Junit : 5</h3>
- 
- 
+
+
 
 
 </br>
@@ -53,23 +54,23 @@
  <h4>우리누리는 조직 내에서 릴리즈 노트를 공유할 수 있는 쉽고 효율적인 프로그램입니다. </br>
  S/W 개발팀, 제품 관리 팀 등 다른 그룹에 관계없이 릴리즈 노트가 필요한 모든 곳에 빠르게 전달할 수 있습니다. </h4>
 
- 
+
  <h2> Repository with Controllers</h2>
 
  <h3>chatGPT</h3>
  <h4>이 폴더에는 릴리즈 노트 요약기능에 사용될 chatGPT API관련 코드가 담겨져 있습니다. </h4>
- 
+
  <h3>Project</h3>
  <h4>이 폴더에는 프로젝트 관리기능과 관련된 코드가 들어있습니다.</h4>
- 
+
  <h3>Release Note</h3>
  <h4>이 폴더에는 릴리즈노트 관리기능과 관련된 코드가 들어있습니다. </h4>
- 
+
  <h3>USER</h3>
  <h4>이 폴더에는 유저 관리기능과 관련된 코드가 들어있습니다. </h4>
 </br>
  <h2>Git 브랜치 전략</h2>
- 
+
  </br>
  <h3>깃플로우</h3>
  <h4>master : 제품으로 출시될 수 있는 브랜치</h4>
@@ -97,18 +98,18 @@ URINURI is a powerful and efficient in-house release note sharing system designe
 ## Repository Structure
 This repository contains the code for the Spring Boot server used in the OurNuri project. It is structured to facilitate easy access based on the main features and whether they have controllers.
 ## Repositories with Controllers
-### chatgpt 
+### chatgpt
 This repository contains the code related to the functionalities implemented through the ChatGPT API.
 ### project
 This repository contains the code related to project management.
 ### releasenote
 This repository contains the code related to release notes and comment systems.
-### user 
+### user
 This repository contains the code related to user management and associated functionalities.
 ## Repositories without Controllers
-### util 
+### util
 This repository contains code that interacts with other functionalities or has reusability, although it does not have controllers.
-### 
+###
 
 
 ### Community

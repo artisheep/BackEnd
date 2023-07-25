@@ -20,5 +20,4 @@ public class AsyncConfig {
         taskExecutor.setThreadNamePrefix("Executor-");
         return taskExecutor;
     }
-
 }

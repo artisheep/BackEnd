@@ -9,11 +9,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@ApiModel(value = "로그인 DTO")
-
-@Builder
+@ApiModel(value = "로그인 요청용 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserLoginServerRequestDTO {
 
     @ApiModelProperty(value="사용자 이메일", example = "artisheep@naver.com", required = true)
