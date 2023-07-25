@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final OAuthService oAuthService;
     private final MailSendImp mailSendImp;
     private final TokenService tokenService;
+
 
     public PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -110,7 +112,7 @@ public class UserServiceImpl implements UserService {
         if (result) {
             return ResponseEntity.ok().body(code);
         }
-        code = mailSendImp.sendSimpleMessage(email);
+        code = mailSendImp.sendCodeMessage(email);
         return ResponseEntity.ok().body(code);
     }
 
@@ -157,8 +159,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserListResponseDTO>  getUserInformationList(){
-        return userRepository.findAllUser();
+        List<UserListResponseDTO> result =  userRepository.findAll().stream().map(
+User -> {
+    UserListResponseDTO userListResponseDTO = new UserListResponseDTO(User.getId(), User.getUsername(), User.getDepartment());
+return userListResponseDTO;
+}
+).collect(Collectors.toList());
+        return result;
+
     }
+
 
     @Override
     public ResponseEntity<String> getTokenByLogin(UserLoginServerRequestDTO requestDto)  {
@@ -219,7 +229,7 @@ public class UserServiceImpl implements UserService {
         if (!result) {
             return ResponseEntity.ok().body(code);
         }
-        code = mailSendImp.sendSimpleMessage(email);
+        code = mailSendImp.sendCodeMessage(email);
         User user =  userRepository.findByEmail(email).get();
         user.setPassword(encoder.encode(code));
 

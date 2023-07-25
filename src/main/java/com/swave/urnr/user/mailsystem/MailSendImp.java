@@ -24,20 +24,26 @@ public class MailSendImp implements MailServiceInter {
     // 메일 내용 작성
     @Override
     public MimeMessage createMessage(String to) throws  MessagingException, UnsupportedEncodingException {
+        /*
+        TODO: Change name
+        sendSimpleMessage가 무슨 역할을 맡고 있는지,
+왜 이 친구가 임시 패스워드를 반환하는지 잘 모르겠습니다.
+더 좋은 작명이 필요해 보입니다.
+         */
 		System.out.println("보내는 대상 : " + to);
 		System.out.println("인증 번호 : " + ePw);
 
         MimeMessage message = emailsender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);// 보내는 대상
-        message.setSubject("SWAVE 인증 ");// 제목
+        message.setSubject("SWAVE 코드 메일");// 제목
 
         String msgg = "";
         msgg += "<div style='margin:100px;'>";
         msgg += "<h1> 안녕하세요</h1>";
         msgg += "<h1> SWAVE RELEASE NOTE 공유 시스템 입니다</h1>";
         msgg += "<br>";
-        msgg += "<p>아래 코드를 인증 창으로 돌아가 입력해주세요<p>";
+        msgg += "<p>요청하신 코드를 보내드립니다.<p>";
         msgg += "<br>";
         msgg += "<p>항상 당신의 꿈을 응원합니다. 감사합니다!<p>";
         msgg += "<br>";
@@ -87,7 +93,7 @@ public class MailSendImp implements MailServiceInter {
     // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
     // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
     @Override
-    public String sendSimpleMessage(String to) throws RuntimeException {
+    public String sendCodeMessage(String to) throws RuntimeException {
 
         ePw = createKey();
 
