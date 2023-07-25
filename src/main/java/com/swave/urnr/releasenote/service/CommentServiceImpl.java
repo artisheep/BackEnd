@@ -59,6 +59,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
     }
 
+    @Override
     public CommentContentListResponseDTO loadRecentComment(Long projectId){
         CommentContentListResponseDTO commentContentListResponseDTO = new CommentContentListResponseDTO(new ArrayList<>());
         List<CommentContentResponseDTO> comments = commentRepository.findTop5RecentComment(projectId);

@@ -2,8 +2,13 @@ package com.swave.urnr.releasenote.service;
 
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
+import com.swave.urnr.releasenote.domain.NoteBlock;
+import com.swave.urnr.releasenote.domain.ReleaseNote;
+import com.swave.urnr.releasenote.repository.NoteBlockRepository;
+import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.releasenote.requestdto.BlockContextCreateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.NoteBlockCreateRequestDTO;
+import com.swave.urnr.releasenote.requestdto.NoteBlockUpdateRequestDTO;
 import com.swave.urnr.releasenote.requestdto.ReleaseNoteCreateRequestDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
 import com.swave.urnr.releasenote.responsedto.ReleaseNoteLabelContentResponseDTO;
@@ -33,6 +38,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -49,6 +55,10 @@ class NoteBlockServiceTest {
     private UserInProjectRepository userInProjectRepository;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private NoteBlockRepository noteBlockRepository;
+    @Autowired
+    private ReleaseNoteRepository releaseNoteRepository;
 
     @Autowired
     private NoteBlockService noteBlockService;
@@ -63,6 +73,77 @@ class NoteBlockServiceTest {
         request.setAttribute("id", 1L);
         request.setAttribute("username", "Kim");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+    }
+
+    @Test
+    @DisplayName(value = "노트 블럭 생성 테스트")
+    @Transactional
+    void createNoteBlock(){
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+
+        ReleaseNote releaseNote = new ReleaseNote();
+        releaseNoteRepository.save(releaseNote);
+
+        NoteBlock noteBlock = noteBlockService.createNoteBlock(noteBlockCreateRequestDTO,releaseNote);
+
+        NoteBlock noteBlock1 = noteBlockRepository.findById(noteBlock.getId())
+                .orElseThrow(NoSuchElementException::new);
+
+        Assertions.assertAll(
+                () -> assertEquals("new", noteBlock1.getLabel(), () -> "노트 블럭 생성이 제대로 되지 않았습니다.")
+        );
+    }
+
+    @Test
+    @DisplayName(value = "노트 블럭 수정 테스트")
+    @Transactional
+    void updateNoteBlock(){
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+
+        ReleaseNote releaseNote = new ReleaseNote();
+        releaseNoteRepository.save(releaseNote);
+
+        NoteBlock noteBlock = noteBlockService.createNoteBlock(noteBlockCreateRequestDTO,releaseNote);
+
+        NoteBlockUpdateRequestDTO noteBlockUpdateRequestDTO = new NoteBlockUpdateRequestDTO();
+        noteBlockUpdateRequestDTO.setLabel("update");
+
+        NoteBlock noteBlock1 = noteBlockService.updateNoteBlock(noteBlockUpdateRequestDTO,releaseNote);
+
+        NoteBlock noteBlock2 = noteBlockRepository.findById(noteBlock1.getId())
+                .orElseThrow(NoSuchElementException::new);
+
+        Assertions.assertAll(
+                () -> assertEquals("update", noteBlock2.getLabel(), () -> "노트 블럭 업데이트가 제대로 되지 않았습니다.")
+        );
+
+    }
+
+    @Test
+    @DisplayName(value = "노트 블럭 삭제 테스트")
+    @Transactional
+    void deleteNoteBlock(){
+        NoteBlockCreateRequestDTO noteBlockCreateRequestDTO = new NoteBlockCreateRequestDTO();
+        noteBlockCreateRequestDTO.setLabel("new");
+
+        ReleaseNote releaseNote = new ReleaseNote();
+        releaseNoteRepository.save(releaseNote);
+
+        NoteBlock noteBlock = noteBlockService.createNoteBlock(noteBlockCreateRequestDTO,releaseNote);
+
+        NoteBlockUpdateRequestDTO noteBlockUpdateRequestDTO = new NoteBlockUpdateRequestDTO();
+        noteBlockUpdateRequestDTO.setLabel("update");
+
+        noteBlockService.deleteNoteBlock(noteBlock.getId());
+
+        NoteBlock noteBlock1 = noteBlockRepository.findById(noteBlock.getId())
+                .orElse(null);
+
+        Assertions.assertAll(
+                () -> assertEquals(null, noteBlock1, () -> "노트 블럭 삭제가 제대로 되지 않았습니다.")
+        );
     }
 
     @Test
@@ -203,4 +284,5 @@ class NoteBlockServiceTest {
         );
 
     }
+
 }

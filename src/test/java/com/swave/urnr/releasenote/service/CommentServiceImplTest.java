@@ -8,6 +8,7 @@ import com.swave.urnr.releasenote.repository.CommentRepository;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
 import com.swave.urnr.releasenote.requestdto.CommentCreateRequestDTO;
 import com.swave.urnr.releasenote.responsedto.CommentContentListResponseDTO;
+import com.swave.urnr.releasenote.responsedto.CommentContentResponseDTO;
 import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.util.http.HttpResponse;
@@ -198,6 +199,57 @@ class CommentServiceImplTest {
                 () -> assertEquals(null, comment, () -> "댓글이 제대로 삭제 되지 않았습니다")
         );
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("댓글 리스트 로드 테스트")
+    void loadCommentList(){
+
+        User user = User.builder()
+                .email("test@gmail.com")
+                .name("Kim")
+                .password("1q2w3e4r5t")
+                .provider("local")
+                .build();
+
+        userRepository.saveAndFlush(user);
+
+        request.setAttribute("id", user.getId());
+
+        Project project = Project.builder()
+                .createDate(new Date())
+                .description("test project")
+                .name("name")
+                .build();
+
+        projectRepository.saveAndFlush(project);
+
+        releaseNote = ReleaseNote.builder()
+                .version("1.0.0")
+                .lastModifiedDate(new Date())
+                .releaseDate(new Date())
+                .count(0)
+                .isUpdated(false)
+                .summary("summary")
+                .project(project)
+                .noteBlockList(null)
+                .user(user)
+                .commentList(new ArrayList<>())
+                .build();
+
+        releaseNoteRepository.saveAndFlush(releaseNote);
+
+        commentCreateRequestDTO = new CommentCreateRequestDTO();
+        commentCreateRequestDTO.setContent("test");
+
+        commentService.createComment(request, releaseNote.getId(),commentCreateRequestDTO);
+
+        ArrayList<CommentContentResponseDTO> commentContentResponseDTO = commentService.loadCommentList(releaseNote.getId());
+
+        Assertions.assertAll(
+                () -> assertEquals("test", commentContentResponseDTO.get(0).getContext(), () -> "댓글의 로드가 제대로 되지 않았습니다")
+        );
     }
 
 }

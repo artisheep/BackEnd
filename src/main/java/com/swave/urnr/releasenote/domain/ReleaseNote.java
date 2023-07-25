@@ -99,6 +99,7 @@ public class ReleaseNote {
             noteBlockContentList.add(noteBlockContentResponseDTO);
         }
 
+        releaseNoteContentResponseDTO.setReleaseNoteId(this.id);
         releaseNoteContentResponseDTO.setCreator(this.user.getUsername());
         releaseNoteContentResponseDTO.setVersion(this.version);
         releaseNoteContentResponseDTO.setLastModified(this.lastModifiedDate);
