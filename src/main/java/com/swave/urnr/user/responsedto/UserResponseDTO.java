@@ -11,10 +11,9 @@ import java.util.List;
 
 
 @ApiModel(value = "유저 정보 반환용 DTO")
-@Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class UserResponseDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

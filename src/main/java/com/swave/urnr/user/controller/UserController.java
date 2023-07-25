@@ -1,5 +1,6 @@
 package com.swave.urnr.user.controller;
 
+import com.swave.urnr.user.responsedto.ManagerResponseDTO;
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
 import com.swave.urnr.util.common.ResponseDTO;
@@ -82,9 +83,9 @@ public class UserController {
     }
 
     @Operation(summary="사용자 정보 리스트 반환", description="사용자들의 정보 리스트를 반환합니다.")
-    @GetMapping("/prelogin/getuserlist")
-    public List<UserListResponseDTO>  getUserInformationList() {
-        return userService.getUserInformationList();
+    @GetMapping("/getuserlist")
+    public ManagerResponseDTO getUserInformationList(HttpServletRequest request) {
+        return userService.getUserInformationList(request);
     }
 
     @Operation(summary="사용자 계정 정보 반환", description="사용자의 계정 정보를 반환합니다.")

@@ -46,11 +46,9 @@ class UserControllerTest {
     @BeforeEach
     @DisplayName("유저 생성 테스트")
     void setAccountToServer() throws Exception {
-        UserRegisterRequestDTO userRegisterRequestDto = UserRegisterRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .name("전강훈")
-                .password("1q2w3e4r")
-                .build();
+        userRepository.deleteAll();
+
+        UserRegisterRequestDTO userRegisterRequestDto = new UserRegisterRequestDTO("corgiwalke@gmail.com","1q2w3e4r","전강훈");
 
         String json = objectMapper.writeValueAsString(userRegisterRequestDto);
         log.info(json);
@@ -70,6 +68,7 @@ class UserControllerTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("유저 중복 생성 테스트")
     void createAccountByEmail() throws Exception {
 
@@ -77,11 +76,9 @@ class UserControllerTest {
         정상 생성 케이스 및 중복, 그리고 유효성 없는 이메일로 테스트 진행
          */
 
-        UserRegisterRequestDTO userRegisterRequestDto = UserRegisterRequestDTO.builder()
-                .email("artisheep@naver.com")
-                .name("전강훈")
-                .password("1q2w3e4r")
-                .build();
+
+        UserRegisterRequestDTO userRegisterRequestDto = new UserRegisterRequestDTO("artisheep@naver.com","1q2w3e4r","전강훈");
+        log.info("TEST : "+userRegisterRequestDto.getEmail());
 
         String json = objectMapper.writeValueAsString(userRegisterRequestDto);
         log.info(json);
@@ -96,11 +93,7 @@ class UserControllerTest {
                         .content(json))
                 .andExpect(status().is(409))
                 .andReturn();
-        userRegisterRequestDto = UserRegisterRequestDTO.builder()
-                .email("artisheepnavercom")
-                .name("전강훈")
-                .password("1q2w3e4r")
-                .build();
+        userRegisterRequestDto =new UserRegisterRequestDTO("artisheepnavercom","1q2w3e4r","전강훈");
         json = objectMapper.writeValueAsString(userRegisterRequestDto);
         result = mockmvc.perform(post("/api/user/prelogin/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -113,9 +106,7 @@ class UserControllerTest {
     @Test
     @DisplayName("이메일 전송 테스트")
     void emailSend() throws Exception {
-        UserValidateEmailDTO userValidateEmailDTO = UserValidateEmailDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .build();
+        UserValidateEmailDTO userValidateEmailDTO = new UserValidateEmailDTO("corgiwalke@gmail.com");
 
         String json = objectMapper.writeValueAsString(userValidateEmailDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/get-temporary-password")
@@ -130,10 +121,7 @@ class UserControllerTest {
     @DisplayName("유저 업데이트 테스트")
     void updateUser() throws Exception{
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r")
-                .build();
+        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r");
 
         String json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/login-by-email")
@@ -141,13 +129,8 @@ class UserControllerTest {
                         .content(json))
                 .andExpect(status().is(200))
                 .andReturn();
-        UserUpdateAccountRequestDTO userUpdateAccountRequestDto = UserUpdateAccountRequestDTO.builder()
-                .department("Good bye")
-                .password("Seeyou")
-                .name("Ganghoon jeon")
-                .build();
-
-        json = objectMapper.writeValueAsString(userUpdateAccountRequestDto);
+        UserUpdateAccountRequestDTO userUpdateAccountRequestDTO = new UserUpdateAccountRequestDTO("TestPassword", "TestDeparment","Ganghoon");
+        json = objectMapper.writeValueAsString(userUpdateAccountRequestDTO);
         String responseContent = result.getResponse().getContentAsString();
         result = mockmvc.perform(put("/api/user/update")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -161,10 +144,7 @@ class UserControllerTest {
     @DisplayName("부서 입력 테스트")
     void initDepartment() throws Exception {
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r")
-                .build();
+        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r");
 
         String json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/login-by-email")
@@ -173,9 +153,7 @@ class UserControllerTest {
                 .andExpect(status().is(200))
                 .andReturn();
 
-        UserDepartmentRequestDTO userDepartmentRequestDto = UserDepartmentRequestDTO.builder()
-                .department("Test")
-                .build();
+        UserDepartmentRequestDTO userDepartmentRequestDto = new UserDepartmentRequestDTO("Test");
 
         json = objectMapper.writeValueAsString(userDepartmentRequestDto);
         String responseContent = result.getResponse().getContentAsString();
@@ -191,10 +169,8 @@ class UserControllerTest {
     @DisplayName("로그인 테스트")
     void getTokenByLogin() throws Exception {
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r")
-                .build();
+
+        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r");
 
         String json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/login-by-email")
@@ -203,10 +179,9 @@ class UserControllerTest {
                 .andExpect(status().is(200))
                 .andReturn();
 
-        userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r!!!!")
-                .build();
+
+        userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r!!!!");
+
 
         json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         result = mockmvc.perform(post("/api/user/prelogin/login-by-email")
@@ -220,10 +195,7 @@ class UserControllerTest {
     @DisplayName("삭제 테스트")
     void deleteUser() throws  Exception {
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r")
-                .build();
+        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r");
 
         String json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/login-by-email")
@@ -247,7 +219,6 @@ class UserControllerTest {
 
     @Test
     void getUserInformationList() throws Exception {
-
         MvcResult result = mockmvc.perform(get("/api/user/prelogin/getuserlist")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
@@ -258,10 +229,9 @@ class UserControllerTest {
     @Test
     void getCurrentUserInformation() throws Exception {
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = UserLoginServerRequestDTO.builder()
-                .email("corgiwalke@gmail.com")
-                .password("1q2w3e4r")
-                .build();
+
+        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO("corgiwalke@gmail.com", "1q2w3e4r");
+
 
         String json = objectMapper.writeValueAsString(userLoginServerRequestDTO);
         MvcResult result = mockmvc.perform(post("/api/user/prelogin/login-by-email")

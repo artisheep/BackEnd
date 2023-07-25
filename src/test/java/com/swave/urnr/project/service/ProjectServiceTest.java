@@ -78,9 +78,8 @@ class ProjectServiceTest {
                 .build();
         userRepository.save(user);
 
-        UserLoginServerRequestDTO userLoginServerRequestDTO = new UserLoginServerRequestDTO();
-        userLoginServerRequestDTO.setEmail(user.getEmail());
-        userLoginServerRequestDTO.setPassword(user.getPassword());
+        UserLoginServerRequestDTO userLoginServerRequestDTO =  new UserLoginServerRequestDTO(user.getEmail(),user.getPassword());
+
         //String token = userService.getTokenByLogin(userLoginServerRequestDTO);
 
         User user2 = User.builder()
