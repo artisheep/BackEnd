@@ -2,10 +2,8 @@ package com.swave.urnr.project.controller;
 
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
-import com.swave.urnr.project.responsedto.ProjectContentResponseDTO;
-import com.swave.urnr.project.responsedto.ProjectListResponseDTO;
+import com.swave.urnr.project.responsedto.*;
 
-import com.swave.urnr.project.responsedto.ProjectManagementContentResponseDTO;
 import com.swave.urnr.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +58,16 @@ public class ProjectController {
     @Operation(summary="프로젝트 하나 가져오기(관리페이지)", description="프로젝트ID를 가져와 프로젝트와 유저정보를 표시합니다.")
     @GetMapping("/manage/{projectId}")
     public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request, @PathVariable Long projectId){
-        return projectService.loadManagementProject(request,projectId);
+        //loadManagementProject
+        //loadManagementProjectJPA
+        return projectService.loadManagementProjectJPA(request,projectId);
+    }
+
+    @Operation(summary="프로젝트 검색하기", description="프로젝트 검색결과를 표시합니다.")
+    @GetMapping("/search")
+    public List<ProjectSearchContentResponseDTO> searchProject(@RequestParam String keyword){
+        System.out.println(keyword);
+        return projectService.searchProject(keyword);
     }
 
     //멤버 편집

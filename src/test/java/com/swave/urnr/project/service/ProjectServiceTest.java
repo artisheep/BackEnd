@@ -174,7 +174,7 @@ class ProjectServiceTest {
     @Test
     void loadProjectList() {
         List<ProjectListResponseDTO> projectListResponseDTOList = projectService.loadProjectList(request);
-        
+
         assertEquals(projectListResponseDTOList.get(0).getName(),"니거무라");
         assertEquals(projectListResponseDTOList.get(0).getDescription(),"이거도");
         assertEquals(projectListResponseDTOList.get(0).getId(),3L);
