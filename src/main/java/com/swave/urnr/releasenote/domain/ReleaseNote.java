@@ -1,10 +1,7 @@
 package com.swave.urnr.releasenote.domain;
 
 import com.swave.urnr.project.domain.Project;
-import com.swave.urnr.releasenote.responsedto.BlockContextContentResponseDTO;
-import com.swave.urnr.releasenote.responsedto.NoteBlockContentResponseDTO;
-import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentResponseDTO;
-import com.swave.urnr.releasenote.responsedto.ReleaseNoteContentListResponseDTO;
+import com.swave.urnr.releasenote.responsedto.*;
 import com.swave.urnr.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
@@ -124,6 +121,15 @@ public class ReleaseNote {
         releaseNoteContentListResponseDTO.setSummary(this.summary);
 
         return releaseNoteContentListResponseDTO;
+    }
+
+    public ReleaseNoteVersionResponseDTO makeReleaseNoteVersionResponseDTO(){
+        ReleaseNoteVersionResponseDTO releaseNoteVersionResponseDTO = new ReleaseNoteVersionResponseDTO();
+
+        releaseNoteVersionResponseDTO.setReleaseNoteId(this.getId());
+        releaseNoteVersionResponseDTO.setVersion(this.getVersion());
+
+        return releaseNoteVersionResponseDTO;
     }
 
     public void addViewCount(){

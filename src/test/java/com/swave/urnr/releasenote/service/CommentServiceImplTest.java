@@ -1,5 +1,6 @@
 package com.swave.urnr.releasenote.service;
 
+import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.releasenote.domain.Comment;
 import com.swave.urnr.releasenote.domain.ReleaseNote;
@@ -117,6 +118,14 @@ class CommentServiceImplTest {
 
         request.setAttribute("id", user.getId());
 
+        Project project = Project.builder()
+                .createDate(new Date())
+                .description("test project")
+                .name("name")
+                .build();
+
+        projectRepository.saveAndFlush(project);
+
         releaseNote = ReleaseNote.builder()
                 .version("1.0.0")
                 .lastModifiedDate(new Date())
@@ -124,7 +133,7 @@ class CommentServiceImplTest {
                 .count(0)
                 .isUpdated(false)
                 .summary("summary")
-                .project(projectRepository.findById(1L).orElse(null))
+                .project(project)
                 .noteBlockList(null)
                 .user(null)
                 .commentList(new ArrayList<>())
@@ -137,7 +146,7 @@ class CommentServiceImplTest {
 
         commentService.createComment(request, releaseNote.getId(),commentCreateRequestDTO);
 
-        CommentContentListResponseDTO commentContentListResponseDTO = commentService.loadRecentComment(1L);
+        CommentContentListResponseDTO commentContentListResponseDTO = commentService.loadRecentComment(project.getId());
 
         Assertions.assertAll(
                 () -> assertEquals("test", commentContentListResponseDTO.getComments().get(0).getContext(), () -> "댓글의 로드가 제대로 되지 않았습니다")

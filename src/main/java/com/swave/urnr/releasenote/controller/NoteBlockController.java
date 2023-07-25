@@ -28,7 +28,6 @@ public class NoteBlockController {
         return noteBlockService.countLabel(projectId);
     }
 
-
     @Operation(summary = "프로젝트 전체 릴리즈 노트 라벨로 필터링 하기", description = "projectId의 프로젝트에 포함된 모든 릴리즈 노트를 라벨로 필터링 해서 보여줍니다.")
     @GetMapping("/api/project/{projectId}/release/label/filter")
     public List<ReleaseNoteLabelContentResponseDTO> filterByLabel(@PathVariable Long projectId){
