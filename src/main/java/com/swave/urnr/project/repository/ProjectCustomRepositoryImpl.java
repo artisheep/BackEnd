@@ -4,9 +4,7 @@ package com.swave.urnr.project.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.StringExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.responsedto.ProjectSearchListResponseDTO;
 import com.swave.urnr.project.responsedto.TestDTO;
 import com.swave.urnr.user.domain.QUserInProject;
@@ -36,21 +34,10 @@ public class ProjectCustomRepositoryImpl implements ProjectCustomRepository {
     public List<ProjectSearchListResponseDTO> searchProject(String keyword) {
 
 
-// Create a JPAQuery object with your JPA EntityManager
-        //JPAQuery<Project> query = new JPAQuery<>(entityManager);
-
-// Build the query using Querydsl's BooleanExpression
         StringExpression projectFields = project.project.name.concat(" ").concat(project.description);
         BooleanExpression keywordExpression = projectFields.contains(keyword);
 
-        //projectid
-        //projectname
-        //projectdescription
-        //projectcreatedate
-        //manger id
-        //manager name
-        //manager department
-        //List<UserMemberInfoResponseDTO> teamMembers;
+
         return queryFactory
                 .select(Projections.constructor(ProjectSearchListResponseDTO.class,
                         project.id,

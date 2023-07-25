@@ -222,6 +222,8 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(projectId).get();
         User user = userRepository.findById((Long)request.getAttribute("id")).orElse(null);
         List<UserMemberInfoResponseDTO> getMembers = userInProjectRepository.getMembers(projectId);
+        log.info(getMembers.toString());
+        System.out.println(getMembers);
 
         //널에러 즉 팀원이 없을 때 해결하기
         //log.info(getMembers.get(0).getUser_Name());
