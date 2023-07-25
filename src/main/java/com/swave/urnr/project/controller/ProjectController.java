@@ -5,6 +5,7 @@ import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.*;
 
 import com.swave.urnr.project.service.ProjectService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import com.swave.urnr.util.http.HttpResponse;
@@ -20,6 +21,7 @@ import java.util.List;
 @CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
+@Api(tags = "ProjectController")
 public class ProjectController {
 
 
