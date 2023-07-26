@@ -30,7 +30,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     // 인증에서 제외할 url
     // 3번째줄 부터는 swagger
     private static final String Exclude_url="/api/test," +
-            "/api/user/prelogin/**," +
             "/swagger/**,/v2/api-docs/**,/configuration/ui/**," +
             "/swagger-resources/**,/configuration/security/**," +
             "/swagger-ui/**,/webjars/**,/swagger-ui.html";
@@ -127,6 +126,7 @@ Request has now have attribute value
                 return true;
             }
         }
+
         if(request.getMethod().toString().equals("POST")){
 
             String[] excludePostUrls = Exclude_post_url.split(",");
