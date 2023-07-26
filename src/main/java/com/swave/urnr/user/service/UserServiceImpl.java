@@ -72,8 +72,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto)  {
 
-
-
         Long id = (Long) request.getAttribute("id");
         log.info(id.toString());
 
@@ -90,8 +88,8 @@ public class UserServiceImpl implements UserService {
 
             responseDto= new ResponseDTO(200,user.getDepartment());
             return ResponseEntity.status(200).body(responseDto);
-    }
 
+    }
 
     @Override
     public ResponseEntity<String> getValidationCode(UserValidateEmailDTO request)  {
@@ -106,7 +104,6 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok().body(code);
     }
 
-
     @Override
     public UserResponseDTO getUser(HttpServletRequest request) throws UserNotFoundException {
         Long userCode = (Long) request.getAttribute("id");
@@ -114,11 +111,8 @@ public class UserServiceImpl implements UserService {
         UserResponseDTO result = new UserResponseDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword(),
                 user.getDepartment(),
-                user.getUsername(),
-                user.getProvider(),
-                user.isDeleted());
+                user.getUsername());
         return result;
     }
 
@@ -146,9 +140,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /*
-    TODO: HTTPServeletrequest 달고 user정보 보내주기.
-     */
     @Override
     public ManagerResponseDTO getUserInformationList(HttpServletRequest request) throws UserNotFoundException{
 

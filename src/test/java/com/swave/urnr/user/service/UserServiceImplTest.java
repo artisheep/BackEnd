@@ -5,6 +5,7 @@ import com.swave.urnr.user.domain.User;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.user.requestdto.*;
+import com.swave.urnr.user.responsedto.ManagerResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
 import com.swave.urnr.util.common.ResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -99,11 +100,8 @@ class UserServiceImplTest {
         UserResponseDTO resultExcepted = new UserResponseDTO(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword(),
                 user.getDepartment(),
-                user.getUsername(),
-                user.getProvider(),
-                user.isDeleted());
+                user.getUsername() );
 
 
         UserResponseDTO result = userService.getUser(request);
@@ -144,7 +142,7 @@ class UserServiceImplTest {
         User user = userRepository.findByEmail("corgiwalke@gmail.com").get();
         request.setAttribute("id", user.getId());
         request.addHeader("Authorization","test");
-        userService.getUserInformationList(request);
+        ManagerResponseDTO result = userService.getUserInformationList(request);
     }
 
     @Test
@@ -160,6 +158,7 @@ class UserServiceImplTest {
 
     @Test
     void getTokenByOauth() {
+
     }
 
     @Test

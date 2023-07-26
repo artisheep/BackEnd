@@ -35,6 +35,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             "/swagger-resources/**,/configuration/security/**," +
             "/swagger-ui/**,/webjars/**,/swagger-ui.html";
 
+
+    private static final String Exclude_post_url="/api/user,"+
+            "/api/user/validation,"+
+            "/api/user/temporary-password,"+
+            "/api/user/login**";
+
     private static final List<String> EXCLUDE_URL =
             Collections.unmodifiableList(
                     Arrays.asList(
@@ -44,7 +50,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String jwtHeader = ((HttpServletRequest)request).getHeader(JwtProperties.HEADER_STRING);
 
-        if (pathMatchesExcludePattern(request.getRequestURI())) {
+        if (pathMatchesExcludePattern(request)) {
             // Skip JWT authentication for excluded URLs
             try {
                 filterChain.doFilter(request, response);
@@ -72,7 +78,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         Long id = null;
         String name = null;
 
-        if (pathMatchesExcludePattern(request.getRequestURI())) {
+        if (pathMatchesExcludePattern(request)) {
             // Skip JWT authentication for excluded URLs
             filterChain.doFilter(request, response);
             return;
@@ -107,7 +113,9 @@ Request has now have attribute value
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
     }
-    private boolean pathMatchesExcludePattern(String requestURI) {
+    private boolean pathMatchesExcludePattern(HttpServletRequest request ) {
+        String requestURI = request.getRequestURI();
+
         AntPathMatcher pathMatcher = new AntPathMatcher();
         String[] excludeUrls = Exclude_url.split(",");
 
@@ -115,7 +123,18 @@ Request has now have attribute value
 
         for (String excludeUrl : excludeUrls) {
             if (pathMatcher.match(excludeUrl, requestURI)) {
+
                 return true;
+            }
+        }
+        if(request.getMethod().toString().equals("POST")){
+
+            String[] excludePostUrls = Exclude_post_url.split(",");
+            for (String excludeUrl : excludePostUrls ) {
+                if (pathMatcher.match(excludeUrl, requestURI)) {
+
+                    return true;
+                }
             }
         }
         return false;

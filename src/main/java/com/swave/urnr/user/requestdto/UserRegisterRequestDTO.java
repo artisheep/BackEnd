@@ -10,10 +10,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-/*
-TODO: Find how to implement NOTNULL VALIDATE without hardcoding, also need to find Email validation system with RNG
-
- */
 @ApiModel(value = "회원가입 요청용 DTO")
 @Validated
 @Getter
