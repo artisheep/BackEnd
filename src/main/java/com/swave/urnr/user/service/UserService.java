@@ -1,5 +1,6 @@
 package com.swave.urnr.user.service;
 
+import com.swave.urnr.user.responsedto.ManagerResponseDTO;
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
 import com.swave.urnr.util.common.ResponseDTO;
@@ -35,5 +36,5 @@ public interface UserService {
 
     void checkInvalidToken(HttpServletRequest request) ;
 
-    List<UserListResponseDTO> getUserInformationList();
+    ManagerResponseDTO getUserInformationList(HttpServletRequest request);
 }
