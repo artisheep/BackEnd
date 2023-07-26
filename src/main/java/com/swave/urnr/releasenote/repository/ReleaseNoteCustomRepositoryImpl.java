@@ -5,7 +5,6 @@ import com.swave.urnr.releasenote.domain.ReleaseNote;
 import com.swave.urnr.user.domain.UserInProject;
 
 import static com.swave.urnr.project.domain.QProject.project;
-import static com.swave.urnr.releasenote.domain.QNoteBlock.noteBlock;
 import static com.swave.urnr.user.domain.QUserInProject.userInProject;
 import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 

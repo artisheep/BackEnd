@@ -14,9 +14,6 @@ import static com.swave.urnr.releasenote.domain.QReleaseNote.releaseNote;
 import static com.swave.urnr.releasenote.domain.QNoteBlock.noteBlock;
 import static com.swave.urnr.releasenote.domain.QBlockContext.blockContext;
 
-
-
-
 public class NoteBlockCustomRepositoryImpl implements NoteBlockCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
