@@ -1,6 +1,7 @@
 package com.swave.urnr.project.controller;
 
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
+import com.swave.urnr.project.requestdto.ProjectKeywordRequestContentDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.*;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -59,9 +61,9 @@ public class ProjectController {
 
     @Operation(summary="프로젝트 검색하기", description="프로젝트 검색결과를 표시합니다.")
     @GetMapping("/search")
-    public List<ProjectSearchContentResponseDTO> searchProject(@RequestParam String keyword){
-        System.out.println(keyword);
-        return projectService.searchProject(keyword);
+    public ProjectSearchResultListResponseDTO searchProject(@RequestBody ProjectKeywordRequestContentDTO projectKeywordRequestContentDTO)throws UnsupportedEncodingException {
+        System.out.println(projectKeywordRequestContentDTO.getKeyword());
+        return projectService.searchProject(projectKeywordRequestContentDTO);
     }
 
 

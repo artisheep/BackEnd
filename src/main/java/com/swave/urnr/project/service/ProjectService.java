@@ -1,5 +1,6 @@
 package com.swave.urnr.project.service;
 
+import com.swave.urnr.project.requestdto.ProjectKeywordRequestContentDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.*;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
@@ -7,6 +8,8 @@ import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
 import javax.servlet.http.HttpServletRequest;
 
 import com.swave.urnr.util.http.HttpResponse;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface ProjectService {
@@ -25,7 +28,8 @@ public interface ProjectService {
 
     HttpResponse deleteProject(Long projectId);
 
-    List<ProjectSearchContentResponseDTO> searchProject(String keyword);
+    ProjectSearchResultListResponseDTO searchProject(ProjectKeywordRequestContentDTO projectKeywordRequestContentDTO) throws UnsupportedEncodingException;
+
 
 
     //String updateUsers(ProjectRequestDto project);

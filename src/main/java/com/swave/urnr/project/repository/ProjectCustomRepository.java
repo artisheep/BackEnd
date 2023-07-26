@@ -8,6 +8,9 @@ import java.util.List;
 public interface ProjectCustomRepository {
 
 
-    List<ProjectSearchListResponseDTO> searchProject(String keyword);
+    List<ProjectSearchListResponseDTO> searchProjectByName(String keyword);
+    List<ProjectSearchListResponseDTO> searchProjectByDescription(String keyword);
+    List<ProjectSearchListResponseDTO> searchProjectByManager(String keyword);
+    List<ProjectSearchListResponseDTO> searchProjectByDeveloper(String keyword);
 
 }

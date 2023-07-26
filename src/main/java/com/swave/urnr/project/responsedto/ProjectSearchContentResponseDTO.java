@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "프로젝트 검색")
-@Builder
 public class ProjectSearchContentResponseDTO {
     @ApiModelProperty(value="프로젝트 ID", example = "1", required = true)
     Long id;
@@ -42,6 +41,15 @@ public class ProjectSearchContentResponseDTO {
 
     @ApiModelProperty(value="프로젝트 참여자", example = "참가자 리스트", required = true)
     List<UserMemberInfoResponseDTO> teamMembers;
-    
-    
+
+    @Builder
+    public ProjectSearchContentResponseDTO(Long id, String name, String description, Date createDate, Long managerId, String managerName, String managerDepartment) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.createDate = createDate;
+        this.managerId = managerId;
+        this.managerName = managerName;
+        this.managerDepartment = managerDepartment;
+    }
 }

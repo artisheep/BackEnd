@@ -4,6 +4,7 @@ package com.swave.urnr.project.service;
 import com.swave.urnr.project.domain.Project;
 import com.swave.urnr.project.repository.ProjectRepository;
 import com.swave.urnr.project.requestdto.ProjectCreateRequestDTO;
+import com.swave.urnr.project.requestdto.ProjectKeywordRequestContentDTO;
 import com.swave.urnr.project.requestdto.ProjectUpdateRequestDTO;
 import com.swave.urnr.project.responsedto.*;
 import com.swave.urnr.releasenote.repository.ReleaseNoteRepository;
@@ -21,12 +22,14 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-;import static com.swave.urnr.util.type.UserRole.Manager;
+;import static com.swave.urnr.project.domain.Project.makeProjectSearchListResponseDTOList;
+import static com.swave.urnr.util.type.UserRole.Manager;
 
 //0710 확인 CR
 @Service
@@ -331,43 +334,30 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectSearchContentResponseDTO> searchProject(String keyword){
-        List<ProjectSearchListResponseDTO> projectSearchListResponseDTOList = projectRepository.searchProject(keyword);
+    public ProjectSearchResultListResponseDTO searchProject(ProjectKeywordRequestContentDTO projectKeywordRequestContentDTO) throws UnsupportedEncodingException {
+        String keyword = projectKeywordRequestContentDTO.getKeyword();
+        ProjectSearchResultListResponseDTO projectSearchResultListResponseDTO = new ProjectSearchResultListResponseDTO();
 
-        List<ProjectSearchContentResponseDTO> projectSearchResponseDTOList = new ArrayList<>();
-        //진짜신기하다 어떻게 메니저가 안바뀌고 들어가지?
-        //코드이해중
-        for(ProjectSearchListResponseDTO projectSearchListResponseDTO : projectSearchListResponseDTOList){
+        //제목 검색
+        List<ProjectSearchListResponseDTO> projectSearchByNameListResponseDTOList = projectRepository.searchProjectByName(keyword);
+        projectSearchResultListResponseDTO.setTitleSearch(makeProjectSearchListResponseDTOList(projectSearchByNameListResponseDTOList));
 
-            Optional<ProjectSearchContentResponseDTO> existingProject = projectSearchResponseDTOList.stream()
-                            .filter(p -> p.getId().equals(projectSearchListResponseDTO.getId()))
-                            .findFirst();
-            if(existingProject.isPresent()){
-                //log.info(String.valueOf(projectSearchListResponseDTO.getUserRole()));
-                //log.info(String.valueOf(projectSearchListResponseDTO.getUserName()));
-                //log.info(String.valueOf(existingProject.get().getTeamMembers()));
-                existingProject.get().getTeamMembers().add(new UserMemberInfoResponseDTO(projectSearchListResponseDTO.getUserId(),projectSearchListResponseDTO.getUserName(),projectSearchListResponseDTO.getDescription()));
-            }else{
-                ProjectSearchContentResponseDTO newProject = new ProjectSearchContentResponseDTO();
-                newProject.setId(projectSearchListResponseDTO.getId());
-                newProject.setName(projectSearchListResponseDTO.getName());
-                newProject.setDescription(projectSearchListResponseDTO.getDescription());
-                newProject.setCreateDate(projectSearchListResponseDTO.getCreateDate());
-                newProject.setManagerId(projectSearchListResponseDTO.getUserId());
-                newProject.setManagerName(projectSearchListResponseDTO.getUserName());
-                newProject.setManagerDepartment(projectSearchListResponseDTO.getUserDepartment());
-                List<UserMemberInfoResponseDTO> teamMembers = new ArrayList<>();
-                if(projectSearchListResponseDTO.getUserRole()!=Manager) {
-                    teamMembers.add(new UserMemberInfoResponseDTO(projectSearchListResponseDTO.getUserId(), projectSearchListResponseDTO.getUserName(), projectSearchListResponseDTO.getUserDepartment()));
-                }
-                newProject.setTeamMembers(teamMembers);
-                projectSearchResponseDTOList.add(newProject);
+        //descriprion 검색
+        List<ProjectSearchListResponseDTO> projectSearchByDescriptionListResponseDTOList = projectRepository.searchProjectByDescription(keyword);
+        projectSearchResultListResponseDTO.setDescriptionSearch(makeProjectSearchListResponseDTOList(projectSearchByDescriptionListResponseDTOList));
 
-            }
-        }
-        return projectSearchResponseDTOList;
+
+        //Manager 검색
+        List<ProjectSearchListResponseDTO> projectSearchByManagerListResponseDTOList = projectRepository.searchProjectByManager(keyword);
+        projectSearchResultListResponseDTO.setManagerSearch(makeProjectSearchListResponseDTOList(projectSearchByManagerListResponseDTOList));
+
+
+        //Developer
+        List<ProjectSearchListResponseDTO> projectSearchByDeveloperListResponseDTOList = projectRepository.searchProjectByDeveloper(keyword);
+        projectSearchResultListResponseDTO.setDeveloperSearch(makeProjectSearchListResponseDTOList(projectSearchByDeveloperListResponseDTOList));
+
+        return projectSearchResultListResponseDTO;
     }
-
 
 
 }
