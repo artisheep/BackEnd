@@ -23,7 +23,6 @@ import static java.lang.Boolean.FALSE;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Where(clause = "is_deleted = false")
 @SQLDelete(sql = "UPDATE project SET is_deleted = true WHERE project_id = ?")
 public class Project {
