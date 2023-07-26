@@ -58,7 +58,7 @@ public class ProjectController {
     }
 
     @Operation(summary="프로젝트 검색하기", description="프로젝트 검색결과를 표시합니다.")
-    @GetMapping("/search")
+    @GetMapping("/project/search")
     public List<ProjectSearchContentResponseDTO> searchProject(@RequestParam String keyword){
         System.out.println(keyword);
         return projectService.searchProject(keyword);
