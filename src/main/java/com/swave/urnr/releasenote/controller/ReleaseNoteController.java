@@ -28,13 +28,13 @@ public class ReleaseNoteController {
     }
 
     @Operation(summary="릴리즈 노트 수정", description="릴리즈 노트를 수정합니다. 유저 정보는 JWT로부터 가져옵니다.")
-    @PatchMapping("/api/project/{projectId}/release-note/{releaseNoteId}")
+    @PatchMapping("/api/project/release-note/{releaseNoteId}")
     public HttpResponse UpdateReleaseNote(HttpServletRequest request, @PathVariable Long releaseNoteId, @RequestBody ReleaseNoteUpdateRequestDTO releaseNoteUpdateRequestDTO) {
         return releaseNoteService.updateReleaseNote(request, releaseNoteId, releaseNoteUpdateRequestDTO);
     }
 
     @Operation(summary="릴리즈 노트 한개 받기", description="releaseNoteId의 릴리즈 노트를 읽어옵니다. 댓글이 포함됩니다.")
-    @GetMapping("/api/project/{projectId}/release-note/{releaseNoteId}")
+    @GetMapping("/api/project/release-note/{releaseNoteId}")
     public ReleaseNoteContentResponseDTO loadReleaseNote(HttpServletRequest request, @PathVariable Long releaseNoteId) {
         return releaseNoteService.loadReleaseNote(request, releaseNoteId);
     }
@@ -52,7 +52,7 @@ public class ReleaseNoteController {
     }
 
     @Operation(summary="릴리즈 노트 삭제", description="releaseNoteId의 릴리즈노트를 삭제 합니다.")
-    @DeleteMapping("/api/project/{projectId}/release-note/{releaseNoteId}")
+    @DeleteMapping("/api/project/release-note/{releaseNoteId}")
     public HttpResponse deleteReleaseNote(@PathVariable Long releaseNoteId) {
         return releaseNoteService.deleteReleaseNote(releaseNoteId);
     }

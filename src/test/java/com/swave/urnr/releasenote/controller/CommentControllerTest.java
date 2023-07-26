@@ -66,7 +66,7 @@ class CommentControllerTest {
         given(commentService.createComment(any(HttpServletRequest.class),eq(1L),eq(commentCreateRequestDTO)))
                 .willReturn(httpResponse);
 
-        mvc.perform(post("/api/project/1/release-note/1/comment")
+        mvc.perform(post("/api/project/release-note/1/comment")
                         .requestAttr("id", 1L)
                         .requestAttr("username", "Kim")
                         .content(objectMapper.writeValueAsString(commentCreateRequestDTO))
@@ -91,7 +91,7 @@ class CommentControllerTest {
 
         given(commentService.loadRecentComment(1L)).willReturn(commentContentListResponseDTO);
 
-        mvc.perform(get("/api/project/1/release-note/1/recent-comments")
+        mvc.perform(get("/api/project/1/release-note/recent-comments")
                         .requestAttr("id", 1L)
                         .requestAttr("username", "Kim")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +111,7 @@ class CommentControllerTest {
 
         given(commentService.deleteComment(1L)).willReturn(httpResponse);
 
-        mvc.perform(delete("/api/project/1/release-note/1/comment/1")
+        mvc.perform(delete("/api/project/release-note/comment/1")
                         .requestAttr("id", 1L)
                         .requestAttr("username", "Kim")
                         .contentType(MediaType.APPLICATION_JSON)
