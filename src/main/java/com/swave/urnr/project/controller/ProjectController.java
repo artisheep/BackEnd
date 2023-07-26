@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping("/api")
 @CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
@@ -30,27 +30,27 @@ public class ProjectController {
     //0706 : create 생성
 
     @Operation(summary="프로젝트 생성", description="JWT에서 유저정보를 받아 프로젝트를 생성합니다.")
-    @PostMapping("/create")
+    @PostMapping("/project")
     public HttpResponse createProject(HttpServletRequest request, @RequestBody ProjectCreateRequestDTO project){;
         return projectService.createProject(request, project);
     }
 
     @Operation(summary="프로젝트 전체 가져오기", description="JWT에서 유저정보를 받아 해당 유저의 프로젝트 전체를 가져옵니다.")
-    @GetMapping("/load/all")
+    @GetMapping("/projects")
     public List<ProjectListResponseDTO> loadProjectList(HttpServletRequest request){
         return projectService.loadProjectList(request);
     }
 
 
 
-    @Operation(summary="프로젝트 하나 가져오기", description="프로젝트ID를 가져와 프로젝트를 표시합니다.")
-    @GetMapping("/load/one/{projectId}")
+    @Operation(summary="프로젝트 하나 가져오기", description="프로젝트 ID를 가져와 프로젝트를 표시합니다.")
+    @GetMapping("/project/{projectId}")
     public ProjectContentResponseDTO loadProject(@PathVariable Long projectId){
         return projectService.loadProject(projectId);
     }
 
     @Operation(summary="프로젝트 하나 가져오기(관리페이지)", description="프로젝트ID를 가져와 프로젝트와 유저정보를 표시합니다.")
-    @GetMapping("/manage/{projectId}")
+    @GetMapping("/project/{projectId}/manage")
     public ProjectManagementContentResponseDTO loadManagementProject(HttpServletRequest request, @PathVariable Long projectId){
         //loadManagementProject
         //loadManagementProjectJPA
@@ -58,7 +58,7 @@ public class ProjectController {
     }
 
     @Operation(summary="프로젝트 검색하기", description="프로젝트 검색결과를 표시합니다.")
-    @GetMapping("/search")
+    @GetMapping("/project/search")
     public List<ProjectSearchContentResponseDTO> searchProject(@RequestParam String keyword){
         System.out.println(keyword);
         return projectService.searchProject(keyword);
@@ -66,14 +66,14 @@ public class ProjectController {
 
 
     @Operation(summary="프로젝트 수정", description="프로젝트ID를 받아 프로젝트를 수정합니다. 멤버를 추가하거나 제거할 수 있습니다.")
-    @PutMapping("/update/{projectId}")
+    @PutMapping("/project/{projectId}")
     public ProjectUpdateRequestDTO updateProject(@PathVariable Long projectId,@RequestBody ProjectUpdateRequestDTO projectUpdateRequestDto){
         return projectService.updateProject(projectId, projectUpdateRequestDto);
 
     }
 
     @Operation(summary="프로젝트 삭제", description="projectID를 받아 프로젝트를 삭제합니다.")
-    @DeleteMapping("/delete/{projectId}")
+    @DeleteMapping("/project/{projectId}")
     public HttpResponse deleteProject(@PathVariable Long projectId){
 
         return projectService.deleteProject(projectId);
