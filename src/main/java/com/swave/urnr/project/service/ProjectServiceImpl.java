@@ -359,6 +359,24 @@ public class ProjectServiceImpl implements ProjectService {
         return projectSearchResultListResponseDTO;
     }
 
+    @Override
+    public List<ProjectUserCheckDTO> checkUser(Long projectId) {
+        List<ProjectUserCheckDTO> projectUserCheckList = new ArrayList<>();
+        List<UserMemberInfoResponseDTO> getMemberLists = userInProjectRepository.getLoginMembers(projectId);
+        log.info(String.valueOf(getMemberLists.get(0)));
+        for (UserMemberInfoResponseDTO getMember : getMemberLists) {
+            User user = userRepository.getReferenceById(getMember.getUserId());
+            ProjectUserCheckDTO projectUserCheck = ProjectUserCheckDTO.builder()
+                    .memberId(user.getId())
+                    .memberName(user.getUsername())
+                    .status(user.isLoginState())
+                    .build();
+            projectUserCheckList.add(projectUserCheck);
+
+        }
+        return projectUserCheckList;
+    }
+
 
 }
 

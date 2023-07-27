@@ -30,6 +30,7 @@ public interface ProjectService {
 
     ProjectSearchResultListResponseDTO searchProject(ProjectKeywordRequestContentDTO projectKeywordRequestContentDTO) throws UnsupportedEncodingException;
 
+    List<ProjectUserCheckDTO> checkUser(Long projectId);
 
 
     //String updateUsers(ProjectRequestDto project);
