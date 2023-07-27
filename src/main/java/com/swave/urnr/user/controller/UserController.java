@@ -1,9 +1,8 @@
 package com.swave.urnr.user.controller;
 
 import com.swave.urnr.user.responsedto.ManagerResponseDTO;
-import com.swave.urnr.user.responsedto.UserListResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
-import com.swave.urnr.util.common.ResponseDTO;
+import com.swave.urnr.user.responsedto.UserEntityResponseDTO;
 import com.swave.urnr.user.exception.UserNotFoundException;
 import com.swave.urnr.user.requestdto.*;
 import com.swave.urnr.user.service.UserService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @Api(tags = "UserController")
 @RestController
@@ -45,7 +43,7 @@ public class UserController {
 
     @Operation(summary="유저 계정 생성", description="유저 정보를 생성합니다.")
     @PostMapping("/user")
-    public ResponseEntity<ResponseDTO> createAccountByEmail(@RequestBody @Valid UserRegisterRequestDTO request) {
+    public ResponseEntity<UserEntityResponseDTO> createAccountByEmail(@RequestBody @Valid UserRegisterRequestDTO request) {
         return userService.createAccountByEmail(request);
     }
 
@@ -61,7 +59,7 @@ public class UserController {
     @Operation(summary="사용자 소속 수정", description="로그인한 사용자로부터 받은 정보로 사용자의 계정 정보를 수정합니다.")
     @PatchMapping("/user")
     @SecurityRequirement(name = "JWT 토큰")
-    public  ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, @RequestBody UserDepartmentRequestDTO requestDto) throws UserNotFoundException {
+    public  ResponseEntity<UserEntityResponseDTO> initDepartment(HttpServletRequest request, @RequestBody UserDepartmentRequestDTO requestDto) throws UserNotFoundException {
         return userService.initDepartment(request, requestDto);
     }
 

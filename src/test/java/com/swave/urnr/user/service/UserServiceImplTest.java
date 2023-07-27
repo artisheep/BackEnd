@@ -7,14 +7,13 @@ import com.swave.urnr.user.repository.UserRepository;
 import com.swave.urnr.user.requestdto.*;
 import com.swave.urnr.user.responsedto.ManagerResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
-import com.swave.urnr.util.common.ResponseDTO;
+import com.swave.urnr.user.responsedto.UserEntityResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mapstruct.control.MappingControl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +22,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +51,7 @@ class UserServiceImplTest {
 
         UserRegisterRequestDTO userRegisterRequestDTO = new UserRegisterRequestDTO("corgiwalke@gmail.com","1q2w3e4r","전강훈");
 
-        ResponseEntity<ResponseDTO> result = userService.createAccountByEmail(userRegisterRequestDTO);
+        ResponseEntity<UserEntityResponseDTO> result = userService.createAccountByEmail(userRegisterRequestDTO);
 
 
         assertEquals( result.getStatusCode().value() , 201);
@@ -71,11 +69,11 @@ class UserServiceImplTest {
 
         UserDepartmentRequestDTO userDepartmentRequestDTO = new UserDepartmentRequestDTO("test");
 
-        ResponseEntity<ResponseDTO> result = userService.initDepartment(request,userDepartmentRequestDTO);
+        ResponseEntity<UserEntityResponseDTO> result = userService.initDepartment(request,userDepartmentRequestDTO);
 
-        ResponseDTO responseDTO = new ResponseDTO(200,"test");
+        UserEntityResponseDTO userEntityResponseDTO = new UserEntityResponseDTO(200,"test");
         assertEquals( result.getStatusCode().value() , 200);
-        assertEquals( result.getBody().getData(),responseDTO.getData());
+        assertEquals( result.getBody().getData(), userEntityResponseDTO.getData());
     }
 
     @Test

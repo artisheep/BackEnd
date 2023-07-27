@@ -3,7 +3,7 @@ package com.swave.urnr.user.service;
 import com.swave.urnr.user.responsedto.ManagerResponseDTO;
 import com.swave.urnr.user.responsedto.UserListResponseDTO;
 import com.swave.urnr.user.responsedto.UserResponseDTO;
-import com.swave.urnr.util.common.ResponseDTO;
+import com.swave.urnr.user.responsedto.UserEntityResponseDTO;
 import com.swave.urnr.util.oauth.JwtProperties;
 import com.swave.urnr.util.oauth.OauthToken;
 import com.swave.urnr.user.domain.User;
@@ -41,13 +41,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public ResponseEntity<ResponseDTO> createAccountByEmail(UserRegisterRequestDTO request) {
+    public ResponseEntity<UserEntityResponseDTO> createAccountByEmail(UserRegisterRequestDTO request) {
 
-        ResponseDTO testDto;
+        UserEntityResponseDTO testDto;
         log.info("Email : ", request.getEmail());
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            testDto= new ResponseDTO(409,"The mail already exists");
+            testDto= new UserEntityResponseDTO(409,"The mail already exists");
             log.info("Email already exists");
             return ResponseEntity.status(409).body(testDto);
         }
@@ -63,22 +63,22 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         userRepository.flush();
 
-        testDto= new ResponseDTO(201,"User created");
+        testDto= new UserEntityResponseDTO(201,"User created");
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
         return ResponseEntity.created(location).body(testDto);
 
     }
 
     @Override
-    public ResponseEntity<ResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto)  {
+    public ResponseEntity<UserEntityResponseDTO> initDepartment(HttpServletRequest request, UserDepartmentRequestDTO requestDto)  {
 
         Long id = (Long) request.getAttribute("id");
         log.info(id.toString());
 
-        ResponseDTO responseDto;
+        UserEntityResponseDTO userEntityResponseDto;
         if (!userRepository.findById(id).isPresent()) {
-            responseDto= new ResponseDTO(409,"The account does not exists.");
-            return ResponseEntity.status(409).body(responseDto);
+            userEntityResponseDto = new UserEntityResponseDTO(409,"The account does not exists.");
+            return ResponseEntity.status(409).body(userEntityResponseDto);
         }
         User user = userRepository.findById(id).get();
             user.setDepartment(requestDto.getDepartment());
@@ -86,8 +86,8 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             userRepository.flush();
 
-            responseDto= new ResponseDTO(200,user.getDepartment());
-            return ResponseEntity.status(200).body(responseDto);
+            userEntityResponseDto = new UserEntityResponseDTO(200,user.getDepartment());
+            return ResponseEntity.status(200).body(userEntityResponseDto);
 
     }
 
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDTO requestDto) {
 
 
-        ResponseDTO testDto;
+        UserEntityResponseDTO testDto;
         Long id = (Long) request.getAttribute("id");
         if(!userRepository.findById(id).isPresent())
         {
