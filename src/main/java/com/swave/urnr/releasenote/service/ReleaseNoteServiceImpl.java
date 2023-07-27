@@ -30,7 +30,6 @@ import java.util.*;
 public class ReleaseNoteServiceImpl implements ReleaseNoteService{
     private final ReleaseNoteRepository releaseNoteRepository;
 
-
     private final NoteBlockService noteBlockService;
     private final BlockContextService blockContextService;
     private final ChatGPTService chatGPTService;
@@ -225,6 +224,11 @@ public class ReleaseNoteServiceImpl implements ReleaseNoteService{
 
     @Override
     public ReleaseNoteContentResponseDTO loadRecentReleaseNote(HttpServletRequest request){
-        return releaseNoteRepository.findMostRecentReleaseNote((Long) request.getAttribute("id")).makeReleaseNoteContentDTO();
+        ReleaseNote releaseNote = releaseNoteRepository.findMostRecentReleaseNote((Long) request.getAttribute("id"));
+        if(releaseNote == null){
+            return null;
+        }else {
+            return releaseNote.makeReleaseNoteContentDTO();
+        }
     }
 }
