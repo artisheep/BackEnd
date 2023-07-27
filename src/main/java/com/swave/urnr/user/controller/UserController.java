@@ -43,7 +43,7 @@ public class UserController {
         return userService.getCurrentUserInformation(request);
     }
 
-    @Operation(summary="유저 계정 생성", description="유저 정보를 생성합니다.")
+    @Operation(summary="사용자 계정 생성", description="사용자 정보를 생성합니다.")
     @PostMapping("/user")
     public ResponseEntity<UserEntityResponseDTO> createAccountByEmail(@RequestBody @Valid UserRegisterRequestDTO request) {
         return userService.createAccountByEmail(request);

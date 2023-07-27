@@ -33,7 +33,7 @@ public class User {
     @Column(name = "provider")
     private String provider;
     @Column(name= "loginState")
-    private boolean loginState=false;
+    private boolean loginState= Boolean.FALSE;
 
     @Column(name = "is_deleted")
     private boolean isDeleted = Boolean.FALSE;
