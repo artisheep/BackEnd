@@ -81,5 +81,9 @@ public class ProjectController {
         return projectService.deleteProject(projectId);
     }
 
+    @GetMapping("/project/memberStatus/{projectId}")
+    public List<ProjectUserCheckDTO> userCheck(@PathVariable Long projectId){
+        return projectService.checkUser(projectId);
+    }
 
 }

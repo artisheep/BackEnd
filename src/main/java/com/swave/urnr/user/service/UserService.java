@@ -35,4 +35,6 @@ public interface UserService {
     void checkInvalidToken(HttpServletRequest request) ;
 
     ManagerResponseDTO getUserInformationList(HttpServletRequest request);
+
+    boolean updateLoginState(HttpServletRequest request, boolean requestDto) throws UserNotFoundException;
 }
