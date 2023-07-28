@@ -28,7 +28,7 @@ public class ManagerResponseDTO {
 
 
     @ApiModelProperty(value="사용자 리스트", example ="[{ \"userId\": 1, \"username\": \"전강훈\"  , \"userDepartment\" : \"가천대학교\"}]" , required = true)
-    @ApiParam(value = "유저 리스트", required = true, example = "소속을 입력하세요.")
+    @ApiParam(value = "사용자 리스트", required = true, example = "소속을 입력하세요.")
     private List<UserListResponseDTO> users;
 
 }

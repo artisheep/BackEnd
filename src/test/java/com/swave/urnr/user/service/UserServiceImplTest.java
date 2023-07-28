@@ -89,7 +89,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("유저 정보 반환 테스트")
+    @DisplayName("사용자 정보 반환 테스트")
     void getUser() throws UserNotFoundException {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -133,7 +133,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("유저 정보 리스트 반환 테스트")
+    @DisplayName("사용자 정보 리스트 반환 테스트")
     void getUserInformationList() {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -160,7 +160,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("유저 정보 업데이트 테스트")
+    @DisplayName("사용자 정보 업데이트 테스트")
     @Transactional
     void updateUser() {
 
@@ -191,7 +191,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("유저 삭제 테스트")
+    @DisplayName("사용자 삭제 테스트")
     @Transactional
     void deleteUser() {
         MockHttpServletRequest request = new MockHttpServletRequest();

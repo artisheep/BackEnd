@@ -43,13 +43,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserEntityResponseDTO> createAccountByEmail(UserRegisterRequestDTO request) {
 
-        UserEntityResponseDTO testDto;
+        UserEntityResponseDTO userEntityResponseDTO;
         log.info("Email : ", request.getEmail());
 
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            testDto= new UserEntityResponseDTO(409,"The mail already exists");
+            userEntityResponseDTO= new UserEntityResponseDTO(409,"The mail already exists");
             log.info("Email already exists");
-            return ResponseEntity.status(409).body(testDto);
+            return ResponseEntity.status(409).body(userEntityResponseDTO);
         }
         log.info("Email not already exists, builded it. ");
 
@@ -63,9 +63,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         userRepository.flush();
 
-        testDto= new UserEntityResponseDTO(201,"User created");
+        userEntityResponseDTO= new UserEntityResponseDTO(201,"User created");
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
-        return ResponseEntity.created(location).body(testDto);
+        return ResponseEntity.created(location).body(userEntityResponseDTO);
 
     }
 
@@ -189,8 +189,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<String> updateUser(HttpServletRequest request, UserUpdateAccountRequestDTO requestDto) {
 
-
-        UserEntityResponseDTO testDto;
         Long id = (Long) request.getAttribute("id");
         if(!userRepository.findById(id).isPresent())
         {
