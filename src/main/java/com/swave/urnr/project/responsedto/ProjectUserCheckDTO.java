@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ProjectUserCheckDTO {
     Long memberId;
     String memberName;
-    boolean status;
+    boolean isOnline;
 
 }

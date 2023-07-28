@@ -80,7 +80,7 @@ public class ProjectController {
 
         return projectService.deleteProject(projectId);
     }
-
+    @Operation(summary="프로젝트 팀원 온/오프 확인", description="projectID를 받아 프로젝트 각 인원의 현재 온/오프 상태를 확인합니다.")
     @GetMapping("/project/memberStatus/{projectId}")
     public List<ProjectUserCheckDTO> userCheck(@PathVariable Long projectId){
         return projectService.checkUser(projectId);

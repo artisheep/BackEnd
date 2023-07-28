@@ -369,7 +369,7 @@ public class ProjectServiceImpl implements ProjectService {
             ProjectUserCheckDTO projectUserCheck = ProjectUserCheckDTO.builder()
                     .memberId(user.getId())
                     .memberName(user.getUsername())
-                    .status(user.isLoginState())
+                    .isOnline(user.isOnline())
                     .build();
             projectUserCheckList.add(projectUserCheck);
 
