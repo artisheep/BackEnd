@@ -66,8 +66,7 @@ class ProjectServiceTest {
     MockHttpServletRequest request;
 
     @BeforeEach
-
-    @DisplayName("유저 등록")
+    @DisplayName("사용자 등록")
     void setUp() throws UserNotFoundException {
 
 
