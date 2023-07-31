@@ -9,7 +9,7 @@ pipeline {
         stage("Build and Push") {
             steps {
                 script {
-                    def imageName = "cicd_test_for_urinuri"
+                    def imageName = "urinuri"
 
                     sh "docker-compose build ${imageName}"
 

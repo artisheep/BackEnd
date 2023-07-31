@@ -1,6 +1,6 @@
 version: '3'
 services:
-  cicd_test:
+  urinuri:
     build:
       context: .
       dockerfile: Dockerfile
