@@ -96,10 +96,10 @@ public class UserController {
     public ResponseEntity getTokenByOauth(@RequestParam("code") String code, @RequestParam("provider") String provider) {
         return userService.getTokenByOauth(code, provider);
     }
-
-    @PatchMapping("/user/updateStatus")
+    @Operation(summary="사용자 로그인 여부 확인", description="현재 사용자가 로그인하고 있으면 true 아니면 false가 나옵니다")
+    @PatchMapping("/user/status")
     public boolean updateStatus(HttpServletRequest request,  @RequestBody Map<String, Object> requestBody) throws UserNotFoundException {
-        return userService.updateLoginState(request, (boolean) requestBody.get("loginState"));
+        return userService.updateLoginState(request, (Boolean) requestBody.get("loginState"));
     }
 
 }
