@@ -11,7 +11,7 @@ pipeline {
                 script {
                     def imageName = "urinuri"
 
-                    sh "docker-compose build ${imageName}"
+                    sh "docker build ${imageName}"
 
                     withCredentials([[$class: 'UsernamePasswordMultiBinding',
                                     credentialsId: 'docker_credentials',
