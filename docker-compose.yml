@@ -1,0 +1,6 @@
+version: '3'
+services:
+  cicd_test:
+    build:
+      context: .
+      dockerfile: Dockerfile
