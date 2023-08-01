@@ -17,7 +17,10 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x gradlew"
-                    sh "./gradlew build" // 또는 "gradle build"로 변경해야 할 수도 있습니다.
+                    sh './gradlew clean'
+                    sh './gradlew compileQuerydsl'
+                    sh './gradlew compileJava'
+                    sh  './gradlew build'
                 }
             }
         }
