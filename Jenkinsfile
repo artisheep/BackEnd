@@ -13,7 +13,7 @@ pipeline {
             }
         }
 
-        stage('Build gradle') {
+        stage('Build') {
             steps {
                 script {
                     sh "chmod +x gradlew"
