@@ -17,10 +17,7 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x gradlew"
-                    sh './gradlew clean'
-                    sh './gradlew compileQuerydsl'
-                    sh './gradlew compileJava'
-                    sh  './gradlew clean build'
+                    sh  './gradlew bootJar'
                 }
             }
         }
