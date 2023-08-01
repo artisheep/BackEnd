@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_URL = "https://github.com/artisheep/BackEnd"
+        GIT_URL = "https://github.com/SwaveReleaseNote/BackEnd"
         IMAGE_NAME = "urynure"
     }
 
