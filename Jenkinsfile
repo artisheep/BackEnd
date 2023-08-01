@@ -20,7 +20,7 @@ pipeline {
                     sh './gradlew clean'
                     sh './gradlew compileQuerydsl'
                     sh './gradlew compileJava'
-                    sh  './gradlew build'
+                    sh  './gradlew clean build'
                 }
             }
         }
