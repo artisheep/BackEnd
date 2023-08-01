@@ -1,29 +1,39 @@
 pipeline {
     agent any
+
+
+
+    environment {
+        GIT_URL = "https://github.com/artisheep/BackEnd"
+        IMAGE_NAME =  "ganghoon"
+    }
+
     stages {
-        stage("Checkout") {
-            steps {
-                checkout scm
-            }
+        stage('Pull') {
+                steps {
+                    git url: "${GIT_URL}", branch: "develop", poll: true, changelog: true
+                }
+
         }
-        stage("Build and Push") {
+
+        stage('Build Docker Image') {
             steps {
                 script {
-                    def imageName = "urinuri"
-
-                    sh "docker build ${imageName}"
-
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding',
-                                    credentialsId: 'docker_credentials',
-                                    usernameVariable: 'DOCKER_USER_ID',
-                                    passwordVariable: 'DOCKER_USER_PASSWORD'
-                                    ]]) {
-                        sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
-                        sh "docker tag ${imageName}:latest ${DOCKER_USER_ID}/${imageName}:${BUILD_NUMBER}"
-                        sh "docker push ${DOCKER_USER_ID}/${imageName}:${BUILD_NUMBER}"
-                    }
+                    sh "docker build -t ${IMAGE_NAME} ."
                 }
             }
         }
+
+        stage('Finish') {
+            steps{
+                sh 'docker images -qf dangling=true | xargs -I{} docker rmi {}'
+            }
+        }
+
+
     }
+
+
+
+
 }
