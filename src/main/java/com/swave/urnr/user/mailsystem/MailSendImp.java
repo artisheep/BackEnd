@@ -105,13 +105,13 @@ public void call() {
 추가로 예외 처리를 할때 원래 에러, 즉 Exception을 예외처리 한 runtime exception에 넘겨줘서 기록을 남기는 것이 매우 중요합니다 나중에 에러가 발생했을 때 원래의 오류를 찾지 못하는 상황이 생길 수도 있기 때문입니다
 
          */
-        try {// 예외처리
-            MimeMessage message = createMessage(to); // 메일 발송
-            emailsender.send(message);
-        } catch (MessagingException | UnsupportedEncodingException es ) {
-            es.printStackTrace();
-            throw new RuntimeException(es);
-        }
+//        try {// 예외처리
+//            MimeMessage message = createMessage(to); // 메일 발송
+//            emailsender.send(message);
+//        } catch (MessagingException | UnsupportedEncodingException es ) {
+//            es.printStackTrace();
+//            throw new RuntimeException(es);
+//        }
 
 
         return ePw; // 메일로 보냈던 인증 코드를 서버로 반환
