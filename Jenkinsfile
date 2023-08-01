@@ -16,6 +16,7 @@ pipeline {
         stage('Build gradle') {
             steps {
                 script {
+                    sh "chmod +x gradlew"
                     sh "./gradlew build" // 또는 "gradle build"로 변경해야 할 수도 있습니다.
                 }
             }
